@@ -13,7 +13,7 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/png" href="/favicon.png" />
+		<link rel="icon" type="image/png" href="/GameDevIndie/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
@@ -43,13 +43,13 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 	<body>
 		<header>
 			<nav>
-				<a href="/" class="logo">
+				<a href="/GameDevIndie/" class="logo">
 					<span class="logo-main">GameDev</span><span class="logo-sub">Indie</span>
 				</a>
 				<ul class="nav-links">
-					<li><a href="/">Início</a></li>
-					<li><a href="/blog">Blog</a></li>
-					<li><a href="/sobre">Sobre</a></li>
+					<li><a href="/GameDevIndie/">Início</a></li>
+					<li><a href="/GameDevIndie/blog">Blog</a></li>
+					<li><a href="/GameDevIndie/sobre">Sobre</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -149,10 +149,37 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 
 	main {
 		flex: 1;
-		max-width: 800px;
+		max-width: 900px;
 		margin: 2rem auto;
 		padding: 0 1.5rem;
 		width: 100%;
+	}
+
+	/* Ad Styles */
+	.ad-container {
+		margin: 2rem 0;
+		text-align: center;
+		background: #f3f4f6;
+		border-radius: 8px;
+		padding: 1rem;
+		border: 1px dashed #d1d5db;
+	}
+
+	.ad-label {
+		font-size: 0.7rem;
+		color: #9ca3af;
+		text-transform: uppercase;
+		margin-bottom: 0.5rem;
+		letter-spacing: 0.05em;
+	}
+
+	.ad-box {
+		min-height: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #9ca3af;
+		font-weight: 500;
 	}
 
 	footer {
