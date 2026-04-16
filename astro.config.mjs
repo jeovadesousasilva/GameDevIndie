@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://jeovadesousasilva.github.io/GameDevIndie',
+	site: 'https://jeovadesousasilva.github.io',
+	base: '/GameDevIndie',
 	integrations: [mdx(), sitemap()],
 });
