@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Sobre - GameDevIndie">
+	<article class="about-page">
+		<header class="page-header">
+			<h1>Sobre a Midnight Toronto</h1>
+			<p class="intro">Desenvolvimento de jogos mobile e soluções técnicas em C#.</p>
+		</header>
+
+		<div class="content">
+			<section>
+				<h2>Perfil Técnico</h2>
+				<p><strong>A Midnight Toronto</strong> é um estúdio de desenvolvimento focado na criação de experiências mobile robustas e performáticas. Sob a liderança de <strong>Jeova</strong>, o estúdio consolidou sua expertise através do desenvolvimento e publicação de dois projetos completos na Unity Engine.</p>
+			</section>
+
+			<section>
+				<h2>Especialidades</h2>
+				<p>Com domínio avançado em <strong>C#</strong> e no ecossistema Unity, o estúdio prioriza a escalabilidade e a otimização técnica. O foco atual reside na exploração das capacidades máximas do hardware mobile, garantindo que a qualidade visual e a fluidez de gameplay caminhem juntas.</p>
+			</section>
+
+			<section class="social-links-section">
+				<h2>Conecte-se</h2>
+				<p>Acompanhe as atualizações técnicas e novidades dos projetos através dos canais oficiais:</p>
+				<div class="social-grid">
+					<a href="https://discord.gg/X9YX2UcY" target="_blank" class="social-item discord">
+						<span>Discord Oficial</span>
+					</a>
+					<a href="https://www.instagram.com/midnight_toronto?igsh=Znh6c2g4d3YyNHJo" target="_blank" class="social-item instagram">
+						<span>Instagram</span>
+					</a>
+				</div>
+			</section>
+
+			<section class="future-site">
+				<div class="studio-card">
+					<h3>Midnight Toronto</h3>
+					<p>Site oficial do estúdio em desenvolvimento.</p>
+					<div class="status-badge">Coming Soon</div>
+				</div>
+			</section>
+		</div>
+	</article>
+</Layout>
+
+<style>
+	.about-page { padding: 2rem 0; }
+	.page-header { text-align: center; margin-bottom: 4rem; }
+	.page-header h1 { font-size: 3rem; margin-bottom: 1rem; color: var(--text); }
+	.intro { font-size: 1.25rem; color: var(--secondary); font-weight: 500; }
+	
+	.content { max-width: 750px; margin: 0 auto; line-height: 1.7; }
+	section { margin-bottom: 3.5rem; }
+	h2 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--text); font-weight: 700; border-left: 4px solid var(--primary); padding-left: 1rem; }
+	
+	.social-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		margin-top: 1.5rem;
+	}
+
+	.social-item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 600;
+		transition: transform 0.2s, background 0.2s;
+	}
+
+	.discord { background: #5865F2; color: white; }
+	.instagram { background: #E1306C; color: white; }
+	
+	.social-item:hover { transform: translateY(-2px); opacity: 0.9; }
+
+	.future-site {
+		margin-top: 5rem;
+	}
+
+	.studio-card {
+		background: #111827;
+		color: white;
+		padding: 3rem;
+		border-radius: 20px;
+		text-align: center;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.studio-card h3 { font-size: 2rem; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+	.studio-card p { opacity: 0.7; margin-bottom: 1.5rem; }
+
+	.status-badge {
+		display: inline-block;
+		padding: 0.5rem 1.5rem;
+		background: var(--primary);
+		border-radius: 9999px;
+		font-size: 0.8rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+	}
+
+	@media (max-width: 600px) {
+		.social-grid { grid-template-columns: 1fr; }
+		.studio-card { padding: 2rem; }
+	}
+</style>

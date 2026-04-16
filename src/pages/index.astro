@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="GameDev 2026 - O Blog para Solo Devs">
+	<section class="hero">
+		<h1>GameDev<span class="text-primary">Indie</span></h1>
+		<p class="subtitle">Dicas, guias e a jornada de <strong>Jeova (Midnight Toronto)</strong> no desenvolvimento solo.</p>
+	</section>
+
+	<hr />
+
+	<section class="latest-post">
+		<div class="card">
+			<span class="tag">Novo Artigo</span>
+			<h2>Como escolher a engine certa em 2026: Godot vs Unity vs Unreal para solo devs</h2>
+			<p>Um guia honesto e sem enrolação para quem quer começar ou mudar de engine no cenário atual...</p>
+			<a href="/blog/como-escolher-engine-2026" class="btn">Ler artigo completo →</a>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		text-align: center;
+		padding: 3rem 0;
+	}
+
+	.hero h1 {
+		font-size: 4rem;
+		margin-bottom: 1rem;
+		font-weight: 900;
+		letter-spacing: -0.04em;
+		color: var(--text);
+	}
+
+	.text-primary {
+		color: var(--primary);
+	}
+
+	.subtitle {
+		font-size: 1.25rem;
+		color: var(--secondary);
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.latest-post {
+		margin: 3rem 0;
+	}
+
+	.card {
+		background: var(--bg);
+		border: 1px solid var(--border);
+		padding: 2.5rem;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	.card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	}
+
+	.tag {
+		display: inline-block;
+		background: #dbeafe;
+		color: #1e40af;
+		font-size: 0.75rem;
+		font-weight: 700;
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		margin-bottom: 1rem;
+		text-transform: uppercase;
+	}
+
+	.card h2 {
+		margin: 0 0 1rem 0;
+		font-size: 1.75rem;
+		border: none;
+		padding: 0;
+	}
+
+	.card p {
+		color: var(--secondary);
+		margin-bottom: 1.5rem;
+	}
+
+	.btn {
+		display: inline-block;
+		background: var(--primary);
+		color: white;
+		padding: 0.75rem 1.5rem;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 600;
+		transition: background 0.2s;
+	}
+
+	.btn:hover {
+		background: #1d4ed8;
+	}
+
+	@media (max-width: 600px) {
+		.hero h1 { font-size: 2rem; }
+		.card { padding: 1.5rem; }
+	}
+</style>

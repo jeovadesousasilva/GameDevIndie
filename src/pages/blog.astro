@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Blog - GameDevIndie">
+	<div class="blog-list-page">
+		<header class="page-header">
+			<h1>Todos os Artigos</h1>
+			<p>Exploração técnica, tutoriais e reflexões sobre game dev.</p>
+		</header>
+
+		<div class="posts-grid">
+			<article class="post-card">
+				<div class="card-content">
+					<span class="date">16 de Abril, 2026</span>
+					<h2><a href="/blog/como-escolher-engine-2026">Como escolher a engine certa em 2026: Godot vs Unity vs Unreal para solo devs</a></h2>
+					<p>Um guia honesto e sem enrolação para quem quer começar ou mudar de engine no cenário atual de desenvolvimento indie.</p>
+					<a href="/blog/como-escolher-engine-2026" class="read-more">Ler mais →</a>
+				</div>
+			</article>
+			
+			<!-- Futuros posts aparecerão aqui -->
+			<div class="coming-soon">
+				<p>Mais artigos em breve...</p>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.blog-list-page { padding: 2rem 0; }
+	.page-header { margin-bottom: 4rem; text-align: center; }
+	.page-header h1 { font-size: 3rem; margin-bottom: 1rem; }
+	
+	.posts-grid {
+		display: grid;
+		gap: 2rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.post-card {
+		background: var(--bg);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		overflow: hidden;
+		transition: transform 0.2s, box-shadow 0.2s;
+	}
+
+	.post-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+	}
+
+	.card-content { padding: 2rem; }
+	.date { font-size: 0.85rem; color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+	
+	.post-card h2 { margin: 0.5rem 0 1rem; font-size: 1.5rem; border: none; }
+	.post-card h2 a { text-decoration: none; color: var(--text); }
+	.post-card h2 a:hover { color: var(--primary); }
+	
+	.post-card p { color: var(--secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+	
+	.read-more {
+		font-weight: 700;
+		color: var(--primary);
+		text-decoration: none;
+		font-size: 0.9rem;
+	}
+
+	.coming-soon {
+		text-align: center;
+		padding: 4rem;
+		border: 2px dashed var(--border);
+		border-radius: 12px;
+		color: var(--secondary);
+		font-style: italic;
+	}
+</style>
