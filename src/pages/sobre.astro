@@ -36,8 +36,8 @@ import Layout from '../layouts/Layout.astro';
 			<section class="future-site">
 				<div class="studio-card">
 					<h3>Midnight Toronto</h3>
-					<p>Site oficial do estúdio em desenvolvimento.</p>
-					<div class="status-badge">Coming Soon</div>
+					<p>Explore o site oficial do nosso estúdio.</p>
+					<a href="/GameDevIndie/" class="btn-studio">Acessar Estúdio</a>
 				</div>
 			</section>
 		</div>
@@ -45,6 +45,17 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
+	.btn-studio {
+		display: inline-block;
+		padding: 0.75rem 2rem;
+		background: var(--primary);
+		color: white;
+		text-decoration: none;
+		border-radius: 8px;
+		font-weight: 600;
+		transition: transform 0.2s;
+	}
+	.btn-studio:hover { transform: translateY(-2px); }
 	.about-page { padding: 2rem 0; }
 	.page-header { text-align: center; margin-bottom: 4rem; }
 	.page-header h1 { font-size: 3rem; margin-bottom: 1rem; color: var(--text); }
