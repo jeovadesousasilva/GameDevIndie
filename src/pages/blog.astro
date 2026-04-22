@@ -1,99 +1,293 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { withBase } from '../utils/paths';
+import { getAllPosts, getFeaturedPost } from '../utils/blog';
 
-const articleHref = withBase('blog/como-escolher-engine-2026/');
+const posts = getAllPosts();
+const featuredPost = getFeaturedPost(posts);
+
+function formatDate(date: string) {
+	return new Intl.DateTimeFormat('pt-BR', {
+		day: '2-digit',
+		month: 'long',
+		year: 'numeric',
+		timeZone: 'UTC'
+	}).format(new Date(date));
+}
 ---
 
-<Layout title="Blog - GameDevIndie">
-	<div class="blog-list-page">
-		<header class="page-header">
-			<h1>Todos os Artigos</h1>
-			<p>Exploracao tecnica, tutoriais e reflexoes sobre game dev.</p>
-		</header>
+<Layout
+	title="GameDevIndie | Blog de desenvolvimento de jogos da Midnight Toronto"
+	description="Guias práticos, decisões de produção, engines, mobile e bastidores de quem está construindo jogos indie de verdade."
+	canonicalPath="blog/"
+>
+	<section class="blog-hero">
+		<div class="hero-copy">
+			<p class="eyebrow">GameDevIndie</p>
+			<h1>Um blog sobre fazer jogos com escopo real, clareza técnica e menos ruído.</h1>
+			<p class="hero-text">
+				Conteúdo editorial da Midnight Toronto para falar sobre engines, produção, mobile e decisões que
+				importam para quem desenvolve sozinho ou em times pequenos.
+			</p>
+		</div>
+		<div class="hero-note">
+			<span>Foco editorial</span>
+			<ul>
+				<li>Engines e escolhas de produção</li>
+				<li>Desenvolvimento solo com visão prática</li>
+				<li>Mobile, escopo e bastidores do estúdio</li>
+			</ul>
+		</div>
+	</section>
 
-		<div class="posts-grid">
-			<article class="post-card">
-				<div class="card-content">
-					<span class="date">16 de Abril, 2026</span>
-					<h2><a href={articleHref}>Como escolher a engine certa em 2026: Godot vs Unity vs Unreal para solo devs</a></h2>
-					<p>Um guia honesto e sem enrolacao para quem quer comecar ou mudar de engine no cenario atual de desenvolvimento indie.</p>
-					<a href={articleHref} class="read-more">Ler mais</a>
+	{featuredPost && (
+		<section class="featured-section">
+			<div class="section-heading">
+				<p class="section-label">Artigo em destaque</p>
+				<h2>Comece por aqui</h2>
+			</div>
+
+			<article class="featured-card">
+				<div class="featured-meta">
+					<span>{featuredPost.category}</span>
+					<span>{formatDate(featuredPost.pubDate)}</span>
+					<span>{featuredPost.readingTime}</span>
+				</div>
+				<h3>
+					<a href={withBase(`blog/${featuredPost.slug}/`)}>{featuredPost.title}</a>
+				</h3>
+				<p>{featuredPost.description}</p>
+				<div class="featured-actions">
+					<a href={withBase(`blog/${featuredPost.slug}/`)} class="read-link">Ler artigo</a>
+					<div class="tag-row">
+						{featuredPost.tags.map((tag) => (
+							<span class="tag">{tag}</span>
+						))}
+					</div>
 				</div>
 			</article>
+		</section>
+	)}
 
-			<div class="coming-soon">
-				<p>Mais artigos em breve...</p>
+	<section class="archive-section">
+		<div class="section-heading">
+			<p class="section-label">Arquivo editorial</p>
+			<h2>Todos os textos</h2>
+		</div>
+
+		<div class="archive-list">
+			{posts.map((post) => (
+				<article class="archive-item">
+					<div class="archive-meta">
+						<span>{post.category}</span>
+						<span>{formatDate(post.pubDate)}</span>
+						<span>{post.readingTime}</span>
+					</div>
+					<div class="archive-copy">
+						<h3><a href={withBase(`blog/${post.slug}/`)}>{post.title}</a></h3>
+						<p>{post.description}</p>
+					</div>
+					<a href={withBase(`blog/${post.slug}/`)} class="archive-link">Abrir</a>
+				</article>
+			))}
+
+			<div class="archive-placeholder">
+				<p>Novos textos sobre produção, mobile e devlog entram aqui conforme o estúdio evolui.</p>
 			</div>
 		</div>
-	</div>
+	</section>
 </Layout>
 
 <style>
-	.blog-list-page { padding: 2rem 0; }
-	.page-header { margin-bottom: 4rem; text-align: center; }
-	.page-header h1 { font-size: 3rem; margin-bottom: 1rem; }
+	.blog-hero,
+	.featured-section,
+	.archive-section {
+		padding-top: 3rem;
+	}
 
-	.posts-grid {
+	.blog-hero {
 		display: grid;
+		grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
 		gap: 2rem;
-		max-width: 800px;
-		margin: 0 auto;
+		align-items: start;
+		padding-top: 4rem;
 	}
 
-	.post-card {
-		background: var(--bg);
+	.eyebrow,
+	.section-label {
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.blog-hero h1,
+	.section-heading h2,
+	.featured-card h3,
+	.archive-copy h3 {
+		font-size: clamp(2.8rem, 6vw, 5rem);
+		margin-top: 0.75rem;
+	}
+
+	.hero-text {
+		max-width: 48rem;
+		margin-top: 1.25rem;
+		font-size: 1.12rem;
+		color: var(--muted);
+	}
+
+	.hero-note,
+	.featured-card,
+	.archive-item,
+	.archive-placeholder {
+		background: var(--paper);
 		border: 1px solid var(--border);
-		border-radius: 12px;
-		overflow: hidden;
-		transition: transform 0.2s, box-shadow 0.2s;
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow);
 	}
 
-	.post-card:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+	.hero-note {
+		padding: 1.5rem;
 	}
 
-	.card-content { padding: 2rem; }
-	.date { font-size: 0.85rem; color: var(--secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+	.hero-note span {
+		display: block;
+		font-size: 0.82rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
 
-	.post-card h2 { margin: 0.5rem 0 1rem; font-size: 1.5rem; border: none; }
-	.post-card h2 a { text-decoration: none; color: var(--text); }
-	.post-card h2 a:hover { color: var(--primary); }
+	.hero-note ul {
+		margin-top: 1rem;
+		padding-left: 1rem;
+	}
 
-	.post-card p { color: var(--secondary); margin-bottom: 1.5rem; font-size: 1rem; }
+	.hero-note li {
+		color: var(--muted);
+	}
 
-	.read-more {
+	.section-heading {
+		display: grid;
+		gap: 0.35rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-heading h2 {
+		font-size: clamp(2.2rem, 4vw, 3.4rem);
+	}
+
+	.featured-card {
+		padding: 2rem;
+	}
+
+	.featured-meta,
+	.archive-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--muted);
+	}
+
+	.featured-card h3 {
+		font-size: clamp(2rem, 4vw, 3rem);
+		margin-top: 1rem;
+	}
+
+	.featured-card h3 a:hover,
+	.archive-copy h3 a:hover {
+		color: var(--accent);
+	}
+
+	.featured-card p {
+		max-width: 46rem;
+		margin-top: 1rem;
+		color: var(--muted);
+		font-size: 1.05rem;
+	}
+
+	.featured-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 1.5rem;
+	}
+
+	.read-link,
+	.archive-link {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		padding: 0.8rem 1.25rem;
-		border-radius: 8px;
-		background: var(--primary);
-		color: #ffffff;
+		min-height: 44px;
+		padding: 0 1rem;
+		border-radius: var(--radius-sm);
+		background: var(--accent);
+		color: #fff8f2;
+		font-weight: 800;
+	}
+
+	.tag-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
+
+	.tag {
+		display: inline-flex;
+		align-items: center;
+		min-height: 34px;
+		padding: 0 0.85rem;
+		border-radius: var(--radius-sm);
+		background: var(--bg-soft);
+		color: var(--muted);
+		font-size: 0.85rem;
 		font-weight: 700;
-		text-decoration: none;
-		font-size: 0.9rem;
-		box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
-		transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 	}
 
-	.read-more:hover {
-		background: #1d4ed8;
-		transform: translateY(-2px);
-		box-shadow: 0 12px 22px rgba(37, 99, 235, 0.24);
+	.archive-list {
+		display: grid;
+		gap: 1rem;
 	}
 
-	.read-more:visited {
-		color: #ffffff;
+	.archive-item {
+		display: grid;
+		grid-template-columns: 170px minmax(0, 1fr) auto;
+		gap: 1.5rem;
+		align-items: start;
+		padding: 1.5rem;
 	}
 
-	.coming-soon {
-		text-align: center;
-		padding: 4rem;
-		border: 2px dashed var(--border);
-		border-radius: 12px;
-		color: var(--secondary);
-		font-style: italic;
+	.archive-copy h3 {
+		font-size: clamp(1.7rem, 3vw, 2.3rem);
+		margin-top: 0;
+	}
+
+	.archive-copy p {
+		margin-top: 0.75rem;
+		color: var(--muted);
+	}
+
+	.archive-placeholder {
+		padding: 1.5rem;
+		color: var(--muted);
+	}
+
+	@media (max-width: 800px) {
+		.blog-hero,
+		.archive-item {
+			grid-template-columns: 1fr;
+		}
+
+		.archive-link {
+			width: fit-content;
+		}
 	}
 </style>

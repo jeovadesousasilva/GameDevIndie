@@ -1,0 +1,195 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { withBase } from '../../utils/paths';
+import { getAllPosts } from '../../utils/blog';
+
+export function getStaticPaths() {
+	return getAllPosts().map((post) => ({
+		params: { slug: post.slug },
+		props: { post }
+	}));
+}
+
+const { post } = Astro.props;
+const Content = post.Content;
+
+function formatDate(date: string) {
+	return new Intl.DateTimeFormat('pt-BR', {
+		day: '2-digit',
+		month: 'long',
+		year: 'numeric',
+		timeZone: 'UTC'
+	}).format(new Date(date));
+}
+---
+
+<Layout
+	title={`${post.title} | GameDevIndie`}
+	description={post.description}
+	canonicalPath={`blog/${post.slug}/`}
+	ogType="article"
+>
+	<article class="article-shell">
+		<header class="article-header">
+			<a href={withBase('blog/')} class="back-link">Voltar para o blog</a>
+			<div class="article-meta">
+				<span>{post.category}</span>
+				<span>{formatDate(post.pubDate)}</span>
+				<span>{post.readingTime}</span>
+				<span>{post.author}</span>
+			</div>
+			<h1>{post.title}</h1>
+			<p class="article-intro">{post.description}</p>
+			<div class="article-tags">
+				{post.tags.map((tag: string) => (
+					<span>{tag}</span>
+				))}
+			</div>
+		</header>
+
+		<div class="article-body">
+			<Content />
+		</div>
+
+		<footer class="article-footer">
+			<div class="author-card">
+				<p class="author-label">Assinatura editorial</p>
+				<h2>GameDevIndie por Midnight Toronto</h2>
+				<p>
+					Textos sobre engines, produção e desenvolvimento indie escritos a partir da experiência prática de
+					quem está construindo jogos de verdade.
+				</p>
+			</div>
+			<div class="article-nav">
+				<a href={withBase('blog/')} class="back-link">Voltar ao índice</a>
+				<a href={withBase()} class="studio-link">Conhecer a Midnight Toronto</a>
+			</div>
+		</footer>
+	</article>
+</Layout>
+
+<style>
+	.article-shell {
+		max-width: 760px;
+		margin: 0 auto;
+		padding-top: 3rem;
+	}
+
+	.back-link,
+	.studio-link {
+		color: var(--accent);
+		font-weight: 800;
+	}
+
+	.article-header {
+		display: grid;
+		gap: 1rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.article-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.article-header h1 {
+		font-size: clamp(2.8rem, 6vw, 4.8rem);
+		line-height: 0.95;
+	}
+
+	.article-intro {
+		font-size: 1.18rem;
+		color: var(--muted);
+		max-width: 46rem;
+	}
+
+	.article-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+	}
+
+	.article-tags span {
+		display: inline-flex;
+		align-items: center;
+		min-height: 34px;
+		padding: 0 0.85rem;
+		border-radius: var(--radius-sm);
+		background: var(--bg-soft);
+		color: var(--muted);
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+
+	.article-body {
+		padding-top: 2rem;
+		font-size: 1.08rem;
+		line-height: 1.85;
+	}
+
+	.article-body :global(h2) {
+		font-size: clamp(2rem, 4vw, 3rem);
+		margin: 2.8rem 0 1rem;
+	}
+
+	.article-body :global(h3) {
+		font-size: clamp(1.5rem, 3vw, 2.2rem);
+		margin: 2rem 0 0.8rem;
+	}
+
+	.article-body :global(p),
+	.article-body :global(li) {
+		color: var(--ink);
+	}
+
+	.article-body :global(a) {
+		color: var(--accent);
+		font-weight: 700;
+	}
+
+	.article-footer {
+		display: grid;
+		gap: 1rem;
+		margin-top: 3rem;
+		padding-top: 2rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.author-card {
+		padding: 1.5rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		background: var(--paper);
+		box-shadow: var(--shadow);
+	}
+
+	.author-label {
+		font-size: 0.8rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.author-card h2 {
+		font-size: clamp(2rem, 4vw, 2.6rem);
+		margin: 0.6rem 0 0.8rem;
+	}
+
+	.author-card p:last-child {
+		color: var(--muted);
+	}
+
+	.article-nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 1.5rem;
+	}
+</style>
