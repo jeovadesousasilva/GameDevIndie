@@ -18,7 +18,7 @@ const articleHref = withBase('blog/como-escolher-engine-2026/');
 					<span class="date">16 de Abril, 2026</span>
 					<h2><a href={articleHref}>Como escolher a engine certa em 2026: Godot vs Unity vs Unreal para solo devs</a></h2>
 					<p>Um guia honesto e sem enrolacao para quem quer comecar ou mudar de engine no cenario atual de desenvolvimento indie.</p>
-					<a href={articleHref} class="read-more">Ler mais -></a>
+					<a href={articleHref} class="read-more">Ler mais</a>
 				</div>
 			</article>
 
@@ -64,10 +64,28 @@ const articleHref = withBase('blog/como-escolher-engine-2026/');
 	.post-card p { color: var(--secondary); margin-bottom: 1.5rem; font-size: 1rem; }
 
 	.read-more {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.8rem 1.25rem;
+		border-radius: 8px;
+		background: var(--primary);
+		color: #ffffff;
 		font-weight: 700;
-		color: var(--primary);
 		text-decoration: none;
 		font-size: 0.9rem;
+		box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+		transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+	}
+
+	.read-more:hover {
+		background: #1d4ed8;
+		transform: translateY(-2px);
+		box-shadow: 0 12px 22px rgba(37, 99, 235, 0.24);
+	}
+
+	.read-more:visited {
+		color: #ffffff;
 	}
 
 	.coming-soon {

@@ -22,7 +22,7 @@ const blogHref = withBase('blog/');
 			<span class="tag">Novo Artigo</span>
 			<h2>Como escolher a engine certa em 2026: Godot vs Unity vs Unreal para solo devs</h2>
 			<p>Um guia honesto e sem enrolacao para quem quer comecar ou mudar de engine no cenario atual...</p>
-			<a href={articleHref} class="btn">Ler artigo completo -></a>
+			<a href={articleHref} class="btn">Ler artigo completo</a>
 		</div>
 		<p class="see-all"><a href={blogHref}>Ver todos os artigos</a></p>
 	</section>
@@ -99,15 +99,22 @@ const blogHref = withBase('blog/');
 		display: inline-block;
 		background: var(--primary);
 		color: white;
-		padding: 0.75rem 1.5rem;
+		padding: 0.85rem 1.4rem;
 		border-radius: 8px;
 		text-decoration: none;
 		font-weight: 600;
-		transition: background 0.2s;
+		box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
+		transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 	}
 
 	.btn:hover {
 		background: #1d4ed8;
+		transform: translateY(-2px);
+		box-shadow: 0 12px 22px rgba(37, 99, 235, 0.24);
+	}
+
+	.btn:visited {
+		color: white;
 	}
 
 	.see-all {
