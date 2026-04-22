@@ -18,9 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuToggle && nav) {
         menuToggle.addEventListener('click', () => {
             nav.classList.toggle('active');
+            const isOpen = nav.classList.contains('active');
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
             const icon = menuToggle.querySelector('span');
             if (icon) {
-                icon.textContent = nav.classList.contains('active') ? 'Fechar' : 'Menu';
+                icon.textContent = isOpen ? menuToggle.dataset.labelClose || 'Close' : menuToggle.dataset.labelOpen || 'Menu';
             }
         });
     }
@@ -29,9 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', () => {
             if (!nav || !menuToggle) return;
             nav.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
             const icon = menuToggle.querySelector('span');
             if (icon) {
-                icon.textContent = 'Menu';
+                icon.textContent = menuToggle.dataset.labelOpen || 'Menu';
             }
         });
     });

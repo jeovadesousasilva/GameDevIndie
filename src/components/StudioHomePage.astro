@@ -1,0 +1,286 @@
+---
+import { withBase } from '../utils/paths';
+import { studioHomeContent, type StudioLocale } from '../content/studioHome';
+
+interface Props {
+	locale: StudioLocale;
+}
+
+const { locale } = Astro.props;
+const content = studioHomeContent[locale];
+
+const faviconHref = withBase('favicon.png');
+const studioAsset = withBase('midnight-toronto/assets');
+const siteUrl = 'https://midnighttoronto.com.br';
+const isEnglish = locale === 'en';
+const pagePath = isEnglish ? 'en/' : '';
+const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
+const ptUrl = `${siteUrl}${withBase()}`;
+const enUrl = `${siteUrl}${withBase('en/')}`;
+const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackground.png')}`;
+const blogUrl = withBase('blog/');
+
+const navSections = [
+	{ href: '#vision', label: content.nav.vision },
+	{ href: '#projects', label: content.nav.projects },
+	{ href: '#contact', label: content.nav.contact }
+];
+
+const socialLinks = [
+	{
+		href: 'https://discord.gg/gSnqfRgqBW',
+		label: 'Discord'
+	},
+	{
+		href: 'https://www.instagram.com/midnight_toronto?igsh=Znh6c2g4d3YyNHJo',
+		label: 'Instagram'
+	}
+];
+---
+
+<!DOCTYPE html>
+<html lang={content.locale}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{content.seo.title}</title>
+		<meta name="description" content={content.seo.description} />
+		<meta name="keywords" content={content.seo.keywords} />
+		<meta name="author" content="Jeova de Sousa" />
+		<meta name="robots" content="index, follow" />
+		<meta name="google-site-verification" content="pKUvH27rY-k1qWgK6HieRd_swEtUzO55_O2B_w7e_no" />
+		<link rel="canonical" href={canonicalUrl} />
+		<link rel="alternate" hreflang="pt-BR" href={ptUrl} />
+		<link rel="alternate" hreflang="en" href={enUrl} />
+		<link rel="alternate" hreflang="x-default" href={ptUrl} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content={content.seo.ogLocale} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content={content.seo.title} />
+		<meta property="og:description" content={content.seo.description} />
+		<meta property="og:image" content={logoUrl} />
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalUrl} />
+		<meta property="twitter:title" content={content.seo.title} />
+		<meta property="twitter:description" content={content.seo.description} />
+		<meta property="twitter:image" content={logoUrl} />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@500;700;800&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href={withBase('midnight-toronto/assets/css/style.css')} />
+		<link rel="icon" type="image/png" href={faviconHref} />
+	</head>
+	<body>
+		<div class="page-shell">
+			<header class="header">
+				<div class="container header-content">
+					<a href={isEnglish ? withBase('en/') : withBase()} class="logo" aria-label="Midnight Toronto">
+						<img
+							src={`${studioAsset}/images/logobackground.png`}
+							alt="Midnight Toronto"
+							class="logo-img"
+						/>
+						<div class="logo-copy">
+							<span class="logo-name">Midnight Toronto</span>
+							<span class="logo-tag">{content.hero.eyebrow}</span>
+						</div>
+					</a>
+
+					<button
+						class="mobile-menu-toggle"
+						aria-label={content.nav.menu}
+						aria-expanded="false"
+						aria-controls="studio-nav"
+						data-label-open={content.nav.menu}
+						data-label-close={content.nav.close}
+					>
+						<span aria-hidden="true">{content.nav.menu}</span>
+					</button>
+
+					<nav class="nav" id="studio-nav">
+						<ul class="nav-list">
+							<li><a href={blogUrl} class="nav-link">{content.nav.blog}</a></li>
+							{navSections.map((item, index) => (
+								<li>
+									<a
+										href={item.href}
+										class={`nav-link ${index === 0 ? 'active' : ''}`.trim()}
+									>
+										{item.label}
+									</a>
+								</li>
+							))}
+						</ul>
+
+						<div class="language-switcher" aria-label={content.nav.languageLabel}>
+							<a href={withBase()} class:list={['language-link', !isEnglish && 'active']}>PT</a>
+							<a href={withBase('en/')} class:list={['language-link', isEnglish && 'active']}>EN</a>
+						</div>
+					</nav>
+				</div>
+			</header>
+
+			<main>
+				<section id="hero" class="hero">
+					<div class="hero-backdrop"></div>
+					<div class="container hero-grid">
+						<div class="hero-copy">
+							<p class="eyebrow">{content.hero.eyebrow}</p>
+							<h1 class="hero-title">{content.hero.title}</h1>
+							<p class="hero-subtitle">{content.hero.subtitle}</p>
+							<div class="hero-cta">
+								<a href="#projects" class="btn btn-primary">{content.hero.primaryCta}</a>
+								<a href={blogUrl} class="btn btn-secondary">{content.hero.secondaryCta}</a>
+							</div>
+						</div>
+
+						<div class="hero-panel">
+							<img
+								src={`${studioAsset}/images/MIDNIGHT-DEVELOPER-BANNER.png`}
+								alt="Midnight Toronto banner"
+								class="hero-art"
+							/>
+							<div class="hero-panel-copy">
+								<span>Midnight Toronto</span>
+								<p>{content.vision.intro}</p>
+							</div>
+						</div>
+					</div>
+					<div class="scroll-indicator">
+						<span>{content.hero.scrollHint}</span>
+					</div>
+				</section>
+
+				<section id="vision" class="section section-vision">
+					<div class="container section-grid">
+						<div class="section-heading">
+							<p class="section-kicker">{content.vision.kicker}</p>
+							<h2 class="section-title">{content.vision.title}</h2>
+						</div>
+
+						<div class="vision-layout">
+							<div class="vision-copy">
+								{content.vision.body.map((paragraph) => <p>{paragraph}</p>)}
+							</div>
+							<aside class="vision-notes">
+								<div class="vision-note-card">
+									<h3>{content.vision.intro}</h3>
+									<ul>
+										{content.vision.notes.map((note) => <li>{note}</li>)}
+									</ul>
+								</div>
+								<div class="stats-grid">
+									{content.vision.stats.map((stat) => (
+										<div class="stat-item">
+											<span class="stat-value">{stat.value}</span>
+											<span class="stat-label">{stat.label}</span>
+										</div>
+									))}
+								</div>
+							</aside>
+						</div>
+					</div>
+				</section>
+
+				<section id="projects" class="section section-projects">
+					<div class="container section-grid">
+						<div class="section-heading section-heading-inline">
+							<div>
+								<p class="section-kicker">{content.projects.kicker}</p>
+								<h2 class="section-title">{content.projects.title}</h2>
+							</div>
+							<a href={blogUrl} class="text-link">
+								{content.projects.ctaLabel}
+							</a>
+						</div>
+
+						<p class="section-intro">{content.projects.intro}</p>
+
+						<div class="projects-grid">
+							{content.projects.items.map((project, index) => (
+								<article class="project-card">
+									<div class="project-art">
+										<img
+											src={`${studioAsset}/images/${index === 0 ? 'Game01.png' : 'Game02.png'}`}
+											alt={project.imageAlt}
+										/>
+									</div>
+									<div class="project-body">
+										<div class="project-meta">
+											<span class="project-category">{project.category}</span>
+											<span class="project-status">{project.status}</span>
+										</div>
+										<h3>{project.title}</h3>
+										<p>{project.description}</p>
+										<p class="project-note">{project.note}</p>
+									</div>
+								</article>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section class="section section-process">
+					<div class="container section-grid">
+						<div class="section-heading">
+							<p class="section-kicker">{content.process.kicker}</p>
+							<h2 class="section-title">{content.process.title}</h2>
+						</div>
+
+						<p class="section-intro">{content.process.intro}</p>
+
+						<div class="process-grid">
+							{content.process.items.map((item) => (
+								<div class="process-card">
+									<h3>{item.title}</h3>
+									<p>{item.description}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section id="contact" class="section section-contact">
+					<div class="container contact-panel">
+						<div class="contact-copy">
+							<p class="section-kicker">{content.contact.kicker}</p>
+							<h2 class="section-title">{content.contact.title}</h2>
+							<p>{content.contact.description}</p>
+							<p class="contact-availability">{content.contact.availability}</p>
+						</div>
+
+						<div class="contact-actions">
+							<span class="contact-label">{content.contact.socialsLabel}</span>
+							<div class="social-links">
+								{socialLinks.map((social) => (
+									<a href={social.href} target="_blank" rel="noreferrer" class="social-link">
+										{social.label}
+									</a>
+								))}
+							</div>
+							<a href={blogUrl} class="btn btn-secondary btn-wide">{content.contact.blogLabel}</a>
+						</div>
+					</div>
+				</section>
+			</main>
+
+			<footer class="footer">
+				<div class="container footer-content">
+					<p>{content.contact.rights} &copy; 2026</p>
+					<div class="footer-links">
+						<a href={blogUrl}>{content.nav.blog}</a>
+						<a href="#vision">{content.nav.vision}</a>
+						<a href="#projects">{content.nav.projects}</a>
+					</div>
+				</div>
+			</footer>
+		</div>
+
+		<script src={withBase('midnight-toronto/assets/js/main.js')}></script>
+	</body>
+</html>
