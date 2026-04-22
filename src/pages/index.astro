@@ -34,6 +34,7 @@ const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackgr
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href={withBase('midnight-toronto/assets/css/style.css')}>
     <link rel="icon" type="image/png" href={faviconHref}>
 </head>
@@ -128,7 +129,6 @@ const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackgr
                                 <p>Um classico de combinar bolhas com um toque moderno. Mire, atire e exploda seu caminho atraves de niveis desafiadores.</p>
                                 <div class="game-links">
                                     <a href="#" class="btn btn-small">Jogar</a>
-                                    <a href="#" class="btn btn-outline btn-small">Detalhes</a>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +148,6 @@ const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackgr
                                 <p>Uma jornada epica de vinganca. Enfrente criaturas assustadoras criadas por um cientista maluco em um mundo hostil.</p>
                                 <div class="game-links">
                                     <a href="#" class="btn btn-small">Jogar</a>
-                                    <a href="#" class="btn btn-outline btn-small">Detalhes</a>
                                 </div>
                             </div>
                         </div>
@@ -169,8 +168,12 @@ const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackgr
                         <h3>Vamos conversar?</h3>
                         <p>Tem alguma duvida, sugestao ou quer apenas falar sobre games? Sinta-se a vontade para entrar em contato.</p>
                         <div class="social-links">
-                            <a href="https://discord.gg/gSnqfRgqBW" target="_blank" class="social-link">D</a>
-                            <a href="https://www.instagram.com/midnight_toronto?igsh=Znh6c2g4d3YyNHJo" target="_blank" class="social-link">I</a>
+                            <a href="https://discord.gg/gSnqfRgqBW" target="_blank" class="social-link" aria-label="Discord">
+                                <i class="fab fa-discord"></i>
+                            </a>
+                            <a href="https://www.instagram.com/midnight_toronto?igsh=Znh6c2g4d3YyNHJo" target="_blank" class="social-link" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
                         </div>
                     </div>
                     <form class="contato-form" action="https://formspree.io/f/xkokjvdy" method="POST">
