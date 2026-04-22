@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jeovadesousasilva.github.io/GameDevIndie/sitemap-index.xml
+Sitemap: https://midnighttoronto.com.br/sitemap-index.xml

@@ -2,8 +2,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-	site: 'https://jeovadesousasilva.github.io',
-	base: '/GameDevIndie',
+	site: 'https://midnighttoronto.com.br',
 	trailingSlash: 'always',
 	build: {
 		format: 'directory'
