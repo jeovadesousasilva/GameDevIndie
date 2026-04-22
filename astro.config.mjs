@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
 	site: 'https://midnighttoronto.com.br',
@@ -7,5 +8,5 @@ export default defineConfig({
 	build: {
 		format: 'directory'
 	},
-	integrations: [mdx()],
+	integrations: [mdx(), sitemap()],
 });
