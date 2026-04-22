@@ -1,10 +1,17 @@
 ---
+import { withBase } from '../utils/paths';
+
 interface Props {
 	title: string;
 	description?: string;
 }
 
-const { title, description = "Meu Blog de Game Dev" } = Astro.props;
+const { title, description = 'Meu Blog de Game Dev' } = Astro.props;
+const faviconHref = withBase('favicon.png');
+const homeHref = withBase();
+const blogHref = withBase('blog/');
+const aboutHref = withBase('sobre/');
+const socialImage = new URL(withBase('favicon.png'), Astro.site).toString();
 ---
 
 <!doctype html>
@@ -13,43 +20,38 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/png" href="/GameDevIndie/favicon.png" />
+		<link rel="icon" type="image/png" href={faviconHref} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
-		<!-- Google Search Console Verification -->
 		<meta name="google-site-verification" content="pKUvH27rY-k1qWgK6HieRd_swEtUzO55_O2B_w7e_no" />
-
-		<!-- SEO Meta Tags -->
 		<meta name="robots" content="index, follow" />
 		<meta name="author" content="Jeova - Midnight Toronto" />
 		<meta name="keywords" content="game dev, indie dev, unity, godot, unreal engine, solo dev, c#, mobile games, desenvolvimento de jogos" />
 		<link rel="canonical" href={Astro.url} />
 
-		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content="/GameDevIndie/favicon.png" />
+		<meta property="og:image" content={socialImage} />
 
-		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={Astro.url} />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
-		<meta property="twitter:image" content="/GameDevIndie/favicon.png" />
+		<meta property="twitter:image" content={socialImage} />
 	</head>
 	<body>
 		<header>
 			<nav>
-				<a href="/GameDevIndie/" class="logo">
+				<a href={homeHref} class="logo">
 					<span class="logo-main">GameDev</span><span class="logo-sub">Indie</span>
 				</a>
 				<ul class="nav-links">
-					<li><a href="/GameDevIndie/">Início</a></li>
-					<li><a href="/GameDevIndie/blog-home/">Blog</a></li>
-					<li><a href="/GameDevIndie/sobre/">Sobre</a></li>
+					<li><a href={homeHref}>Inicio</a></li>
+					<li><a href={blogHref}>Blog</a></li>
+					<li><a href={aboutHref}>Sobre</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -72,10 +74,9 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 		--card-bg: #f9fafb;
 	}
 
-	/* Dark mode opcional, mas o foco agora é no fundo claro para leitura */
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--bg: #ffffff; /* Mantendo branco mesmo em dark mode por escolha do usuário para leitura */
+			--bg: #ffffff;
 			--text: #111827;
 			--primary: #2563eb;
 			--secondary: #4b5563;
@@ -156,7 +157,6 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 		width: 100%;
 	}
 
-	/* Ad Styles */
 	.ad-container {
 		margin: 2rem 0;
 		text-align: center;
@@ -191,7 +191,6 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 		font-size: 0.9rem;
 	}
 
-	/* Markdown Styles (Clean/Docs Style) */
 	h1, h2, h3 { margin: 2rem 0 1rem; line-height: 1.3; font-weight: 700; }
 	h1 { font-size: 2.5rem; letter-spacing: -0.025em; }
 	h2 { font-size: 1.8rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-top: 3rem; }
@@ -205,13 +204,12 @@ const { title, description = "Meu Blog de Game Dev" } = Astro.props;
 	code { background: rgba(0,0,0,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 	pre { background: #1e293b; color: #f8fafc; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1.5rem 0; }
 
-	/* Responsividade Adicional */
 	@media (max-width: 600px) {
 		h1 { font-size: 2rem; }
-		nav { 
-			flex-direction: row; 
+		nav {
+			flex-direction: row;
 			justify-content: space-between;
-			gap: 0.5rem; 
+			gap: 0.5rem;
 		}
 		.nav-links {
 			gap: 0.75rem;

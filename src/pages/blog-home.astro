@@ -1,10 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { withBase } from '../utils/paths';
+
+const articleHref = withBase('blog/como-escolher-engine-2026/');
+const blogHref = withBase('blog/');
 ---
 
 <Layout 
 	title="GameDevIndie - O Blog para Solo Devs da Midnight Toronto"
-	description="Dicas, guias e reflexões de Jeova sobre Unity, Godot, Unreal e o mundo do desenvolvimento de jogos indie solo em 2026."
+	description="Dicas, guias e reflexoes de Jeova sobre Unity, Godot, Unreal e o mundo do desenvolvimento de jogos indie solo em 2026."
 >
 	<section class="hero">
 		<h1>GameDev<span class="text-primary">Indie</span></h1>
@@ -17,9 +21,10 @@ import Layout from '../layouts/Layout.astro';
 		<div class="card">
 			<span class="tag">Novo Artigo</span>
 			<h2>Como escolher a engine certa em 2026: Godot vs Unity vs Unreal para solo devs</h2>
-			<p>Um guia honesto e sem enrolação para quem quer começar ou mudar de engine no cenário atual...</p>
-			<a href="/GameDevIndie/blog/como-escolher-engine-2026/" class="btn">Ler artigo completo →</a>
+			<p>Um guia honesto e sem enrolacao para quem quer comecar ou mudar de engine no cenario atual...</p>
+			<a href={articleHref} class="btn">Ler artigo completo →</a>
 		</div>
+		<p class="see-all"><a href={blogHref}>Ver todos os artigos</a></p>
 	</section>
 </Layout>
 
@@ -103,6 +108,17 @@ import Layout from '../layouts/Layout.astro';
 
 	.btn:hover {
 		background: #1d4ed8;
+	}
+
+	.see-all {
+		margin-top: 1rem;
+		text-align: center;
+	}
+
+	.see-all a {
+		color: var(--primary);
+		font-weight: 600;
+		text-decoration: none;
 	}
 
 	@media (max-width: 600px) {

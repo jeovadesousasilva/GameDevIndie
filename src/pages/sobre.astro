@@ -1,28 +1,29 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { withBase } from '../utils/paths';
 ---
 
 <Layout title="Sobre - GameDevIndie">
 	<article class="about-page">
 		<header class="page-header">
 			<h1>Sobre a Midnight Toronto</h1>
-			<p class="intro">Desenvolvimento de jogos mobile e soluções técnicas em C#.</p>
+			<p class="intro">Desenvolvimento de jogos mobile e solucoes tecnicas em C#.</p>
 		</header>
 
 		<div class="content">
 			<section>
-				<h2>Perfil Técnico</h2>
-				<p><strong>A Midnight Toronto</strong> é um estúdio de desenvolvimento focado na criação de experiências mobile robustas e performáticas. Sob a liderança de <strong>Jeova</strong>, o estúdio consolidou sua expertise através do desenvolvimento e publicação de dois projetos completos na Unity Engine.</p>
+				<h2>Perfil Tecnico</h2>
+				<p><strong>A Midnight Toronto</strong> e um estudio de desenvolvimento focado na criacao de experiencias mobile robustas e performaticas. Sob a lideranca de <strong>Jeova</strong>, o estudio consolidou sua expertise atraves do desenvolvimento e publicacao de dois projetos completos na Unity Engine.</p>
 			</section>
 
 			<section>
 				<h2>Especialidades</h2>
-				<p>Com domínio avançado em <strong>C#</strong> e no ecossistema Unity, o estúdio prioriza a escalabilidade e a otimização técnica. O foco atual reside na exploração das capacidades máximas do hardware mobile, garantindo que a qualidade visual e a fluidez de gameplay caminhem juntas.</p>
+				<p>Com dominio avancado em <strong>C#</strong> e no ecossistema Unity, o estudio prioriza a escalabilidade e a otimizacao tecnica. O foco atual reside na exploracao das capacidades maximas do hardware mobile, garantindo que a qualidade visual e a fluidez de gameplay caminhem juntas.</p>
 			</section>
 
 			<section class="social-links-section">
 				<h2>Conecte-se</h2>
-				<p>Acompanhe as atualizações técnicas e novidades dos projetos através dos canais oficiais:</p>
+				<p>Acompanhe as atualizacoes tecnicas e novidades dos projetos atraves dos canais oficiais:</p>
 				<div class="social-grid">
 					<a href="https://discord.gg/X9YX2UcY" target="_blank" class="social-item discord">
 						<span>Discord Oficial</span>
@@ -36,8 +37,8 @@ import Layout from '../layouts/Layout.astro';
 			<section class="future-site">
 				<div class="studio-card">
 					<h3>Midnight Toronto</h3>
-					<p>Explore o site oficial do nosso estúdio.</p>
-					<a href="/GameDevIndie/" class="btn-studio">Acessar Estúdio</a>
+					<p>Explore o site oficial do nosso estudio.</p>
+					<a href={withBase()} class="btn-studio">Acessar Estudio</a>
 				</div>
 			</section>
 		</div>
@@ -60,11 +61,11 @@ import Layout from '../layouts/Layout.astro';
 	.page-header { text-align: center; margin-bottom: 4rem; }
 	.page-header h1 { font-size: 3rem; margin-bottom: 1rem; color: var(--text); }
 	.intro { font-size: 1.25rem; color: var(--secondary); font-weight: 500; }
-	
+
 	.content { max-width: 750px; margin: 0 auto; line-height: 1.7; }
 	section { margin-bottom: 3.5rem; }
 	h2 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--text); font-weight: 700; border-left: 4px solid var(--primary); padding-left: 1rem; }
-	
+
 	.social-grid {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
@@ -85,7 +86,7 @@ import Layout from '../layouts/Layout.astro';
 
 	.discord { background: #5865F2; color: white; }
 	.instagram { background: #E1306C; color: white; }
-	
+
 	.social-item:hover { transform: translateY(-2px); opacity: 0.9; }
 
 	.future-site {
