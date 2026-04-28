@@ -45,6 +45,9 @@ type ProjectContent = {
 	description: string;
 	note: string;
 	imageAlt: string;
+	image: string;
+	downloadLabel?: string;
+	downloadUrl?: string;
 };
 
 type ProjectsSectionContent = {
@@ -144,11 +147,14 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 				{
 					title: 'Midnight Bubbles',
 					category: 'Puzzle / Casual',
-					status: 'Em desenvolvimento',
+					status: 'Lançado',
 					description:
 						'Um puzzle de leitura imediata, construído para ser acessível no primeiro contato e interessante conforme o ritmo acelera.',
 					note: 'Projeto pensado para sessões curtas, feedback claro e acabamento visual limpo.',
-					imageAlt: 'Arte do jogo Midnight Bubbles'
+					imageAlt: 'Arte do jogo Midnight Bubbles',
+					image: 'GameGame01Img02.png',
+					downloadLabel: 'Baixar no Google Play',
+					downloadUrl: 'https://play.google.com/store/apps/details?id=com.MidnightToronto.MidnightBubbles'
 				},
 				{
 					title: 'A Vingança do Herói',
@@ -157,7 +163,8 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 					description:
 						'Uma aventura com tom mais sombrio, presença mais dramática e combate moldado para sustentar a sensação de jornada.',
 					note: 'Projeto orientado por atmosfera, progressão e identidade de mundo.',
-					imageAlt: 'Arte do jogo A Vingança do Herói'
+					imageAlt: 'Arte do jogo A Vingança do Herói',
+					image: 'Game02.png'
 				}
 			]
 		},
@@ -252,11 +259,14 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 				{
 					title: 'Midnight Bubbles',
 					category: 'Puzzle / Casual',
-					status: 'In development',
+					status: 'Released',
 					description:
 						'A puzzle game built for instant readability, designed to feel accessible at first glance and more engaging as the pace increases.',
 					note: 'Built for short sessions, clear feedback, and clean visual polish.',
-					imageAlt: 'Artwork for Midnight Bubbles'
+					imageAlt: 'Artwork for Midnight Bubbles',
+					image: 'GameGame01Img02.png',
+					downloadLabel: 'Download on Google Play',
+					downloadUrl: 'https://play.google.com/store/apps/details?id=com.MidnightToronto.MidnightBubbles'
 				},
 				{
 					title: 'A Vingança do Herói',
@@ -265,7 +275,8 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 					description:
 						'A darker adventure with a stronger dramatic tone and combat shaped to support the feeling of a long-form journey.',
 					note: 'Driven by atmosphere, progression, and world identity.',
-					imageAlt: 'Artwork for A Vingança do Herói'
+					imageAlt: 'Artwork for A Vingança do Herói',
+					image: 'Game02.png'
 				}
 			]
 		},

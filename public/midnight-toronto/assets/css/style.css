@@ -556,6 +556,25 @@ textarea {
     font-size: 0.94rem;
 }
 
+.project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.project-download {
+    min-height: 44px;
+    padding-inline: 18px;
+    background: linear-gradient(135deg, #d8c49d 0%, #bfa06b 100%);
+    color: #0c0d11;
+    box-shadow: 0 12px 24px rgba(201, 180, 141, 0.16);
+}
+
+.project-download:hover {
+    background: linear-gradient(135deg, #e5d1aa 0%, #c9ad78 100%);
+}
+
 .process-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
