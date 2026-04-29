@@ -64,7 +64,7 @@ const socialImage = new URL(withBase('favicon.png'), Astro.site).toString();
 		/>
 	</head>
 	<body>
-		<header class="site-header">
+		<header class="site-header" data-autohide-header>
 			<nav class="site-nav">
 				<div class="nav-brand">
 					<a href={blogHref} class="logo">
@@ -89,6 +89,22 @@ const socialImage = new URL(withBase('favicon.png'), Astro.site).toString();
 				<p class="footer-copy">Conteúdo editorial da Midnight Toronto sobre engines, produção, mobile e devlog.</p>
 			</div>
 		</footer>
+		<script>
+			const header = document.querySelector('[data-autohide-header]');
+			let lastScrollY = window.scrollY;
+
+			function updateHeaderVisibility() {
+				if (!header) return;
+
+				const currentScrollY = window.scrollY;
+				const scrollingDown = currentScrollY > lastScrollY;
+
+				header.classList.toggle('site-header-hidden', scrollingDown && currentScrollY > 120);
+				lastScrollY = Math.max(currentScrollY, 0);
+			}
+
+			window.addEventListener('scroll', updateHeaderVisibility, { passive: true });
+		</script>
 	</body>
 </html>
 
@@ -144,6 +160,12 @@ const socialImage = new URL(withBase('favicon.png'), Astro.site).toString();
 		position: sticky;
 		top: 0;
 		z-index: 100;
+		transition: transform 0.24s ease, box-shadow 0.24s ease;
+		will-change: transform;
+	}
+
+	.site-header-hidden {
+		transform: translateY(-100%);
 	}
 
 	.site-nav,
@@ -292,7 +314,7 @@ const socialImage = new URL(withBase('favicon.png'), Astro.site).toString();
 
 	@media (max-width: 600px) {
 		.site-header {
-			position: static;
+			position: sticky;
 		}
 
 		.site-nav,

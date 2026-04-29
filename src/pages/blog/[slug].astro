@@ -162,17 +162,17 @@ function formatDate(date: string) {
 	}
 
 	.article-body :global(.article-figure img) {
+		display: block;
 		width: 100%;
-		aspect-ratio: 16 / 9;
-		object-fit: cover;
+		height: auto;
 		border-radius: var(--radius-md);
 		border: 1px solid var(--border);
-		background: var(--paper);
+		background: #17191f;
 		box-shadow: var(--shadow);
 	}
 
 	.article-body :global(.article-figure-wide img) {
-		aspect-ratio: 21 / 9;
+		border-radius: var(--radius-md);
 	}
 
 	.article-body :global(.article-figure figcaption) {

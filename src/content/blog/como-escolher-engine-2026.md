@@ -20,11 +20,6 @@ Minha recomendação curta:
 - **Unity** para mobile, produção comercial indie, plugins, Asset Store e um caminho mais prático para publicar.
 - **Unreal** para 3D visualmente forte, atmosfera pesada, câmera cinematográfica e projetos em que o impacto visual é parte da promessa.
 
-<figure class="article-figure article-figure-wide">
-	<img src="/blog/assets/engine-workspace.svg" alt="Interface ilustrada de uma engine com cena, hierarquia, inspetor e console" loading="lazy" />
-	<figcaption>A engine certa não é a mais impressionante: é a que deixa você prototipar, testar e exportar sem travar a produção.</figcaption>
-</figure>
-
 ---
 
 ## Comece pelo tipo de jogo
@@ -43,16 +38,16 @@ Antes de pensar em comunidade, tutorial ou opinião de internet, defina o jogo:
 
 Essa tabela não é uma regra absoluta. Ela é um filtro. Se o seu jogo é pequeno, leveza importa. Se o seu jogo é mobile, pipeline e plugins importam. Se o visual 3D vende a experiência, a Unreal começa a fazer mais sentido.
 
-<figure class="article-figure">
-	<img src="/blog/assets/engine-decision.svg" alt="Comparação visual entre projetos 2D, mobile e 3D visual" loading="lazy" />
-	<figcaption>Escolha pela produção: 2D pede leveza, mobile pede ecossistema, 3D ambicioso pede pipeline visual.</figcaption>
-</figure>
-
 ## Godot: melhor para ganhar tração
 
 Godot é uma escolha muito forte quando você quer sair da ideia e chegar rápido numa cena jogável.
 
 Ele é leve, direto e agradável para aprender. A lógica de nodes ajuda bastante quem está começando, e o 2D é um dos pontos mais fortes da engine. Para projetos pequenos e médios, especialmente com visual estilizado, Godot reduz fricção.
+
+<figure class="article-figure">
+	<img src="/blog/assets/godot-editor-interface.webp" alt="Interface do editor Godot mostrando um projeto 2D com cena, nodes, arquivos e inspector" loading="lazy" />
+	<figcaption>Godot costuma ser forte para 2D e protótipos rápidos: a interface separa cena, arquivos e inspector de forma bem direta. Fonte: documentação oficial do Godot.</figcaption>
+</figure>
 
 Use Godot se você quer:
 
@@ -69,6 +64,11 @@ Tenha cuidado se o seu jogo precisa de 3D muito ambicioso, console, pipeline com
 Unity continua sendo uma das escolhas mais pragmáticas para indie dev. Ela não é a engine mais elegante, mas é muito prática.
 
 O maior ponto forte é o ecossistema: tutoriais, Asset Store, plugins, integrações mobile, anúncios, analytics, UI, controle, save e ferramentas prontas. Para quem está sozinho, isso economiza tempo.
+
+<figure class="article-figure article-figure-wide">
+	<img src="/blog/assets/unity-editor-interface.png" alt="Interface do editor Unity mostrando viewport 3D, cube selecionado e painel Inspector" loading="lazy" />
+	<figcaption>Unity é muito usada porque combina viewport, inspector, C# e um ecossistema enorme de pacotes e plugins. Fonte: documentação da Unity.</figcaption>
+</figure>
 
 Use Unity se você quer:
 
@@ -116,6 +116,11 @@ O cuidado aqui é não deixar a engine crescer mais que o jogo. Unity tem muitas
 
 Unreal é poderosa, especialmente para 3D. Iluminação, materiais, ambientes, câmera, animação e Blueprints tornam a engine muito atraente para projetos com presença visual forte.
 
+<figure class="article-figure">
+	<img src="/blog/assets/unreal-editor-interface.webp" alt="Interface do Unreal Editor mostrando viewport 3D, painéis laterais e timeline de animação" loading="lazy" />
+	<figcaption>Unreal/UEFN mostra bem o peso visual da pipeline: viewport 3D, animação, painéis e ferramentas de cena trabalhando juntos. Fonte: página oficial Fortnite for Developers.</figcaption>
+</figure>
+
 Use Unreal se você quer:
 
 - fazer um jogo 3D com impacto visual;
@@ -124,11 +129,6 @@ Use Unreal se você quer:
 - trabalhar com ambientes e iluminação mais cinematográficos.
 
 O cuidado é o peso. Unreal exige mais máquina, mais organização e uma pipeline mais séria. Para um jogo pequeno, pode ser mais engine do que você precisa. Para um jogo em que atmosfera e visual são o centro, ela pode valer muito.
-
-<figure class="article-figure">
-	<img src="/blog/assets/engine-build-test.svg" alt="Fluxo visual de protótipo, teste de input e build para plataforma alvo" loading="lazy" />
-	<figcaption>Antes de casar com uma engine, faça um protótipo curto: cena jogável, input real e build na plataforma alvo.</figcaption>
-</figure>
 
 ## O teste de 7 dias
 
@@ -157,6 +157,9 @@ A melhor engine não é a que ganha discussão. É a que combina com o seu escop
 ## Fontes e leituras úteis
 
 - [Notas de lançamento do Godot](https://godotengine.org/blog/release/)
+- [Interface do editor Godot](https://docs.godotengine.org/en/latest/getting_started/introduction/first_look_at_the_editor.html)
 - [Atualizações de preço da Unity](https://unity.com/products/pricing-updates)
+- [Boas práticas de screenshots da Unity](https://docs-style-guide.unity.com/media/images/screenshots/screenshot-setup/)
 - [Licenciamento da Unreal Engine](https://www.unrealengine.com/en-US/license)
+- [Fortnite for Developers / UEFN](https://www.fortnite.com/developer?lang=en-US)
 - [Notas de lançamento da Unreal Engine 5.7](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-5-7-release-notes?application_version=5.7)
