@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+	<title id="title">Comparação visual entre fluxos de engines</title>
+	<desc id="desc">Ilustração com três colunas mostrando fluxos de desenvolvimento para jogos 2D, mobile e 3D visual.</desc>
+	<rect width="1200" height="675" fill="#f6f2e8"/>
+	<rect x="70" y="70" width="1060" height="535" rx="30" fill="#fbf8f2" stroke="#dfd2bd" stroke-width="3"/>
+	<text x="110" y="130" fill="#161718" font-family="Arial, sans-serif" font-size="38" font-weight="800">Escolha pela produção, não pela torcida</text>
+	<g transform="translate(110 180)">
+		<rect width="300" height="350" rx="22" fill="#eaf5ef"/>
+		<text x="28" y="54" fill="#147a4a" font-family="Arial, sans-serif" font-size="28" font-weight="800">2D / aprendizado</text>
+		<rect x="28" y="92" width="244" height="44" rx="12" fill="#ffffff"/>
+		<rect x="28" y="154" width="190" height="44" rx="12" fill="#ffffff"/>
+		<rect x="28" y="216" width="226" height="44" rx="12" fill="#ffffff"/>
+		<text x="28" y="312" fill="#147a4a" font-family="Arial, sans-serif" font-size="24" font-weight="700">Leveza primeiro</text>
+	</g>
+	<g transform="translate(450 180)">
+		<rect width="300" height="350" rx="22" fill="#edf2ff"/>
+		<text x="28" y="54" fill="#3153c8" font-family="Arial, sans-serif" font-size="28" font-weight="800">Mobile / comercial</text>
+		<rect x="28" y="92" width="244" height="44" rx="12" fill="#ffffff"/>
+		<rect x="28" y="154" width="190" height="44" rx="12" fill="#ffffff"/>
+		<rect x="28" y="216" width="226" height="44" rx="12" fill="#ffffff"/>
+		<text x="28" y="312" fill="#3153c8" font-family="Arial, sans-serif" font-size="24" font-weight="700">Ecossistema pesa</text>
+	</g>
+	<g transform="translate(790 180)">
+		<rect width="300" height="350" rx="22" fill="#f7ece8"/>
+		<text x="28" y="54" fill="#a14b2d" font-family="Arial, sans-serif" font-size="28" font-weight="800">3D / visual forte</text>
+		<rect x="28" y="92" width="244" height="44" rx="12" fill="#ffffff"/>
+		<rect x="28" y="154" width="190" height="44" rx="12" fill="#ffffff"/>
+		<rect x="28" y="216" width="226" height="44" rx="12" fill="#ffffff"/>
+		<text x="28" y="312" fill="#a14b2d" font-family="Arial, sans-serif" font-size="24" font-weight="700">Pipeline manda</text>
+	</g>
+</svg>

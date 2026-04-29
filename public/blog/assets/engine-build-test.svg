@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+	<title id="title">Fluxo de protótipo e teste de jogo</title>
+	<desc id="desc">Ilustração editorial mostrando a rotina de criar uma cena, testar input e gerar build.</desc>
+	<rect width="1200" height="675" fill="#141414"/>
+	<rect x="82" y="76" width="1036" height="523" rx="28" fill="#24211f"/>
+	<text x="130" y="142" fill="#fff8f2" font-family="Arial, sans-serif" font-size="40" font-weight="800">Protótipo de 7 dias</text>
+	<g transform="translate(130 205)">
+		<rect width="250" height="250" rx="24" fill="#fbf8f2"/>
+		<path d="M55 170h140l-38-64-38 42-24-28z" fill="#a14b2d"/>
+		<circle cx="168" cy="82" r="34" fill="#ffcf4a"/>
+		<text x="46" y="220" fill="#161718" font-family="Arial, sans-serif" font-size="24" font-weight="800">Cena jogável</text>
+	</g>
+	<g transform="translate(475 205)">
+		<rect width="250" height="250" rx="24" fill="#fbf8f2"/>
+		<rect x="54" y="74" width="142" height="102" rx="28" fill="#3483fa"/>
+		<circle cx="91" cy="126" r="15" fill="#ffffff"/>
+		<circle cx="160" cy="126" r="15" fill="#ffffff"/>
+		<rect x="111" y="110" width="30" height="12" rx="6" fill="#ffffff"/>
+		<text x="58" y="220" fill="#161718" font-family="Arial, sans-serif" font-size="24" font-weight="800">Input real</text>
+	</g>
+	<g transform="translate(820 205)">
+		<rect width="250" height="250" rx="24" fill="#fbf8f2"/>
+		<rect x="62" y="58" width="126" height="168" rx="20" fill="#2bd576"/>
+		<rect x="82" y="82" width="86" height="100" rx="10" fill="#17191f"/>
+		<circle cx="125" cy="205" r="8" fill="#17191f"/>
+		<text x="70" y="258" fill="#161718" font-family="Arial, sans-serif" font-size="24" font-weight="800">Build alvo</text>
+	</g>
+	<path d="M390 330h70M735 330h70" stroke="#fff8f2" stroke-width="10" stroke-linecap="round"/>
+</svg>
