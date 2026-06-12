@@ -132,16 +132,16 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 				'Escopo controlado para manter consistência e acabamento.'
 			],
 			stats: [
-				{ value: '2', label: 'Projetos em desenvolvimento' },
+				{ value: '3', label: 'Projetos no catálogo' },
 				{ value: 'PT + EN', label: 'Apresentação bilíngue do estúdio' },
 				{ value: '100%', label: 'Foco em produção indie autoral' }
 			]
 		},
 		projects: {
 			kicker: 'Projetos em destaque',
-			title: 'Duas direções, a mesma assinatura.',
+			title: 'Três direções, a mesma assinatura.',
 			intro:
-				'Cada jogo segue um caminho próprio, mas ambos nascem do mesmo compromisso com atmosfera, legibilidade e presença visual.',
+				'Cada jogo segue um caminho próprio, mas todos nascem do mesmo compromisso com atmosfera, legibilidade e presença visual.',
 			ctaLabel: 'Acompanhar no blog',
 			items: [
 				{
@@ -152,19 +152,29 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 						'Um puzzle de leitura imediata, construído para ser acessível no primeiro contato e interessante conforme o ritmo acelera.',
 					note: 'Projeto pensado para sessões curtas, feedback claro e acabamento visual limpo.',
 					imageAlt: 'Arte do jogo Midnight Bubbles',
-					image: 'GameGame01Img02.png',
+					image: 'Game01Img03.png',
 					downloadLabel: 'Baixar no Google Play',
 					downloadUrl: 'https://play.google.com/store/apps/details?id=com.MidnightToronto.MidnightBubbles'
 				},
 				{
 					title: 'A Vingança do Herói',
 					category: 'Ação / Aventura',
-					status: 'Em breve',
+					status: 'Desenvolvimento pausado',
 					description:
 						'Uma aventura com tom mais sombrio, presença mais dramática e combate moldado para sustentar a sensação de jornada.',
 					note: 'Projeto orientado por atmosfera, progressão e identidade de mundo.',
 					imageAlt: 'Arte do jogo A Vingança do Herói',
 					image: 'Game02.png'
+				},
+				{
+					title: 'Firezone: Zombie',
+					category: 'FPS / Sobrevivência',
+					status: 'Em breve',
+					description:
+						'Sobreviva a ondas de zumbis em um FPS mobile sombrio e intenso, feito para partidas rápidas, tensão constante e ação direta.',
+					note: 'Projeto focado em clima pesado, combate responsivo e progressão por ondas.',
+					imageAlt: 'Arte do jogo Firezone: Zombie',
+					image: 'Game03.png'
 				}
 			]
 		},
@@ -244,16 +254,16 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 				'Controlled scope to preserve consistency and polish.'
 			],
 			stats: [
-				{ value: '2', label: 'Projects in development' },
+				{ value: '3', label: 'Projects in the catalog' },
 				{ value: 'PT + EN', label: 'Bilingual studio presentation' },
 				{ value: '100%', label: 'Focus on authored indie production' }
 			]
 		},
 		projects: {
 			kicker: 'Featured projects',
-			title: 'Two directions, one signature.',
+			title: 'Three directions, one signature.',
 			intro:
-				'Each game follows its own path, but both come from the same commitment to atmosphere, readability, and visual presence.',
+				'Each game follows its own path, but all come from the same commitment to atmosphere, readability, and visual presence.',
 			ctaLabel: 'Follow on the blog',
 			items: [
 				{
@@ -264,19 +274,29 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 						'A puzzle game built for instant readability, designed to feel accessible at first glance and more engaging as the pace increases.',
 					note: 'Built for short sessions, clear feedback, and clean visual polish.',
 					imageAlt: 'Artwork for Midnight Bubbles',
-					image: 'GameGame01Img02.png',
+					image: 'Game01Img03.png',
 					downloadLabel: 'Download on Google Play',
 					downloadUrl: 'https://play.google.com/store/apps/details?id=com.MidnightToronto.MidnightBubbles'
 				},
 				{
 					title: 'A Vingança do Herói',
 					category: 'Action / Adventure',
-					status: 'Coming soon',
+					status: 'Development paused',
 					description:
 						'A darker adventure with a stronger dramatic tone and combat shaped to support the feeling of a long-form journey.',
 					note: 'Driven by atmosphere, progression, and world identity.',
 					imageAlt: 'Artwork for A Vingança do Herói',
 					image: 'Game02.png'
+				},
+				{
+					title: 'Firezone: Zombie',
+					category: 'FPS / Survival',
+					status: 'Coming soon',
+					description:
+						'Survive waves of zombies in a dark, intense mobile FPS built for quick sessions, constant tension, and direct action.',
+					note: 'Focused on a heavy mood, responsive combat, and wave-based progression.',
+					imageAlt: 'Artwork for Firezone: Zombie',
+					image: 'Game03.png'
 				}
 			]
 		},

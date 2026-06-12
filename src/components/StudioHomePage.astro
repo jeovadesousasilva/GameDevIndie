@@ -18,7 +18,6 @@ const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
 const ptUrl = `${siteUrl}${withBase()}`;
 const enUrl = `${siteUrl}${withBase('en/')}`;
 const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackground.png')}`;
-const blogUrl = withBase('blog/');
 
 const navSections = [
 	{ href: '#vision', label: content.nav.vision },
@@ -109,7 +108,6 @@ const socialLinks = [
 
 					<nav class="nav" id="studio-nav">
 						<ul class="nav-list">
-							<li><a href={blogUrl} class="nav-link">{content.nav.blog}</a></li>
 							{navSections.map((item, index) => (
 								<li>
 									<a
@@ -140,7 +138,6 @@ const socialLinks = [
 							<p class="hero-subtitle">{content.hero.subtitle}</p>
 							<div class="hero-cta">
 								<a href="#projects" class="btn btn-primary">{content.hero.primaryCta}</a>
-								<a href={blogUrl} class="btn btn-secondary">{content.hero.secondaryCta}</a>
 							</div>
 						</div>
 
@@ -199,9 +196,6 @@ const socialLinks = [
 								<p class="section-kicker">{content.projects.kicker}</p>
 								<h2 class="section-title">{content.projects.title}</h2>
 							</div>
-							<a href={blogUrl} class="text-link">
-								{content.projects.ctaLabel}
-							</a>
 						</div>
 
 						<p class="section-intro">{content.projects.intro}</p>
@@ -280,7 +274,6 @@ const socialLinks = [
 									</a>
 								))}
 							</div>
-							<a href={blogUrl} class="btn btn-secondary btn-wide">{content.contact.blogLabel}</a>
 						</div>
 					</div>
 				</section>
@@ -290,7 +283,6 @@ const socialLinks = [
 				<div class="container footer-content">
 					<p>{content.contact.rights} &copy; 2026</p>
 					<div class="footer-links">
-						<a href={blogUrl}>{content.nav.blog}</a>
 						<a href="#vision">{content.nav.vision}</a>
 						<a href="#projects">{content.nav.projects}</a>
 					</div>
