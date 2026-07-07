@@ -157,6 +157,18 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 					downloadUrl: 'https://play.google.com/store/apps/details?id=com.MidnightToronto.MidnightBubbles'
 				},
 				{
+					title: 'Firezone: Zombies',
+					category: 'FPS / Sobrevivência',
+					status: 'Lançado',
+					description:
+						'Sobreviva a ondas de zumbis em um FPS mobile sombrio e intenso, feito para partidas rápidas, tensão constante e ação direta.',
+					note: 'Projeto focado em clima pesado, combate responsivo e progressão por ondas.',
+					imageAlt: 'Arte do jogo Firezone: Zombies',
+					image: 'Game03img02.png',
+					downloadLabel: 'Baixar no Google Play',
+					downloadUrl: 'https://play.google.com/store/apps/details?id=com.midnighttoronto.firezonezombies'
+				},
+				{
 					title: 'A Vingança do Herói',
 					category: 'Ação / Aventura',
 					status: 'Desenvolvimento pausado',
@@ -165,16 +177,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 					note: 'Projeto orientado por atmosfera, progressão e identidade de mundo.',
 					imageAlt: 'Arte do jogo A Vingança do Herói',
 					image: 'Game02.png'
-				},
-				{
-					title: 'Firezone: Zombie',
-					category: 'FPS / Sobrevivência',
-					status: 'Em breve',
-					description:
-						'Sobreviva a ondas de zumbis em um FPS mobile sombrio e intenso, feito para partidas rápidas, tensão constante e ação direta.',
-					note: 'Projeto focado em clima pesado, combate responsivo e progressão por ondas.',
-					imageAlt: 'Arte do jogo Firezone: Zombie',
-					image: 'Game03.png'
 				}
 			]
 		},
@@ -279,6 +281,18 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 					downloadUrl: 'https://play.google.com/store/apps/details?id=com.MidnightToronto.MidnightBubbles'
 				},
 				{
+					title: 'Firezone: Zombies',
+					category: 'FPS / Survival',
+					status: 'Released',
+					description:
+						'Survive waves of zombies in a dark, intense mobile FPS built for quick sessions, constant tension, and direct action.',
+					note: 'Focused on a heavy mood, responsive combat, and wave-based progression.',
+					imageAlt: 'Artwork for Firezone: Zombies',
+					image: 'Game03img02.png',
+					downloadLabel: 'Download on Google Play',
+					downloadUrl: 'https://play.google.com/store/apps/details?id=com.midnighttoronto.firezonezombies'
+				},
+				{
 					title: 'A Vingança do Herói',
 					category: 'Action / Adventure',
 					status: 'Development paused',
@@ -287,16 +301,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 					note: 'Driven by atmosphere, progression, and world identity.',
 					imageAlt: 'Artwork for A Vingança do Herói',
 					image: 'Game02.png'
-				},
-				{
-					title: 'Firezone: Zombie',
-					category: 'FPS / Survival',
-					status: 'Coming soon',
-					description:
-						'Survive waves of zombies in a dark, intense mobile FPS built for quick sessions, constant tension, and direct action.',
-					note: 'Focused on a heavy mood, responsive combat, and wave-based progression.',
-					imageAlt: 'Artwork for Firezone: Zombie',
-					image: 'Game03.png'
 				}
 			]
 		},
