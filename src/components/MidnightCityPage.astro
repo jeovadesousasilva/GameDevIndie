@@ -16,15 +16,16 @@ const homeUrl = withBase(isEnglish ? 'en/' : '');
 const faviconHref = withBase('favicon.png');
 const studioAsset = withBase('midnight-toronto/assets');
 const discordUrl = 'https://discord.gg/vDkr2wVf6v';
-const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/bg-01.jpg')}`;
+const logoImage = `${studioAsset}/images/midnight-city/midnight-city-logo.png`;
+const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/midnight-city-logo.png')}`;
 
 const pageContent = {
 	'pt-BR': {
 		locale: 'pt-BR',
 		seo: {
-			title: 'Midnight City | Novo servidor SA-MP Mobile',
+			title: 'Midnight City | Servidor SA-MP Mobile em desenvolvimento',
 			description:
-				'Midnight City e um novo servidor SA-MP Mobile em desenvolvimento. Entre no Discord para acompanhar a criacao, sugerir ideias e participar da comunidade desde o inicio.',
+				'Midnight City é um novo servidor SA-MP Mobile em desenvolvimento. Entre no Discord para acompanhar o projeto, votar em enquetes e participar da comunidade desde o começo.',
 			keywords:
 				'midnight city, samp mobile, sa-mp mobile, servidor samp mobile, discord samp, midnight toronto',
 			ogLocale: 'pt_BR'
@@ -32,78 +33,87 @@ const pageContent = {
 		backLabel: 'Midnight Toronto',
 		topCta: 'Entrar no Discord',
 		hero: {
-			eyebrow: 'Novo projeto em desenvolvimento',
-			title: 'Midnight City',
+			eyebrow: 'Servidor SA-MP Mobile em desenvolvimento',
+			title: 'Entre agora no Discord do Midnight City',
 			subtitle:
-				'Um novo servidor SA-MP Mobile em construcao, pensado para nascer com comunidade de verdade desde o primeiro dia.',
+				'A forma mais rápida de entender o projeto é simples: estamos criando um novo servidor SA-MP Mobile e a comunidade já está sendo construída antes da abertura oficial.',
 			description:
-				'Em vez de aparecer pronto e distante, Midnight City esta sendo montado perto das pessoas que realmente querem jogar. No Discord voce acompanha a evolucao, opina nas decisoes e pode entrar nos primeiros testes quando eles abrirem.',
-			primaryCta: 'Participar da comunidade',
-			secondaryCta: 'Ver como vai funcionar',
-			noteTitle: 'Desenvolvimento aberto',
-			note:
-				'A proposta e criar uma base forte antes da abertura oficial, com feedback real, clima organizado e espaco para quem quer fazer parte do comeco.'
+				'Se você quer acompanhar novidades, sugerir ideias, votar em enquetes e ficar perto dos testes iniciais, o Discord é o lugar certo para entrar agora.',
+			primaryCta: 'Quero entrar no Discord',
+			secondaryCta: 'Ver por que entrar agora',
+			badges: ['Novo servidor SA-MP Mobile', 'Comunidade em formação', 'Convites para testes futuros']
 		},
-		highlights: [
-			'Acompanhe o desenvolvimento em primeira mao',
-			'Vote em enquetes e sugira direcoes para o servidor',
-			'Fique perto dos convites para testes iniciais'
-		],
-		benefitsTitle: 'Por que entrar agora',
-		benefitsIntro:
-			'Se a ideia de acompanhar um servidor desde o inicio faz sentido para voce, estes sao os principais motivos para entrar agora.',
-		benefits: [
+		snapshotTitle: 'Em poucos segundos, o que você precisa saber',
+		snapshot: [
 			{
-				title: 'Comunidade antes da abertura',
-				description:
-					'Estamos reunindo as pessoas certas antes do lancamento para que o servidor ja nasca com conversa, expectativa e participacao.'
+				label: 'O que é',
+				value: 'Um novo servidor SA-MP Mobile chamado Midnight City.'
 			},
 			{
-				title: 'Espaco para opiniao real',
-				description:
-					'No Discord, a comunidade ajuda a priorizar ideias, apontar o que faz sentido e evitar decisoes desconectadas do que o publico quer.'
+				label: 'Em que fase está',
+				value: 'Ainda em desenvolvimento, com comunidade sendo montada agora.'
 			},
 			{
-				title: 'Entrada natural nos testes',
-				description:
-					'Quem acompanha cedo entende melhor a proposta, ve o projeto amadurecer e fica mais perto das primeiras vagas de teste.'
+				label: 'Qual é o próximo passo',
+				value: 'Entrar no Discord para acompanhar tudo desde o início.'
 			}
 		],
-		processTitle: 'O que voce vai encontrar no Discord',
-		processIntro:
-			'Entrar cedo vale a pena porque o Discord vai concentrar as partes mais importantes dessa fase inicial do projeto.',
-		process: [
+		reasonsTitle: 'Por que vale a pena entrar agora',
+		reasonsIntro:
+			'Quem chega cedo entende melhor a proposta do servidor e participa mais de perto das decisões que vão moldar a experiência.',
+		reasons: [
+			{
+				title: 'Acompanhar a criação de perto',
+				description:
+					'As principais novidades do projeto, ajustes de direção e avanços do servidor vão aparecer primeiro na comunidade.'
+			},
+			{
+				title: 'Participar com opinião real',
+				description:
+					'Você pode votar em enquetes, sugerir ideias e ajudar a mostrar o que faz sentido para quem realmente quer jogar.'
+			},
+			{
+				title: 'Ficar perto dos primeiros testes',
+				description:
+					'Quando as fases iniciais abrirem, o Discord será o canal principal para avisos, orientações e convites.'
+			}
+		],
+		discordTitle: 'O Discord será o centro da comunidade',
+		discordIntro:
+			'É lá que o Midnight City vai crescer nesta fase inicial, com comunicação mais direta e espaço para a comunidade acompanhar a evolução do projeto.',
+		discordPoints: [
 			{
 				step: '01',
-				title: 'Atualizacoes de desenvolvimento',
+				title: 'Atualizações e anúncios',
 				description:
-					'Novidades, ajustes de direcao, ideias aprovadas e movimentacoes do projeto vao aparecer primeiro na comunidade.'
+					'Você vê as novidades do servidor antes de todo mundo e entende rapidamente o que está sendo feito.'
 			},
 			{
 				step: '02',
-				title: 'Enquetes e feedback',
+				title: 'Enquetes e sugestões',
 				description:
-					'Quem estiver por perto vai poder votar, comentar e ajudar a definir detalhes sem ficar apenas assistindo de longe.'
+					'A comunidade participa do processo com feedback, ideias e decisões guiadas por quem pretende jogar.'
 			},
 			{
 				step: '03',
-				title: 'Convites para fases iniciais',
+				title: 'Entrada natural nos testes',
 				description:
-					'Quando os testes comecarem, o Discord sera o caminho mais natural para descobrir datas, regras e proximos passos.'
+					'Quem estiver no Discord ficará mais próximo das primeiras oportunidades de testar o servidor.'
 			}
 		],
-		ctaTitle: 'Se voce curte SA-MP Mobile, este e o melhor momento para entrar.',
+		ctaTitle: 'Se você curte SA-MP Mobile, este é o melhor momento para entrar.',
 		ctaDescription:
-			'Entre no Discord para acompanhar a construcao do Midnight City, conversar com a comunidade e ficar por dentro das proximas novidades.',
+			'Entre no Discord do Midnight City e acompanhe a comunidade desde o começo do projeto.',
 		ctaButton: 'Entrar no Discord agora',
-		footer: 'Midnight City'
+		footer: 'Midnight City',
+		logoAlt: 'Logo do projeto Midnight City'
 	},
 	en: {
 		locale: 'en',
 		seo: {
-			title: 'Midnight City | New SA-MP Mobile server',
+			title: 'Midnight City | SA-MP Mobile server in development',
 			description:
-				'Midnight City is a new SA-MP Mobile server in development. Join the Discord to follow the build, share ideas, and be part of the community from the start.',
+				'Midnight City is a new SA-MP Mobile server in development. Join the Discord to follow the project, vote in polls, and be part of the community from the start.',
 			keywords:
 				'midnight city, samp mobile, sa-mp mobile, mobile roleplay server, discord samp, midnight toronto',
 			ogLocale: 'en_US'
@@ -111,76 +121,84 @@ const pageContent = {
 		backLabel: 'Midnight Toronto',
 		topCta: 'Join Discord',
 		hero: {
-			eyebrow: 'New project in development',
-			title: 'Midnight City',
+			eyebrow: 'SA-MP Mobile server in development',
+			title: 'Join the Midnight City Discord now',
 			subtitle:
-				'A new SA-MP Mobile server being built to start with a real community from day one.',
+				'The fastest way to understand the project is simple: we are building a new SA-MP Mobile server, and the community is already forming before the official launch.',
 			description:
-				'Instead of showing up fully closed off, Midnight City is being built close to the people who actually want to play. In Discord, you can follow progress, give feedback, and stay close to the first rounds of testing when they open.',
-			primaryCta: 'Join the community',
-			secondaryCta: 'See the concept',
-			noteTitle: 'Open development',
-			note:
-				'The goal is to build a strong foundation before launch, with real feedback, organized communication, and room for early supporters.'
+				'If you want to follow updates, suggest ideas, vote in polls, and stay close to early testing, Discord is the right place to join now.',
+			primaryCta: 'Join the Discord',
+			secondaryCta: 'See why now matters',
+			badges: ['New SA-MP Mobile server', 'Community forming now', 'Future testing invites']
 		},
-		highlights: [
-			'Follow the development as it happens',
-			'Vote in polls and help shape the direction',
-			'Stay close to early testing invites'
-		],
-		benefitsTitle: 'Why join now',
-		benefitsIntro:
-			'If the idea of following a server from the beginning sounds right to you, these are the clearest reasons to join now.',
-		benefits: [
+		snapshotTitle: 'What you need to understand quickly',
+		snapshot: [
 			{
-				title: 'Community before launch',
-				description:
-					'We are bringing people together ahead of release so the server can open with momentum, conversation, and real participation.'
+				label: 'What it is',
+				value: 'A new SA-MP Mobile server called Midnight City.'
 			},
 			{
-				title: 'Real room for feedback',
-				description:
-					'Inside Discord, the community can help prioritize ideas, point out what makes sense, and keep the project aligned with players.'
+				label: 'Current stage',
+				value: 'Still in development, with the community being built right now.'
 			},
 			{
-				title: 'A natural path into testing',
-				description:
-					'People who join early understand the vision sooner, watch the project evolve, and stay closer to first testing opportunities.'
+				label: 'Next step',
+				value: 'Join the Discord to follow everything from the start.'
 			}
 		],
-		processTitle: 'What you will find in Discord',
-		processIntro:
-			'Joining early matters because Discord is where the most relevant parts of this early stage will come together.',
-		process: [
+		reasonsTitle: 'Why joining now is worth it',
+		reasonsIntro:
+			'People who join early understand the direction of the server sooner and stay much closer to the decisions that shape the experience.',
+		reasons: [
+			{
+				title: 'Follow the creation closely',
+				description:
+					'Key updates, direction changes, and server progress will show up in the community first.'
+			},
+			{
+				title: 'Take part with real feedback',
+				description:
+					'You can vote in polls, share ideas, and help show what makes sense for the people who actually want to play.'
+			},
+			{
+				title: 'Stay near the first tests',
+				description:
+					'When early phases open, Discord will be the main channel for announcements, guidance, and invitations.'
+			}
+		],
+		discordTitle: 'Discord will be the center of the community',
+		discordIntro:
+			'That is where Midnight City will grow during this early phase, with direct communication and a clear place for the community to follow the project.',
+		discordPoints: [
 			{
 				step: '01',
-				title: 'Development updates',
+				title: 'Updates and announcements',
 				description:
-					'News, direction changes, approved ideas, and project movement will show up in the community first.'
+					'You will see the latest server news first and understand quickly what is being built.'
 			},
 			{
 				step: '02',
-				title: 'Polls and feedback',
+				title: 'Polls and suggestions',
 				description:
-					'People who are already inside can vote, comment, and help shape details instead of only watching from a distance.'
+					'The community helps shape the process with feedback, ideas, and decisions guided by future players.'
 			},
 			{
 				step: '03',
-				title: 'Early-stage invitations',
+				title: 'A natural path into testing',
 				description:
-					'When testing starts, Discord will be the most natural place to find dates, rules, and the next steps.'
+					'Anyone inside the Discord will be closer to the first chances to test the server.'
 			}
 		],
 		ctaTitle: 'If you enjoy SA-MP Mobile, this is the right moment to join.',
 		ctaDescription:
-			'Join the Discord to follow Midnight City as it takes shape, talk with the community, and stay updated on what comes next.',
+			'Join the Midnight City Discord and follow the community from the very beginning of the project.',
 		ctaButton: 'Join Discord now',
-		footer: 'Midnight City'
+		footer: 'Midnight City',
+		logoAlt: 'Midnight City project logo'
 	}
 } as const;
 
 const content = pageContent[locale];
-const heroImages = ['bg-01.jpg', 'bg-02.png'];
 ---
 
 <!DOCTYPE html>
@@ -191,7 +209,7 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		<title>{content.seo.title}</title>
 		<meta name="description" content={content.seo.description} />
 		<meta name="keywords" content={content.seo.keywords} />
-		<meta name="author" content="Jeova de Sousa" />
+		<meta name="author" content="Jeová de Sousa" />
 		<meta name="robots" content="index, follow" />
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="alternate" hreflang="pt-BR" href={ptUrl} />
@@ -223,11 +241,9 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 			<header class="mc-header">
 				<div class="mc-container mc-header-inner">
 					<a href={homeUrl} class="mc-brand">
-						<img
-							src={`${studioAsset}/images/logobackground.png`}
-							alt="Midnight Toronto"
-							class="mc-brand-logo"
-						/>
+						<div class="mc-brand-logo-shell">
+							<img src={logoImage} alt={content.logoAlt} class="mc-brand-logo" />
+						</div>
 						<div class="mc-brand-copy">
 							<span class="mc-brand-name">Midnight City</span>
 							<span class="mc-brand-sub">{content.backLabel}</span>
@@ -245,18 +261,13 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 
 			<main>
 				<section class="mc-hero">
-					<div class="mc-hero-media" aria-hidden="true">
-						{heroImages.map((image) => (
-							<div
-								class="mc-hero-slide"
-								style={`background-image: url(${studioAsset}/images/midnight-city/${image});`}
-							></div>
-						))}
+					<div class="mc-hero-backdrop" aria-hidden="true">
+						<img src={logoImage} alt="" class="mc-hero-backdrop-image" />
+						<div class="mc-hero-overlay"></div>
 					</div>
-					<div class="mc-hero-wash"></div>
 
 					<div class="mc-container mc-hero-layout">
-						<div class="mc-hero-card">
+						<div class="mc-hero-copy">
 							<p class="mc-kicker">{content.hero.eyebrow}</p>
 							<h1>{content.hero.title}</h1>
 							<p class="mc-hero-subtitle">{content.hero.subtitle}</p>
@@ -271,36 +282,49 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 								>
 									{content.hero.primaryCta}
 								</a>
-								<a href="#benefits" class="mc-btn mc-btn-secondary">{content.hero.secondaryCta}</a>
+								<a href="#reasons" class="mc-btn mc-btn-secondary">{content.hero.secondaryCta}</a>
 							</div>
 
-							<div class="mc-highlights">
-								{content.highlights.map((item) => (
-									<span class="mc-highlight-pill">{item}</span>
+							<div class="mc-badges">
+								{content.hero.badges.map((badge) => (
+									<span class="mc-badge">{badge}</span>
 								))}
 							</div>
 						</div>
 
-						<aside class="mc-note-card">
-							<span>{content.hero.noteTitle}</span>
-							<p>{content.hero.note}</p>
+						<aside class="mc-hero-side">
+							<div class="mc-logo-card">
+								<img src={logoImage} alt={content.logoAlt} class="mc-hero-logo" />
+							</div>
+
+							<div class="mc-snapshot-card">
+								<h2>{content.snapshotTitle}</h2>
+								<div class="mc-snapshot-list">
+									{content.snapshot.map((item) => (
+										<div class="mc-snapshot-item">
+											<span>{item.label}</span>
+											<p>{item.value}</p>
+										</div>
+									))}
+								</div>
+							</div>
 						</aside>
 					</div>
 				</section>
 
-				<section id="benefits" class="mc-section">
+				<section id="reasons" class="mc-section">
 					<div class="mc-container">
 						<div class="mc-section-heading">
 							<p class="mc-kicker">Midnight City</p>
-							<h2>{content.benefitsTitle}</h2>
-							<p>{content.benefitsIntro}</p>
+							<h2>{content.reasonsTitle}</h2>
+							<p>{content.reasonsIntro}</p>
 						</div>
 
-						<div class="mc-benefit-grid">
-							{content.benefits.map((benefit) => (
+						<div class="mc-card-grid">
+							{content.reasons.map((reason) => (
 								<article class="mc-card">
-									<h3>{benefit.title}</h3>
-									<p>{benefit.description}</p>
+									<h3>{reason.title}</h3>
+									<p>{reason.description}</p>
 								</article>
 							))}
 						</div>
@@ -311,13 +335,13 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 					<div class="mc-container">
 						<div class="mc-section-heading">
 							<p class="mc-kicker">Discord</p>
-							<h2>{content.processTitle}</h2>
-							<p>{content.processIntro}</p>
+							<h2>{content.discordTitle}</h2>
+							<p>{content.discordIntro}</p>
 						</div>
 
-						<div class="mc-process-grid">
-							{content.process.map((item) => (
-								<article class="mc-process-card">
+						<div class="mc-card-grid">
+							{content.discordPoints.map((item) => (
+								<article class="mc-card mc-card-step">
 									<span class="mc-step">{item.step}</span>
 									<h3>{item.title}</h3>
 									<p>{item.description}</p>
@@ -361,19 +385,19 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 
 <style is:global>
 	:root {
-		--mc-bg: #f7f2e7;
-		--mc-bg-soft: #fffaf1;
-		--mc-paper: rgba(255, 250, 242, 0.84);
-		--mc-paper-strong: rgba(255, 247, 236, 0.94);
-		--mc-line: rgba(110, 84, 47, 0.16);
-		--mc-line-strong: rgba(110, 84, 47, 0.24);
-		--mc-text: #1e1d1a;
-		--mc-muted: #62584e;
-		--mc-accent: #d9783f;
-		--mc-accent-strong: #ca6130;
-		--mc-shadow: 0 18px 50px rgba(139, 98, 52, 0.14);
+		--mc-bg: #f5efe7;
+		--mc-bg-soft: #fff8ef;
+		--mc-paper: rgba(255, 249, 241, 0.9);
+		--mc-paper-strong: rgba(255, 249, 241, 0.96);
+		--mc-line: rgba(117, 83, 54, 0.16);
+		--mc-text: #191715;
+		--mc-muted: #5e5148;
+		--mc-accent: #d84f25;
+		--mc-accent-strong: #b33c18;
+		--mc-shadow: 0 18px 48px rgba(34, 23, 16, 0.14);
 		--mc-radius-xl: 36px;
 		--mc-radius-lg: 28px;
+		--mc-radius-md: 22px;
 		--mc-radius-sm: 999px;
 	}
 
@@ -393,8 +417,8 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		color: var(--mc-text);
 		background:
 			radial-gradient(circle at top left, rgba(255, 214, 176, 0.6), transparent 30%),
-			radial-gradient(circle at top right, rgba(191, 231, 255, 0.5), transparent 28%),
-			linear-gradient(180deg, #fff8ef 0%, #f8f1e4 40%, #f5efe5 100%);
+			radial-gradient(circle at top right, rgba(255, 233, 209, 0.5), transparent 28%),
+			linear-gradient(180deg, #fff8ef 0%, #f8f1e6 48%, #f6efe6 100%);
 	}
 
 	img {
@@ -417,7 +441,7 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		top: 0;
 		z-index: 100;
 		padding: 16px 0;
-		background: rgba(255, 248, 239, 0.82);
+		background: rgba(255, 248, 239, 0.88);
 		backdrop-filter: blur(14px);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.45);
 	}
@@ -425,7 +449,9 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 	.mc-header-inner,
 	.mc-footer-inner,
 	.mc-header-actions,
-	.mc-brand {
+	.mc-brand,
+	.mc-actions,
+	.mc-badges {
 		display: flex;
 		align-items: center;
 	}
@@ -441,11 +467,20 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		min-width: 0;
 	}
 
+	.mc-brand-logo-shell {
+		width: 58px;
+		height: 58px;
+		border-radius: 18px;
+		background: #0f1117;
+		box-shadow: 0 10px 22px rgba(16, 14, 13, 0.18);
+		overflow: hidden;
+		flex-shrink: 0;
+	}
+
 	.mc-brand-logo {
-		width: 52px;
-		height: 52px;
-		border-radius: 50%;
-		box-shadow: 0 8px 20px rgba(62, 41, 19, 0.16);
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
 	.mc-brand-copy {
@@ -456,14 +491,20 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 	.mc-brand-name,
 	.mc-kicker,
 	.mc-step,
-	.mc-note-card span {
+	.mc-snapshot-item span {
 		font-weight: 800;
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
 	}
 
-	.mc-brand-name {
+	.mc-brand-name,
+	h1,
+	h2,
+	h3 {
 		font-family: 'Syne', sans-serif;
+	}
+
+	.mc-brand-name {
 		font-size: 1rem;
 	}
 
@@ -482,76 +523,80 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 	}
 
 	.mc-link-back,
-	.mc-link-discord {
+	.mc-link-discord,
+	.mc-btn,
+	.mc-badge {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 44px;
-		padding: 0 18px;
 		border-radius: var(--mc-radius-sm);
 		font-weight: 700;
 	}
 
+	.mc-link-back,
+	.mc-link-discord {
+		min-height: 44px;
+		padding: 0 18px;
+	}
+
 	.mc-link-back {
-		background: rgba(255, 255, 255, 0.46);
+		background: rgba(255, 255, 255, 0.52);
 		border: 1px solid var(--mc-line);
 	}
 
-	.mc-link-discord {
-		background: var(--mc-accent);
+	.mc-link-discord,
+	.mc-btn-primary {
+		background: linear-gradient(135deg, #eb5b2a 0%, #c43f18 100%);
 		color: #fffaf6;
-		box-shadow: 0 12px 28px rgba(202, 97, 48, 0.22);
+		box-shadow: 0 16px 32px rgba(196, 63, 24, 0.24);
 	}
 
 	.mc-hero {
 		position: relative;
 		overflow: hidden;
-		padding: clamp(48px, 7vw, 88px) 0 clamp(42px, 7vw, 72px);
+		padding: clamp(44px, 7vw, 88px) 0 clamp(52px, 7vw, 80px);
 	}
 
-	.mc-hero-media,
-	.mc-hero-wash,
-	.mc-hero-slide {
+	.mc-hero-backdrop,
+	.mc-hero-overlay {
 		position: absolute;
 		inset: 0;
 	}
 
-	.mc-hero-media {
+	.mc-hero-backdrop {
 		overflow: hidden;
-	}
-
-	.mc-hero-slide {
-		background-position: center;
-		background-size: cover;
-		opacity: 0;
-		transform: scale(1.05);
-		animation: mcHeroCycle 16s infinite;
-		filter: saturate(1.04) contrast(0.94);
-	}
-
-	.mc-hero-slide:nth-child(2) {
-		animation-delay: 8s;
-	}
-
-	.mc-hero-wash {
 		background:
-			linear-gradient(115deg, rgba(255, 248, 239, 0.94) 12%, rgba(255, 248, 239, 0.72) 46%, rgba(255, 248, 239, 0.88) 100%),
-			linear-gradient(180deg, rgba(223, 243, 255, 0.18) 0%, rgba(247, 242, 231, 0.5) 100%);
+			radial-gradient(circle at 18% 18%, rgba(255, 181, 96, 0.22), transparent 24%),
+			linear-gradient(135deg, #161116 0%, #1f1717 50%, #1a1111 100%);
+	}
+
+	.mc-hero-backdrop-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: blur(18px) saturate(0.88) brightness(0.42);
+		transform: scale(1.08);
+		opacity: 0.52;
+	}
+
+	.mc-hero-overlay {
+		background:
+			linear-gradient(90deg, rgba(255, 248, 239, 0.94) 0%, rgba(255, 248, 239, 0.84) 44%, rgba(255, 248, 239, 0.55) 72%, rgba(20, 14, 14, 0.16) 100%);
 	}
 
 	.mc-hero-layout {
 		position: relative;
 		z-index: 1;
 		display: grid;
-		grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.6fr);
+		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
 		gap: clamp(24px, 4vw, 42px);
-		align-items: end;
+		align-items: start;
 	}
 
-	.mc-hero-card,
-	.mc-note-card,
+	.mc-hero-copy,
+	.mc-logo-card,
+	.mc-snapshot-card,
 	.mc-card,
-	.mc-process-card,
 	.mc-cta-panel {
 		border: 1px solid rgba(255, 255, 255, 0.5);
 		background: var(--mc-paper);
@@ -559,13 +604,14 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		box-shadow: var(--mc-shadow);
 	}
 
-	.mc-hero-card {
-		padding: clamp(28px, 5vw, 46px);
+	.mc-hero-copy {
+		padding: clamp(28px, 5vw, 44px);
 		border-radius: var(--mc-radius-xl);
 	}
 
 	.mc-kicker,
-	.mc-step {
+	.mc-step,
+	.mc-snapshot-item span {
 		color: var(--mc-accent-strong);
 		font-size: 0.78rem;
 	}
@@ -573,7 +619,6 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 	h1,
 	h2,
 	h3 {
-		font-family: 'Syne', sans-serif;
 		letter-spacing: -0.03em;
 		line-height: 0.98;
 	}
@@ -581,11 +626,11 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 	h1 {
 		max-width: 10ch;
 		margin-top: 18px;
-		font-size: clamp(3.4rem, 8vw, 6.4rem);
+		font-size: clamp(3rem, 7vw, 5.5rem);
 	}
 
 	h2 {
-		font-size: clamp(2.1rem, 4vw, 4rem);
+		font-size: clamp(1.8rem, 3vw, 3rem);
 	}
 
 	h3 {
@@ -594,41 +639,45 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 
 	p {
 		font-size: 1.02rem;
-		line-height: 1.72;
+		line-height: 1.7;
 		color: var(--mc-muted);
 	}
 
 	.mc-hero-subtitle {
-		max-width: 20ch;
+		max-width: 56ch;
 		margin-top: 20px;
-		font-size: clamp(1.2rem, 2vw, 1.48rem);
+		font-size: clamp(1.1rem, 1.8vw, 1.28rem);
 		font-weight: 700;
-		line-height: 1.38;
 		color: var(--mc-text);
 	}
 
 	.mc-hero-description {
 		max-width: 60ch;
-		margin-top: 18px;
+		margin-top: 16px;
+	}
+
+	.mc-actions,
+	.mc-badges {
+		flex-wrap: wrap;
+		gap: 14px;
 	}
 
 	.mc-actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 14px;
 		margin-top: 30px;
 	}
 
 	.mc-btn {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 52px;
+		min-height: 54px;
 		padding: 0 22px;
-		border-radius: var(--mc-radius-sm);
 		border: 1px solid transparent;
 		font-weight: 800;
 		transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+	}
+
+	.mc-btn-secondary {
+		background: rgba(255, 255, 255, 0.52);
+		border-color: var(--mc-line);
+		color: var(--mc-text);
 	}
 
 	.mc-btn:hover,
@@ -637,88 +686,97 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		transform: translateY(-1px);
 	}
 
-	.mc-btn-primary {
-		background: linear-gradient(135deg, #e17e45 0%, #cb6332 100%);
-		color: #fffaf6;
-		box-shadow: 0 16px 32px rgba(202, 97, 48, 0.24);
-	}
-
-	.mc-btn-secondary {
-		background: rgba(255, 255, 255, 0.5);
-		border-color: var(--mc-line);
-		color: var(--mc-text);
-	}
-
-	.mc-highlights {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 12px;
+	.mc-badges {
 		margin-top: 24px;
 	}
 
-	.mc-highlight-pill {
-		display: inline-flex;
-		align-items: center;
+	.mc-badge {
 		min-height: 40px;
 		padding: 0 16px;
-		border-radius: var(--mc-radius-sm);
-		background: rgba(255, 255, 255, 0.54);
-		border: 1px solid rgba(255, 255, 255, 0.55);
+		background: rgba(255, 255, 255, 0.58);
+		border: 1px solid rgba(255, 255, 255, 0.6);
 		color: var(--mc-text);
 		font-size: 0.9rem;
-		font-weight: 700;
 	}
 
-	.mc-note-card {
-		padding: 28px;
+	.mc-hero-side {
+		display: grid;
+		gap: 18px;
+	}
+
+	.mc-logo-card,
+	.mc-snapshot-card,
+	.mc-card,
+	.mc-cta-panel {
 		border-radius: var(--mc-radius-lg);
-		background: rgba(255, 247, 236, 0.94);
-		align-self: stretch;
 	}
 
-	.mc-note-card p {
-		margin-top: 14px;
+	.mc-logo-card {
+		padding: 18px;
+		background: rgba(16, 17, 23, 0.88);
+	}
+
+	.mc-hero-logo {
+		width: 100%;
+		border-radius: 22px;
+	}
+
+	.mc-snapshot-card {
+		padding: 26px;
+		background: var(--mc-paper-strong);
+	}
+
+	.mc-snapshot-list {
+		display: grid;
+		gap: 16px;
+		margin-top: 18px;
+	}
+
+	.mc-snapshot-item {
+		padding-top: 16px;
+		border-top: 1px solid var(--mc-line);
+	}
+
+	.mc-snapshot-item:first-child {
+		padding-top: 0;
+		border-top: none;
+	}
+
+	.mc-snapshot-item p {
+		margin-top: 8px;
 	}
 
 	.mc-section {
-		padding: clamp(54px, 8vw, 92px) 0;
+		padding: clamp(56px, 8vw, 96px) 0;
 	}
 
 	.mc-section-soft {
-		background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(244, 235, 219, 0.46) 100%);
-		border-block: 1px solid rgba(255, 255, 255, 0.4);
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(247, 237, 226, 0.56) 100%);
+		border-block: 1px solid rgba(255, 255, 255, 0.44);
 	}
 
 	.mc-section-heading {
 		display: grid;
 		gap: 16px;
-		max-width: 720px;
+		max-width: 760px;
 	}
 
-	.mc-benefit-grid,
-	.mc-process-grid {
+	.mc-card-grid {
 		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 22px;
 		margin-top: 32px;
 	}
 
-	.mc-benefit-grid,
-	.mc-process-grid {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-
-	.mc-card,
-	.mc-process-card {
+	.mc-card {
 		padding: 28px;
-		border-radius: var(--mc-radius-lg);
 	}
 
-	.mc-card p,
-	.mc-process-card p {
+	.mc-card p {
 		margin-top: 14px;
 	}
 
-	.mc-step {
+	.mc-card-step .mc-step {
 		display: inline-flex;
 		margin-bottom: 18px;
 	}
@@ -729,8 +787,7 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		gap: 20px;
 		align-items: center;
 		padding: clamp(28px, 4vw, 42px);
-		border-radius: var(--mc-radius-xl);
-		background: linear-gradient(135deg, rgba(255, 253, 249, 0.92) 0%, rgba(255, 243, 230, 0.92) 100%);
+		background: linear-gradient(135deg, rgba(255, 253, 249, 0.94) 0%, rgba(255, 242, 227, 0.94) 100%);
 	}
 
 	.mc-cta-panel p {
@@ -751,26 +808,15 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 		border-top: 1px solid var(--mc-line);
 	}
 
-	@keyframes mcHeroCycle {
-		0%,
-		42% {
-			opacity: 1;
-			transform: scale(1);
-		}
-
-		50%,
-		100% {
-			opacity: 0;
-			transform: scale(1.08);
-		}
-	}
-
-	@media (max-width: 980px) {
+	@media (max-width: 1024px) {
 		.mc-hero-layout,
-		.mc-cta-panel,
-		.mc-benefit-grid,
-		.mc-process-grid {
+		.mc-card-grid,
+		.mc-cta-panel {
 			grid-template-columns: 1fr;
+		}
+
+		h1 {
+			max-width: 11ch;
 		}
 
 		.mc-btn-large {
@@ -800,17 +846,22 @@ const heroImages = ['bg-01.jpg', 'bg-02.png'];
 			width: 100%;
 		}
 
-		.mc-hero-card,
-		.mc-note-card,
+		.mc-hero-copy,
+		.mc-logo-card,
+		.mc-snapshot-card,
 		.mc-card,
-		.mc-process-card,
 		.mc-cta-panel {
 			padding: 22px;
 		}
 
 		h1 {
 			max-width: none;
-			font-size: clamp(2.9rem, 14vw, 4.2rem);
+			font-size: clamp(2.6rem, 13vw, 4rem);
+		}
+
+		.mc-hero-overlay {
+			background:
+				linear-gradient(180deg, rgba(255, 248, 239, 0.94) 0%, rgba(255, 248, 239, 0.88) 56%, rgba(255, 248, 239, 0.76) 100%);
 		}
 	}
 </style>
