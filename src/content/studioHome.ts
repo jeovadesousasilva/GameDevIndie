@@ -115,7 +115,7 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			subtitle:
 				'A Midnight Toronto nasce para criar experiências que ficam na memória: mundos compactos, direção visual forte e uma sensação artesanal em cada detalhe.',
 			primaryCta: 'Explorar projetos',
-			secondaryCta: 'Ler o blog',
+			secondaryCta: 'Conhecer Midnight City',
 			scrollHint: 'Role para continuar'
 		},
 		vision: {
@@ -239,7 +239,7 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			subtitle:
 				'Midnight Toronto is shaped to create memorable experiences: compact worlds, deliberate visual direction, and a handcrafted feel in every layer.',
 			primaryCta: 'Explore projects',
-			secondaryCta: 'Read the blog',
+			secondaryCta: 'Meet Midnight City',
 			scrollHint: 'Scroll to continue'
 		},
 		vision: {

@@ -2,10 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://midnighttoronto.com.br/</loc>
-		<lastmod>2026-04-22</lastmod>
+		<lastmod>2026-07-09</lastmod>
 	</url>
 	<url>
 		<loc>https://midnighttoronto.com.br/en/</loc>
-		<lastmod>2026-04-22</lastmod>
+		<lastmod>2026-07-09</lastmod>
+	</url>
+	<url>
+		<loc>https://midnighttoronto.com.br/midnight-city/</loc>
+		<lastmod>2026-07-09</lastmod>
+	</url>
+	<url>
+		<loc>https://midnighttoronto.com.br/en/midnight-city/</loc>
+		<lastmod>2026-07-09</lastmod>
 	</url>
 </urlset>

@@ -18,6 +18,7 @@ const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
 const ptUrl = `${siteUrl}${withBase()}`;
 const enUrl = `${siteUrl}${withBase('en/')}`;
 const logoUrl = `${siteUrl}${withBase('midnight-toronto/assets/images/logobackground.png')}`;
+const midnightCityHref = withBase(isEnglish ? 'en/midnight-city/' : 'midnight-city/');
 
 const navSections = [
 	{ href: '#vision', label: content.nav.vision },
@@ -138,6 +139,7 @@ const socialLinks = [
 							<p class="hero-subtitle">{content.hero.subtitle}</p>
 							<div class="hero-cta">
 								<a href="#projects" class="btn btn-primary">{content.hero.primaryCta}</a>
+								<a href={midnightCityHref} class="btn btn-secondary">{content.hero.secondaryCta}</a>
 							</div>
 						</div>
 
