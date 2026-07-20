@@ -8,10 +8,10 @@ interface Props {
 const { locale } = Astro.props;
 const isEnglish = locale === 'en';
 const siteUrl = 'https://midnighttoronto.com.br';
-const pagePath = isEnglish ? 'en/midnight-city/' : 'midnight-city/';
+const pagePath = isEnglish ? 'en/171-brasil-roleplay/' : '171-brasil-roleplay/';
 const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
-const ptUrl = `${siteUrl}${withBase('midnight-city/')}`;
-const enUrl = `${siteUrl}${withBase('en/midnight-city/')}`;
+const ptUrl = `${siteUrl}${withBase('171-brasil-roleplay/')}`;
+const enUrl = `${siteUrl}${withBase('en/171-brasil-roleplay/')}`;
 const homeUrl = withBase(isEnglish ? 'en/' : '');
 const faviconHref = withBase('favicon.png');
 const studioAsset = withBase('midnight-toronto/assets');
