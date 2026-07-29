@@ -57,18 +57,11 @@ const products = [
 	{
 		category: 'inventario',
 		icon: '🎒',
-		name: '+3 slots de inventário',
-		description: 'Adiciona mais espaços para guardar itens importantes da sua conta.',
-		price: 'R$ 8,00',
-		badge: '+3 slots'
-	},
-	{
-		category: 'inventario',
-		icon: '📦',
-		name: '+6 slots de inventário',
-		description: 'Pacote maior para jogadores que gostam de carregar mais recursos.',
-		price: 'R$ 20,00',
-		badge: 'melhor custo'
+		name: 'Página extra de inventário',
+		description: 'Mais uma página para guardar itens importantes. Produto planejado para uma fase futura.',
+		price: 'Em breve',
+		badge: 'não disponível',
+		unavailable: true
 	},
 	{
 		category: 'garagem',
@@ -121,7 +114,7 @@ const products = [
 		<title>Loja 171 Brasil Roleplay | Dinheiro, VIP, Garagem e IDs</title>
 		<meta
 			name="description"
-			content="Loja da 171 Brasil Roleplay com dinheiro, VIP, slots de inventário, slots de garagem e IDs especiais."
+			content="Loja da 171 Brasil Roleplay com dinheiro, VIP, slots de garagem, IDs especiais e inventário em breve."
 		/>
 		<meta
 			name="keywords"
@@ -138,7 +131,7 @@ const products = [
 		<meta property="og:title" content="Loja 171 Brasil Roleplay" />
 		<meta
 			property="og:description"
-			content="Dinheiro, VIP, slots extras e IDs especiais para a 171 Brasil Roleplay."
+			content="Dinheiro, VIP, slots de garagem e IDs especiais para a 171 Brasil Roleplay."
 		/>
 		<meta property="og:image" content={socialImage} />
 		<meta property="twitter:card" content="summary_large_image" />
@@ -146,7 +139,7 @@ const products = [
 		<meta property="twitter:title" content="Loja 171 Brasil Roleplay" />
 		<meta
 			property="twitter:description"
-			content="Dinheiro, VIP, slots extras e IDs especiais para a 171 Brasil Roleplay."
+			content="Dinheiro, VIP, slots de garagem e IDs especiais para a 171 Brasil Roleplay."
 		/>
 		<meta property="twitter:image" content={socialImage} />
 
@@ -188,7 +181,7 @@ const products = [
 							<p class="shop-eyebrow">SA-MP Mobile</p>
 							<h1>Loja 171 Brasil Roleplay</h1>
 							<p>
-								Compre dinheiro, VIP, slots extras e IDs especiais para deixar sua conta do
+								Compre dinheiro, VIP, slots de garagem e IDs especiais para deixar sua conta do
 								jeito que você quer.
 							</p>
 
@@ -266,14 +259,20 @@ const products = [
 												<p>{product.description}</p>
 												<div class="shop-product-bottom">
 													<strong>{product.price}</strong>
-													<a
-														href={discordUrl}
-														target="_blank"
-														rel="noreferrer"
-														aria-label={`Comprar ${product.name}`}
-													>
-														Comprar
-													</a>
+													{product.unavailable ? (
+														<button type="button" class="shop-product-disabled" disabled>
+															Em breve
+														</button>
+													) : (
+														<a
+															href={discordUrl}
+															target="_blank"
+															rel="noreferrer"
+															aria-label={`Comprar ${product.name}`}
+														>
+															Comprar
+														</a>
+													)}
 												</div>
 											</article>
 										))}
@@ -448,6 +447,7 @@ const products = [
 	.shop-button,
 	.shop-categories a,
 	.shop-product-bottom a,
+	.shop-product-disabled,
 	.shop-support-links a {
 		display: inline-flex;
 		align-items: center;
@@ -831,11 +831,22 @@ const products = [
 		line-height: 1;
 	}
 
-	.shop-product-bottom a {
+	.shop-product-bottom a,
+	.shop-product-disabled {
 		min-height: 44px;
 		padding: 0 16px;
+		border: 0;
+		font: inherit;
+		font-weight: 900;
+		border-radius: var(--shop-radius-pill);
 		color: var(--shop-navy);
 		background: var(--shop-yellow);
+	}
+
+	.shop-product-disabled {
+		cursor: not-allowed;
+		color: #718096;
+		background: #edf2f7;
 	}
 
 	.shop-note {
@@ -942,7 +953,8 @@ const products = [
 			flex-direction: column;
 		}
 
-		.shop-product-bottom a {
+		.shop-product-bottom a,
+		.shop-product-disabled {
 			width: 100%;
 		}
 	}
