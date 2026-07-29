@@ -27,7 +27,7 @@ const products = [
 		icon: '4KK',
 		name: '4kk de dinheiro',
 		description: 'Saldo inicial para comprar itens, veículos e recursos dentro da cidade.',
-		price: 'R$ 10,00',
+		price: 'R$ 0,10',
 		badge: '4 milhões'
 	},
 	{
@@ -36,7 +36,7 @@ const products = [
 		icon: '8KK',
 		name: '8kk de dinheiro',
 		description: 'Pacote equilibrado para começar com mais liberdade no roleplay.',
-		price: 'R$ 25,00',
+		price: 'R$ 0,10',
 		badge: '8 milhões',
 		featured: true
 	},
@@ -46,7 +46,7 @@ const products = [
 		icon: '15KK',
 		name: '15kk de dinheiro',
 		description: 'Mais saldo para guardar, investir e aproveitar futuras novidades.',
-		price: 'R$ 50,00',
+		price: 'R$ 0,10',
 		badge: '15 milhões'
 	},
 	{
@@ -55,8 +55,8 @@ const products = [
 		name: 'VIP Mensal',
 		description: 'Tag VIP, visual especial e benefícios planejados para quem quer apoiar o servidor.',
 		price: 'R$ 25,00',
-		badge: '30 dias',
-		featured: true
+		badge: 'indisponível',
+		unavailable: true
 	},
 	{
 		category: 'inventario',
@@ -73,7 +73,7 @@ const products = [
 		icon: '🚗',
 		name: '+1 slot de garagem',
 		description: 'Libera mais um espaço para guardar veículo na conta do jogador.',
-		price: 'R$ 12,00',
+		price: 'R$ 0,10',
 		badge: '+1 veículo'
 	},
 	{
@@ -82,7 +82,7 @@ const products = [
 		icon: '🏁',
 		name: '+3 slots de garagem',
 		description: 'Mais espaços para quem quer colecionar carros, motos e veículos especiais.',
-		price: 'R$ 30,00',
+		price: 'R$ 0,10',
 		badge: '+3 veículos'
 	},
 	{
@@ -91,7 +91,8 @@ const products = [
 		name: 'ID 3 dígitos',
 		description: 'Reserva de ID especial com três dígitos para deixar a conta mais marcante.',
 		price: 'R$ 20,00',
-		badge: 'exclusivo'
+		badge: 'indisponível',
+		unavailable: true
 	},
 	{
 		category: 'ids',
@@ -99,7 +100,8 @@ const products = [
 		name: 'ID 2 dígitos',
 		description: 'ID curto e raro para jogadores que querem uma identificação premium.',
 		price: 'R$ 40,00',
-		badge: 'raro'
+		badge: 'indisponível',
+		unavailable: true
 	},
 	{
 		category: 'ids',
@@ -107,7 +109,8 @@ const products = [
 		name: 'ID personalizado',
 		description: 'Escolha um ID disponível e combine a reserva com a equipe do servidor.',
 		price: 'R$ 60,00',
-		badge: 'sob consulta'
+		badge: 'indisponível',
+		unavailable: true
 	}
 ];
 ---
@@ -201,18 +204,13 @@ const products = [
 
 						<aside class="shop-account-card">
 							<span class="shop-card-icon">🆔</span>
-							<h2>Compra por ID da conta</h2>
+							<h2>Confirmação segura</h2>
 							<p>
-								Na versão final, o jogador informa o ID da conta no checkout e recebe o produto
-								após a confirmação do pagamento.
+								Ao clicar em pagar, você informa o ID da conta, confere nome e skin, confirma se
+								é sua conta e só então recebe o Pix.
 							</p>
-							<label for="account-preview">Prévia do campo de ID</label>
-							<div class="shop-id-preview">
-								<input id="account-preview" type="text" placeholder="Ex: 1024" />
-								<button type="button">OK</button>
-							</div>
 							<p class="shop-checkout-status" data-shop-status aria-live="polite">
-								Digite seu ID antes de comprar.
+								Escolha um produto disponível para começar.
 							</p>
 						</aside>
 					</div>
@@ -270,7 +268,7 @@ const products = [
 													<strong>{product.price}</strong>
 													{product.unavailable ? (
 														<button type="button" class="shop-product-disabled" disabled>
-															Em breve
+															Indisponível
 														</button>
 													) : product.checkoutProductId ? (
 														<button
@@ -280,7 +278,7 @@ const products = [
 															data-product-name={product.name}
 															aria-label={`Comprar ${product.name}`}
 														>
-															Pagar Pix
+															Pagar
 														</button>
 													) : (
 														<a
@@ -323,6 +321,55 @@ const products = [
 			</footer>
 		</div>
 
+		<div class="shop-account-modal" data-account-modal hidden>
+			<div class="shop-pix-backdrop" data-account-close></div>
+			<section class="shop-pix-dialog shop-account-dialog" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+				<button type="button" class="shop-pix-close" data-account-close aria-label="Fechar confirmação de conta">
+					×
+				</button>
+				<p class="shop-section-label">Confirme sua conta</p>
+				<h2 id="account-modal-title">Digite seu ID</h2>
+				<p class="shop-pix-summary" data-account-product>Produto selecionado</p>
+
+				<div class="shop-account-form">
+					<label for="account-checkout-id">ID da conta</label>
+					<div class="shop-id-preview">
+						<input id="account-checkout-id" data-account-input type="number" inputmode="numeric" placeholder="Ex: 103566" />
+						<button type="button" data-account-verify>Verificar</button>
+					</div>
+				</div>
+
+				<div class="shop-pix-loading shop-account-loading" data-account-loading hidden>
+					<span></span>
+					Verificando conta...
+				</div>
+
+				<div class="shop-account-result" data-account-result hidden>
+					<div class="shop-skin-card">
+						<span>Skin</span>
+						<strong data-account-skin>#0</strong>
+					</div>
+					<div>
+						<p>Nome da conta</p>
+						<strong data-account-name>Jogador</strong>
+					</div>
+					<div>
+						<p>Level geral</p>
+						<strong data-account-level>Não disponível</strong>
+					</div>
+				</div>
+
+				<div class="shop-account-actions">
+					<button type="button" class="shop-pix-copy" data-account-confirm hidden>Sim, é minha conta</button>
+					<button type="button" class="shop-pix-open" data-account-change hidden>Trocar ID</button>
+				</div>
+
+				<div class="shop-pix-state" data-account-state>
+					Informe o ID público da sua conta.
+				</div>
+			</section>
+		</div>
+
 		<div class="shop-pix-modal" data-pix-modal hidden>
 			<div class="shop-pix-backdrop" data-pix-close></div>
 			<section class="shop-pix-dialog" role="dialog" aria-modal="true" aria-labelledby="pix-modal-title">
@@ -360,10 +407,21 @@ const products = [
 			(() => {
 				const page = document.querySelector('.shop-page');
 				const apiBase = page?.getAttribute('data-store-api-base') || '';
-				const accountInput = document.querySelector('#account-preview');
 				const statusEl = document.querySelector('[data-shop-status]');
 				const buyButtons = document.querySelectorAll('.shop-buy-button');
-				const modal = document.querySelector('[data-pix-modal]');
+				const accountModal = document.querySelector('[data-account-modal]');
+				const accountInput = document.querySelector('[data-account-input]');
+				const accountProduct = document.querySelector('[data-account-product]');
+				const accountLoading = document.querySelector('[data-account-loading]');
+				const accountResult = document.querySelector('[data-account-result]');
+				const accountName = document.querySelector('[data-account-name]');
+				const accountSkin = document.querySelector('[data-account-skin]');
+				const accountLevel = document.querySelector('[data-account-level]');
+				const accountState = document.querySelector('[data-account-state]');
+				const accountVerify = document.querySelector('[data-account-verify]');
+				const accountConfirm = document.querySelector('[data-account-confirm]');
+				const accountChange = document.querySelector('[data-account-change]');
+				const pixModal = document.querySelector('[data-pix-modal]');
 				const modalSummary = document.querySelector('[data-pix-summary]');
 				const modalLoading = document.querySelector('[data-pix-loading]');
 				const modalContent = document.querySelector('[data-pix-content]');
@@ -372,17 +430,15 @@ const products = [
 				const modalCopy = document.querySelector('[data-pix-copy]');
 				const modalOpen = document.querySelector('[data-pix-open]');
 				const modalState = document.querySelector('[data-pix-state]');
+				const fetchHeaders = { 'ngrok-skip-browser-warning': 'true' };
 				let pollTimer = null;
+				let selectedProduct = null;
+				let selectedAccount = null;
 
 				const setStatus = (message, type = 'info') => {
 					if (!statusEl) return;
 					statusEl.textContent = message;
 					statusEl.dataset.status = type;
-				};
-
-				const getAccountId = () => {
-					const value = Number(String(accountInput?.value || '').trim());
-					return Number.isInteger(value) && value > 0 ? value : null;
 				};
 
 				const setPixState = (message, type = 'info') => {
@@ -391,18 +447,44 @@ const products = [
 					modalState.dataset.status = type;
 				};
 
-				const openPixModal = () => {
+				const setAccountState = (message, type = 'info') => {
+					if (!accountState) return;
+					accountState.textContent = message;
+					accountState.dataset.status = type;
+				};
+
+				const openModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = false;
 					document.body.classList.add('shop-modal-open');
 				};
 
-				const closePixModal = () => {
+				const closeModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = true;
-					document.body.classList.remove('shop-modal-open');
+					if (accountModal?.hidden && pixModal?.hidden) {
+						document.body.classList.remove('shop-modal-open');
+					}
+				};
+
+				const closePixModal = () => {
+					closeModal(pixModal);
 					if (pollTimer) window.clearInterval(pollTimer);
 					pollTimer = null;
+				};
+
+				const resetAccountModal = () => {
+					selectedAccount = null;
+					if (accountInput) {
+						accountInput.value = '';
+						accountInput.disabled = false;
+					}
+					if (accountProduct) accountProduct.textContent = selectedProduct?.name || 'Produto selecionado';
+					if (accountLoading) accountLoading.hidden = true;
+					if (accountResult) accountResult.hidden = true;
+					if (accountConfirm) accountConfirm.hidden = true;
+					if (accountChange) accountChange.hidden = true;
+					setAccountState('Informe o ID público da sua conta.', 'info');
 				};
 
 				const resetPixModal = (productName, accountId) => {
@@ -439,7 +521,9 @@ const products = [
 
 					const check = async () => {
 						try {
-							const response = await fetch(`${apiBase}/api/orders/${orderId}`);
+							const response = await fetch(`${apiBase}/api/orders/${orderId}`, {
+								headers: fetchHeaders
+							});
 							const data = await response.json().catch(() => ({}));
 
 							if (!response.ok) {
@@ -477,8 +561,112 @@ const products = [
 					pollTimer = window.setInterval(check, 5000);
 				};
 
+				const verifyAccount = async () => {
+					const accountId = Number(String(accountInput?.value || '').trim());
+					if (!Number.isInteger(accountId) || accountId <= 0) {
+						setAccountState('Digite um ID de conta válido.', 'error');
+						accountInput?.focus();
+						return;
+					}
+
+					if (accountLoading) accountLoading.hidden = false;
+					if (accountResult) accountResult.hidden = true;
+					if (accountConfirm) accountConfirm.hidden = true;
+					if (accountChange) accountChange.hidden = true;
+					if (accountInput) accountInput.disabled = true;
+					setAccountState('Verificando conta...', 'pending');
+
+					try {
+						const response = await fetch(`${apiBase}/api/accounts/${accountId}`, {
+							headers: fetchHeaders
+						});
+						const data = await response.json().catch(() => ({}));
+
+						if (!response.ok) {
+							throw new Error(data.error || 'Conta não encontrada.');
+						}
+
+						selectedAccount = data;
+						if (accountName) accountName.textContent = data.name || 'Jogador';
+						if (accountSkin) accountSkin.textContent = `#${data.skin ?? '-'}`;
+						if (accountLevel) accountLevel.textContent = data.level ?? 'Não disponível';
+						if (accountResult) accountResult.hidden = false;
+						if (accountConfirm) accountConfirm.hidden = false;
+						if (accountChange) accountChange.hidden = false;
+						setAccountState('Confira se essa é sua conta antes de continuar.', 'success');
+					} catch (error) {
+						selectedAccount = null;
+						setAccountState(error.message || 'Não foi possível verificar a conta.', 'error');
+						if (accountInput) accountInput.disabled = false;
+					} finally {
+						if (accountLoading) accountLoading.hidden = true;
+					}
+				};
+
+				const startPixPayment = async () => {
+					if (!selectedProduct || !selectedAccount) return;
+
+					closeModal(accountModal);
+					resetPixModal(selectedProduct.name, selectedAccount.accountId);
+					openModal(pixModal);
+					setStatus(`Gerando Pix para ${selectedAccount.name || selectedAccount.accountId}...`, 'info');
+
+					try {
+						const response = await fetch(`${apiBase}/api/pix`, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								...fetchHeaders
+							},
+							body: JSON.stringify({
+								productId: selectedProduct.id,
+								accountId: selectedAccount.accountId
+							})
+						});
+
+						const data = await response.json().catch(() => ({}));
+
+						if (!response.ok) {
+							throw new Error(data.error || data.details || 'Não foi possível gerar o Pix.');
+						}
+
+						if (!data.qrCode && !data.ticketUrl) {
+							throw new Error('Mercado Pago não retornou o Pix.');
+						}
+
+						renderPixPayment(data);
+						pollOrderStatus(data.orderId);
+						setStatus(`Pix gerado para ${data.accountName || selectedAccount.name}. Aguardando pagamento.`, 'success');
+					} catch (error) {
+						setStatus(error.message || 'Erro ao gerar Pix. Chame o suporte.', 'error');
+						setPixState(error.message || 'Erro ao gerar Pix. Chame o suporte.', 'error');
+						if (modalLoading) modalLoading.hidden = true;
+					}
+				};
+
 				document.querySelectorAll('[data-pix-close]').forEach((button) => {
 					button.addEventListener('click', closePixModal);
+				});
+
+				document.querySelectorAll('[data-account-close]').forEach((button) => {
+					button.addEventListener('click', () => closeModal(accountModal));
+				});
+
+				accountVerify?.addEventListener('click', verifyAccount);
+				accountInput?.addEventListener('keydown', (event) => {
+					if (event.key === 'Enter') verifyAccount();
+				});
+				accountConfirm?.addEventListener('click', startPixPayment);
+				accountChange?.addEventListener('click', () => {
+					if (accountInput) {
+						accountInput.disabled = false;
+						accountInput.focus();
+					}
+					if (accountResult) accountResult.hidden = true;
+					if (accountConfirm) accountConfirm.hidden = true;
+					if (accountChange) accountChange.hidden = true;
+					selectedAccount = null;
+					setAccountState('Digite o ID correto e verifique novamente.', 'info');
 				});
 
 				modalCopy?.addEventListener('click', async () => {
@@ -495,65 +683,23 @@ const products = [
 				});
 
 				buyButtons.forEach((button) => {
-					button.addEventListener('click', async () => {
-						const accountId = getAccountId();
+					button.addEventListener('click', () => {
 						const productId = button.getAttribute('data-product-id');
 						const productName = button.getAttribute('data-product-name') || 'produto';
-
-						if (!accountId) {
-							setStatus('Digite um ID de conta válido antes de comprar.', 'error');
-							accountInput?.focus();
-							return;
-						}
 
 						if (!apiBase || !productId) {
 							setStatus('Checkout ainda não configurado para este produto.', 'error');
 							return;
 						}
 
-						const originalLabel = button.textContent;
-						button.setAttribute('disabled', 'true');
-						button.textContent = 'Gerando Pix...';
-						resetPixModal(productName, accountId);
-						openPixModal();
-						setStatus(`Validando ID ${accountId} e gerando Pix para ${productName}...`, 'info');
-
-						try {
-							const response = await fetch(`${apiBase}/api/pix`, {
-								method: 'POST',
-								headers: {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify({
-									productId,
-									accountId
-								})
-							});
-
-							const data = await response.json().catch(() => ({}));
-
-							if (!response.ok) {
-								throw new Error(data.error || data.details || 'Não foi possível iniciar o checkout.');
-							}
-
-							if (!data.qrCode && !data.ticketUrl) {
-								throw new Error('Mercado Pago não retornou o Pix.');
-							}
-
-							renderPixPayment(data);
-							pollOrderStatus(data.orderId);
-							setStatus(`Pix gerado para ${data.accountName || accountId}. Aguardando pagamento.`, 'success');
-						} catch (error) {
-							setStatus(error.message || 'Erro ao iniciar compra. Chame o suporte.', 'error');
-							setPixState(error.message || 'Erro ao gerar Pix. Chame o suporte.', 'error');
-							if (modalLoading) modalLoading.hidden = true;
-							button.removeAttribute('disabled');
-							button.textContent = originalLabel;
-							return;
-						}
-
-						button.removeAttribute('disabled');
-						button.textContent = originalLabel;
+						selectedProduct = {
+							id: productId,
+							name: productName
+						};
+						resetAccountModal();
+						openModal(accountModal);
+						setStatus(`Informe o ID da conta para ${productName}.`, 'info');
+						window.setTimeout(() => accountInput?.focus(), 80);
 					});
 				});
 			})();
@@ -1170,11 +1316,13 @@ const products = [
 		overflow: hidden;
 	}
 
-	.shop-pix-modal[hidden] {
+	.shop-pix-modal[hidden],
+	.shop-account-modal[hidden] {
 		display: none;
 	}
 
-	.shop-pix-modal {
+	.shop-pix-modal,
+	.shop-account-modal {
 		position: fixed;
 		inset: 0;
 		z-index: 80;
@@ -1212,6 +1360,76 @@ const products = [
 	.shop-pix-summary {
 		margin-top: 10px;
 		font-weight: 800;
+	}
+
+	.shop-account-form {
+		display: grid;
+		gap: 8px;
+		margin-top: 18px;
+	}
+
+	.shop-account-form label {
+		color: var(--shop-navy);
+		font-weight: 900;
+	}
+
+	.shop-account-result {
+		display: grid;
+		grid-template-columns: 92px 1fr 1fr;
+		gap: 12px;
+		align-items: stretch;
+		margin-top: 18px;
+	}
+
+	.shop-account-result[hidden] {
+		display: none;
+	}
+
+	.shop-account-result > div {
+		padding: 14px;
+		border: 1px solid var(--shop-line);
+		border-radius: 18px;
+		background: #f8fbff;
+	}
+
+	.shop-account-result p,
+	.shop-skin-card span {
+		color: var(--shop-muted);
+		font-size: 0.78rem;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+
+	.shop-account-result strong {
+		display: block;
+		margin-top: 4px;
+		color: var(--shop-navy);
+		font-family: 'Syne', sans-serif;
+		font-size: 1.1rem;
+	}
+
+	.shop-skin-card {
+		display: grid;
+		place-items: center;
+		text-align: center;
+		background:
+			radial-gradient(circle at 30% 20%, rgba(255, 201, 40, 0.42), transparent 38%),
+			#eef3ff !important;
+	}
+
+	.shop-skin-card strong {
+		font-size: 1.7rem;
+		color: var(--shop-blue-dark);
+	}
+
+	.shop-account-actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 14px;
+	}
+
+	.shop-account-actions > * {
+		flex: 1 1 0;
 	}
 
 	.shop-pix-close {
@@ -1318,9 +1536,19 @@ const products = [
 		color: var(--shop-blue-dark);
 	}
 
+	.shop-pix-open[hidden],
+	.shop-account-actions [hidden] {
+		display: none;
+	}
+
 	.shop-pix-state[data-status='success'] {
 		background: #e7fff0;
 		color: #0c8a3e;
+	}
+
+	.shop-pix-state[data-status='pending'] {
+		background: #fff9df;
+		color: #9a6b00;
 	}
 
 	.shop-pix-state[data-status='error'] {
@@ -1410,7 +1638,8 @@ const products = [
 			width: 100%;
 		}
 
-		.shop-pix-modal {
+		.shop-pix-modal,
+		.shop-account-modal {
 			align-items: end;
 			padding: 10px;
 		}
@@ -1420,6 +1649,12 @@ const products = [
 			max-height: calc(100vh - 20px);
 			padding: 22px 18px;
 			border-radius: 24px;
+		}
+
+		.shop-account-result,
+		.shop-account-actions {
+			grid-template-columns: 1fr;
+			flex-direction: column;
 		}
 	}
 </style>
