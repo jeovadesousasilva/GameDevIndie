@@ -180,6 +180,11 @@ const products = [
 							Suporte
 						</a>
 					</nav>
+
+					<button type="button" class="shop-account-button" data-open-login>
+						<span>👤</span>
+						<strong data-account-button-label>Entrar</strong>
+					</button>
 				</div>
 			</header>
 
@@ -310,6 +315,104 @@ const products = [
 			</footer>
 		</div>
 
+		<div class="shop-login-modal" data-login-modal hidden>
+			<div class="shop-pix-backdrop" data-login-close></div>
+			<section class="shop-pix-dialog shop-login-dialog" role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
+				<button type="button" class="shop-pix-close" data-login-close aria-label="Fechar login">
+					×
+				</button>
+				<p class="shop-section-label">Conta 171 Brasil RP</p>
+				<h2 id="login-modal-title">Entre para ver seu painel</h2>
+				<p class="shop-login-text">
+					Use o mesmo ID e senha da sua conta do servidor. Se preferir, você ainda pode comprar sem login.
+				</p>
+
+				<div class="shop-login-form">
+					<label for="site-login-id">ID da conta</label>
+					<input id="site-login-id" data-login-id type="number" inputmode="numeric" placeholder="Ex: 103566" autocomplete="username" />
+
+					<label for="site-login-password">Senha</label>
+					<input id="site-login-password" data-login-password type="password" placeholder="Senha da conta" autocomplete="current-password" />
+
+					<button type="button" class="shop-pix-copy" data-login-submit>Entrar na conta</button>
+					<button type="button" class="shop-pix-open" data-login-skip>Comprar sem login</button>
+				</div>
+
+				<div class="shop-pix-loading shop-login-loading" data-login-loading hidden>
+					<span></span>
+					Entrando com segurança...
+				</div>
+
+				<div class="shop-pix-state" data-login-state>
+					Sua sessão fica salva neste navegador.
+				</div>
+			</section>
+		</div>
+
+		<div class="shop-dashboard-modal" data-dashboard-modal hidden>
+			<div class="shop-pix-backdrop" data-dashboard-close></div>
+			<section class="shop-dashboard-dialog" role="dialog" aria-modal="true" aria-labelledby="dashboard-modal-title">
+				<button type="button" class="shop-pix-close" data-dashboard-close aria-label="Fechar painel da conta">
+					×
+				</button>
+
+				<div class="shop-dashboard-head">
+					<div class="shop-dashboard-skin">
+						<img data-dashboard-skin alt="Skin da conta logada" />
+					</div>
+					<div>
+						<p class="shop-section-label">Minha conta</p>
+						<h2 id="dashboard-modal-title" data-dashboard-name>Jogador</h2>
+						<span data-dashboard-id>ID #---</span>
+					</div>
+				</div>
+
+				<div class="shop-dashboard-stats">
+					<article>
+						<span>Membro desde</span>
+						<strong data-dashboard-member>--</strong>
+					</article>
+					<article>
+						<span>Dinheiro</span>
+						<strong data-dashboard-money>R$ 0</strong>
+					</article>
+					<article>
+						<span>Level geral</span>
+						<strong data-dashboard-level>0</strong>
+					</article>
+					<article>
+						<span>Slots garagem</span>
+						<strong data-dashboard-slots>0</strong>
+					</article>
+				</div>
+
+				<div class="shop-dashboard-section">
+					<div>
+						<p class="shop-section-label">Garagem</p>
+						<h3>Veículos da conta</h3>
+					</div>
+					<div class="shop-vehicle-grid" data-dashboard-vehicles></div>
+				</div>
+
+				<div class="shop-dashboard-section">
+					<div>
+						<p class="shop-section-label">Histórico</p>
+						<h3>Últimos pedidos</h3>
+					</div>
+					<div class="shop-order-list" data-dashboard-orders></div>
+				</div>
+
+				<div class="shop-dashboard-actions">
+					<button type="button" class="shop-pix-copy" data-dashboard-refresh>Atualizar painel</button>
+					<button type="button" class="shop-pix-open" data-logout>Desconectar</button>
+				</div>
+
+				<div class="shop-pix-state" data-dashboard-state>
+					Painel carregado.
+				</div>
+			</section>
+		</div>
+
 		<div class="shop-account-modal" data-account-modal hidden>
 			<div class="shop-pix-backdrop" data-account-close></div>
 			<section class="shop-pix-dialog shop-account-dialog" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
@@ -407,6 +510,28 @@ const products = [
 				const apiBase = page?.getAttribute('data-store-api-base') || '';
 				const statusEl = document.querySelector('[data-shop-status]');
 				const buyButtons = document.querySelectorAll('.shop-buy-button');
+				const openLoginButton = document.querySelector('[data-open-login]');
+				const accountButtonLabel = document.querySelector('[data-account-button-label]');
+				const loginModal = document.querySelector('[data-login-modal]');
+				const loginId = document.querySelector('[data-login-id]');
+				const loginPassword = document.querySelector('[data-login-password]');
+				const loginSubmit = document.querySelector('[data-login-submit]');
+				const loginSkip = document.querySelector('[data-login-skip]');
+				const loginLoading = document.querySelector('[data-login-loading]');
+				const loginState = document.querySelector('[data-login-state]');
+				const dashboardModal = document.querySelector('[data-dashboard-modal]');
+				const dashboardName = document.querySelector('[data-dashboard-name]');
+				const dashboardId = document.querySelector('[data-dashboard-id]');
+				const dashboardSkin = document.querySelector('[data-dashboard-skin]');
+				const dashboardMember = document.querySelector('[data-dashboard-member]');
+				const dashboardMoney = document.querySelector('[data-dashboard-money]');
+				const dashboardLevel = document.querySelector('[data-dashboard-level]');
+				const dashboardSlots = document.querySelector('[data-dashboard-slots]');
+				const dashboardVehicles = document.querySelector('[data-dashboard-vehicles]');
+				const dashboardOrders = document.querySelector('[data-dashboard-orders]');
+				const dashboardRefresh = document.querySelector('[data-dashboard-refresh]');
+				const dashboardState = document.querySelector('[data-dashboard-state]');
+				const logoutButton = document.querySelector('[data-logout]');
 				const accountModal = document.querySelector('[data-account-modal]');
 				const accountInput = document.querySelector('[data-account-input]');
 				const accountProduct = document.querySelector('[data-account-product]');
@@ -434,6 +559,7 @@ const products = [
 				let pollTimer = null;
 				let selectedProduct = null;
 				let selectedAccount = null;
+				let loggedAccount = null;
 
 				const setStatus = (message, type = 'info') => {
 					if (!statusEl) return;
@@ -453,6 +579,49 @@ const products = [
 					accountState.dataset.status = type;
 				};
 
+				const setLoginState = (message, type = 'info') => {
+					if (!loginState) return;
+					loginState.textContent = message;
+					loginState.dataset.status = type;
+				};
+
+				const setDashboardState = (message, type = 'info') => {
+					if (!dashboardState) return;
+					dashboardState.textContent = message;
+					dashboardState.dataset.status = type;
+				};
+
+				const formatDate = (value) => {
+					if (!value) return '--';
+					const date = new Date(value);
+					if (Number.isNaN(date.getTime())) return '--';
+					return new Intl.DateTimeFormat('pt-BR').format(date);
+				};
+
+				const formatMoney = (value) =>
+					new Intl.NumberFormat('pt-BR', {
+						style: 'currency',
+						currency: 'BRL',
+						maximumFractionDigits: 0
+					}).format(Number(value || 0));
+
+				const formatOrderStatus = (status, deliveryStatus) => {
+					if (deliveryStatus === 'entregue' || status === 'entregue') return 'Entregue';
+					if (status === 'pago') return 'Pago';
+					if (status === 'cancelado') return 'Cancelado';
+					if (status === 'erro' || deliveryStatus === 'erro') return 'Suporte';
+					return 'Aguardando';
+				};
+
+				const escapeHtml = (value) =>
+					String(value ?? '').replace(/[&<>"']/g, (character) => ({
+						'&': '&amp;',
+						'<': '&lt;',
+						'>': '&gt;',
+						'"': '&quot;',
+						"'": '&#39;'
+					})[character]);
+
 				const openModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = false;
@@ -462,7 +631,7 @@ const products = [
 				const closeModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = true;
-					if (accountModal?.hidden && pixModal?.hidden) {
+					if (accountModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
 						document.body.classList.remove('shop-modal-open');
 					}
 				};
@@ -501,6 +670,179 @@ const products = [
 					setPixState('Gerando Pix seguro...', 'info');
 				};
 
+				const updateAccountButton = () => {
+					if (!accountButtonLabel) return;
+					accountButtonLabel.textContent = loggedAccount?.name
+						? loggedAccount.name
+						: 'Entrar';
+				};
+
+				const renderDashboard = (data) => {
+					loggedAccount = data.account || null;
+					updateAccountButton();
+
+					if (!loggedAccount) return;
+
+					if (dashboardName) dashboardName.textContent = loggedAccount.name || 'Jogador';
+					if (dashboardId) dashboardId.textContent = `ID #${loggedAccount.idPublico || '---'}`;
+					if (dashboardSkin) {
+						dashboardSkin.src = loggedAccount.skinImageUrl || `https://assets.open.mp/assets/images/skins/${loggedAccount.skin || 0}.png`;
+						dashboardSkin.hidden = false;
+					}
+					if (dashboardMember) dashboardMember.textContent = formatDate(loggedAccount.memberSince);
+					if (dashboardMoney) dashboardMoney.textContent = formatMoney(loggedAccount.money);
+					if (dashboardLevel) dashboardLevel.textContent = loggedAccount.level ?? 0;
+					if (dashboardSlots) dashboardSlots.textContent = loggedAccount.garageSlots ?? 0;
+
+					const vehicles = Array.isArray(data.vehicles) ? data.vehicles : [];
+					if (dashboardVehicles) {
+						dashboardVehicles.innerHTML = vehicles.length
+							? vehicles.map((vehicle) => `
+								<article class="shop-vehicle-card">
+									${vehicle.imageUrl ? `<img src="${escapeHtml(vehicle.imageUrl)}" alt="${escapeHtml(vehicle.name || `Veículo ${vehicle.model}`)}" loading="lazy" onerror="this.hidden=true" />` : ''}
+									<div>
+										<strong>${escapeHtml(vehicle.name || `Modelo ${vehicle.model || '?'}`)}</strong>
+										<span>Slot ${escapeHtml(vehicle.slot ?? '--')} · Modelo ${escapeHtml(vehicle.model ?? '--')}</span>
+									</div>
+								</article>
+							`).join('')
+							: '<p class="shop-empty">Nenhum veículo encontrado nessa conta ainda.</p>';
+					}
+
+					const orders = Array.isArray(data.orders) ? data.orders : [];
+					if (dashboardOrders) {
+						dashboardOrders.innerHTML = orders.length
+							? orders.map((order) => `
+								<article class="shop-order-item">
+									<div>
+										<strong>${escapeHtml(order.productName || 'Pedido da loja')}</strong>
+										<span>#${escapeHtml(order.orderId)} · ${escapeHtml(formatDate(order.createdAt))}</span>
+									</div>
+									<em>${escapeHtml(formatOrderStatus(order.status, order.deliveryStatus))}</em>
+								</article>
+							`).join('')
+							: '<p class="shop-empty">Nenhum pedido encontrado ainda.</p>';
+					}
+
+					setDashboardState('Painel atualizado.', 'success');
+				};
+
+				const loadDashboard = async ({ silent = false } = {}) => {
+					if (!apiBase) return null;
+					if (!silent) setDashboardState('Carregando painel...', 'pending');
+
+					try {
+						const response = await fetch(`${apiBase}/api/me`, {
+							headers: fetchHeaders,
+							credentials: 'include'
+						});
+						const data = await response.json().catch(() => ({}));
+
+						if (!response.ok) {
+							throw new Error(data.error || 'Sessão não encontrada.');
+						}
+
+						renderDashboard(data);
+						return data;
+					} catch (error) {
+						loggedAccount = null;
+						updateAccountButton();
+						if (!silent) setDashboardState(error.message || 'Não foi possível carregar o painel.', 'error');
+						return null;
+					}
+				};
+
+				const loginAccount = async () => {
+					const accountId = Number(String(loginId?.value || '').trim());
+					const password = String(loginPassword?.value || '');
+
+					if (!Number.isInteger(accountId) || accountId <= 0) {
+						setLoginState('Digite um ID válido.', 'error');
+						loginId?.focus();
+						return;
+					}
+
+					if (!password) {
+						setLoginState('Digite a senha da conta.', 'error');
+						loginPassword?.focus();
+						return;
+					}
+
+					if (loginLoading) loginLoading.hidden = false;
+					if (loginSubmit) loginSubmit.disabled = true;
+					setLoginState('Verificando ID e senha...', 'pending');
+
+					try {
+						const response = await fetch(`${apiBase}/api/auth/login`, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								...fetchHeaders
+							},
+							credentials: 'include',
+							body: JSON.stringify({ accountId, password })
+						});
+						const data = await response.json().catch(() => ({}));
+
+						if (!response.ok) {
+							throw new Error(data.error || 'Não foi possível entrar.');
+						}
+
+						renderDashboard(data);
+						setLoginState('Login confirmado.', 'success');
+						closeModal(loginModal);
+						openModal(dashboardModal);
+					} catch (error) {
+						setLoginState(error.message || 'ID ou senha incorretos.', 'error');
+					} finally {
+						if (loginLoading) loginLoading.hidden = true;
+						if (loginSubmit) loginSubmit.disabled = false;
+					}
+				};
+
+				const logoutAccount = async () => {
+					try {
+						await fetch(`${apiBase}/api/auth/logout`, {
+							method: 'POST',
+							headers: fetchHeaders,
+							credentials: 'include'
+						});
+					} catch {
+						// Se a API estiver fora, ainda limpamos a interface local.
+					}
+
+					loggedAccount = null;
+					updateAccountButton();
+					closeModal(dashboardModal);
+					openModal(loginModal);
+					setLoginState('Você saiu da conta neste navegador.', 'success');
+				};
+
+				const prepareLoggedCheckout = () => {
+					selectedAccount = {
+						accountId: loggedAccount.idPublico,
+						name: loggedAccount.name,
+						skin: loggedAccount.skin,
+						level: loggedAccount.level
+					};
+					if (accountInput) {
+						accountInput.value = String(loggedAccount.idPublico || '');
+						accountInput.disabled = true;
+					}
+					if (accountProduct) accountProduct.textContent = selectedProduct?.name || 'Produto selecionado';
+					if (accountName) accountName.textContent = loggedAccount.name || 'Jogador';
+					if (accountSkin) accountSkin.textContent = `#${loggedAccount.skin ?? '-'}`;
+					if (accountSkinImage) {
+						accountSkinImage.src = loggedAccount.skinImageUrl || `https://assets.open.mp/assets/images/skins/${loggedAccount.skin || 0}.png`;
+						accountSkinImage.hidden = false;
+					}
+					if (accountLevel) accountLevel.textContent = loggedAccount.level ?? 'Não disponível';
+					if (accountResult) accountResult.hidden = false;
+					if (accountConfirm) accountConfirm.hidden = false;
+					if (accountChange) accountChange.hidden = false;
+					setAccountState('Você está comprando para a conta logada. Confira antes de continuar.', 'success');
+				};
+
 				const renderPixPayment = (data) => {
 					if (modalLoading) modalLoading.hidden = true;
 					if (modalContent) modalContent.hidden = false;
@@ -523,7 +865,8 @@ const products = [
 					const check = async () => {
 						try {
 							const response = await fetch(`${apiBase}/api/orders/${orderId}`, {
-								headers: fetchHeaders
+								headers: fetchHeaders,
+								credentials: 'include'
 							});
 							const data = await response.json().catch(() => ({}));
 
@@ -537,6 +880,7 @@ const products = [
 								if (modalSuccess) modalSuccess.hidden = false;
 								setPixState('Pagamento aprovado e item entregue na conta. Pode entrar no servidor!', 'success');
 								setStatus('Compra aprovada e entregue na conta.', 'success');
+								if (loggedAccount) loadDashboard({ silent: true });
 								if (pollTimer) window.clearInterval(pollTimer);
 								pollTimer = null;
 								return;
@@ -582,7 +926,8 @@ const products = [
 
 					try {
 						const response = await fetch(`${apiBase}/api/accounts/${accountId}`, {
-							headers: fetchHeaders
+							headers: fetchHeaders,
+							credentials: 'include'
 						});
 						const data = await response.json().catch(() => ({}));
 
@@ -627,6 +972,7 @@ const products = [
 								'Content-Type': 'application/json',
 								...fetchHeaders
 							},
+							credentials: 'include',
 							body: JSON.stringify({
 								productId: selectedProduct.id,
 								accountId: selectedAccount.accountId
@@ -660,6 +1006,42 @@ const products = [
 				document.querySelectorAll('[data-account-close]').forEach((button) => {
 					button.addEventListener('click', () => closeModal(accountModal));
 				});
+
+				document.querySelectorAll('[data-login-close]').forEach((button) => {
+					button.addEventListener('click', () => closeModal(loginModal));
+				});
+
+				document.querySelectorAll('[data-dashboard-close]').forEach((button) => {
+					button.addEventListener('click', () => closeModal(dashboardModal));
+				});
+
+				openLoginButton?.addEventListener('click', async () => {
+					if (loggedAccount) {
+						const data = await loadDashboard({ silent: false });
+						if (data) {
+							openModal(dashboardModal);
+						} else {
+							openModal(loginModal);
+						}
+					} else {
+						openModal(loginModal);
+						window.setTimeout(() => loginId?.focus(), 80);
+					}
+				});
+
+				loginSubmit?.addEventListener('click', loginAccount);
+				loginId?.addEventListener('keydown', (event) => {
+					if (event.key === 'Enter') loginAccount();
+				});
+				loginPassword?.addEventListener('keydown', (event) => {
+					if (event.key === 'Enter') loginAccount();
+				});
+				loginSkip?.addEventListener('click', () => {
+					sessionStorage.setItem('lojaLoginSkipped', '1');
+					closeModal(loginModal);
+				});
+				dashboardRefresh?.addEventListener('click', () => loadDashboard({ silent: false }));
+				logoutButton?.addEventListener('click', logoutAccount);
 
 				accountVerify?.addEventListener('click', verifyAccount);
 				accountInput?.addEventListener('keydown', (event) => {
@@ -706,10 +1088,24 @@ const products = [
 							name: productName
 						};
 						resetAccountModal();
+						if (loggedAccount) {
+							prepareLoggedCheckout();
+						}
 						openModal(accountModal);
-						setStatus(`Informe o ID da conta para ${productName}.`, 'info');
-						window.setTimeout(() => accountInput?.focus(), 80);
+						if (loggedAccount) {
+							setStatus(`Confira sua conta para ${productName}.`, 'info');
+						} else {
+							setStatus(`Informe o ID da conta para ${productName}.`, 'info');
+							window.setTimeout(() => accountInput?.focus(), 80);
+						}
 					});
+				});
+
+				loadDashboard({ silent: true }).then((data) => {
+					if (!data && !sessionStorage.getItem('lojaLoginSkipped')) {
+						openModal(loginModal);
+						window.setTimeout(() => loginId?.focus(), 120);
+					}
 				});
 			})();
 		</script>
@@ -885,6 +1281,29 @@ const products = [
 	.shop-top-nav .shop-discord {
 		color: var(--shop-navy);
 		background: var(--shop-yellow);
+	}
+
+	.shop-account-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 44px;
+		gap: 8px;
+		padding: 0 16px;
+		border: 1px solid rgba(255, 201, 40, 0.42);
+		border-radius: var(--shop-radius-pill);
+		color: var(--shop-navy);
+		background: var(--shop-white);
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+		transition: transform 170ms ease, box-shadow 170ms ease;
+	}
+
+	.shop-account-button:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
 	}
 
 	.shop-hero {
@@ -1270,12 +1689,16 @@ const products = [
 	}
 
 	.shop-pix-modal[hidden],
-	.shop-account-modal[hidden] {
+	.shop-account-modal[hidden],
+	.shop-login-modal[hidden],
+	.shop-dashboard-modal[hidden] {
 		display: none;
 	}
 
 	.shop-pix-modal,
-	.shop-account-modal {
+	.shop-account-modal,
+	.shop-login-modal,
+	.shop-dashboard-modal {
 		position: fixed;
 		inset: 0;
 		z-index: 80;
@@ -1308,6 +1731,224 @@ const products = [
 	.shop-pix-dialog h2 {
 		margin-top: 6px;
 		color: var(--shop-navy);
+	}
+
+	.shop-login-dialog {
+		width: min(500px, 100%);
+	}
+
+	.shop-login-text {
+		margin-top: 10px;
+		font-weight: 800;
+	}
+
+	.shop-login-form {
+		display: grid;
+		gap: 10px;
+		margin-top: 18px;
+	}
+
+	.shop-login-form label {
+		color: var(--shop-navy);
+		font-weight: 900;
+	}
+
+	.shop-login-form input {
+		width: 100%;
+		min-height: 48px;
+		padding: 0 14px;
+		border: 1px solid var(--shop-line);
+		border-radius: 16px;
+		color: var(--shop-navy);
+		background: #f8fbff;
+		font: inherit;
+		font-weight: 800;
+		outline: none;
+	}
+
+	.shop-login-form input:focus {
+		border-color: rgba(20, 88, 255, 0.45);
+		box-shadow: 0 0 0 4px rgba(20, 88, 255, 0.1);
+	}
+
+	.shop-dashboard-dialog {
+		position: relative;
+		z-index: 1;
+		width: min(940px, 100%);
+		max-height: calc(100vh - 44px);
+		overflow-y: auto;
+		padding: clamp(22px, 4vw, 34px);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 30px;
+		color: var(--shop-navy);
+		background:
+			radial-gradient(circle at top left, rgba(255, 201, 40, 0.24), transparent 28%),
+			var(--shop-white);
+		box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
+	}
+
+	.shop-dashboard-head {
+		display: flex;
+		align-items: center;
+		gap: 18px;
+		padding-right: 46px;
+	}
+
+	.shop-dashboard-head h2 {
+		margin-top: 4px;
+		color: var(--shop-navy);
+	}
+
+	.shop-dashboard-head span {
+		display: inline-flex;
+		margin-top: 8px;
+		padding: 6px 10px;
+		border-radius: var(--shop-radius-pill);
+		color: var(--shop-blue-dark);
+		background: #eef3ff;
+		font-weight: 900;
+	}
+
+	.shop-dashboard-skin {
+		display: grid;
+		width: 112px;
+		height: 132px;
+		flex: 0 0 auto;
+		place-items: end center;
+		overflow: hidden;
+		border: 1px solid var(--shop-line);
+		border-radius: 24px;
+		background:
+			radial-gradient(circle at 50% 18%, rgba(255, 201, 40, 0.45), transparent 34%),
+			linear-gradient(180deg, #eef3ff 0%, #ffffff 100%);
+	}
+
+	.shop-dashboard-skin img {
+		width: 84px;
+		height: 124px;
+		object-fit: contain;
+		object-position: bottom center;
+		filter: drop-shadow(0 12px 16px rgba(7, 20, 38, 0.22));
+	}
+
+	.shop-dashboard-stats {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 20px;
+	}
+
+	.shop-dashboard-stats article,
+	.shop-vehicle-card,
+	.shop-order-item {
+		border: 1px solid var(--shop-line);
+		border-radius: 20px;
+		background: #f8fbff;
+	}
+
+	.shop-dashboard-stats article {
+		padding: 14px;
+	}
+
+	.shop-dashboard-stats span,
+	.shop-vehicle-card span,
+	.shop-order-item span {
+		display: block;
+		color: var(--shop-muted);
+		font-size: 0.78rem;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+
+	.shop-dashboard-stats strong {
+		display: block;
+		margin-top: 6px;
+		color: var(--shop-navy);
+		font-family: 'Syne', sans-serif;
+		font-size: 1.25rem;
+	}
+
+	.shop-dashboard-section {
+		margin-top: 22px;
+	}
+
+	.shop-dashboard-section h3 {
+		margin-top: 4px;
+		color: var(--shop-navy);
+		font-size: 1.45rem;
+	}
+
+	.shop-vehicle-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		margin-top: 12px;
+	}
+
+	.shop-vehicle-card {
+		display: grid;
+		grid-template-columns: 112px 1fr;
+		gap: 12px;
+		align-items: center;
+		min-height: 92px;
+		padding: 10px;
+	}
+
+	.shop-vehicle-card img {
+		width: 112px;
+		height: 72px;
+		object-fit: contain;
+		border-radius: 14px;
+		background: #ffffff;
+	}
+
+	.shop-vehicle-card strong,
+	.shop-order-item strong {
+		display: block;
+		color: var(--shop-navy);
+		font-weight: 900;
+	}
+
+	.shop-order-list {
+		display: grid;
+		gap: 10px;
+		margin-top: 12px;
+	}
+
+	.shop-order-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 14px;
+	}
+
+	.shop-order-item em {
+		flex: 0 0 auto;
+		padding: 7px 10px;
+		border-radius: var(--shop-radius-pill);
+		color: var(--shop-blue-dark);
+		background: #eef3ff;
+		font-style: normal;
+		font-weight: 900;
+	}
+
+	.shop-dashboard-actions {
+		display: flex;
+		gap: 10px;
+		margin-top: 18px;
+	}
+
+	.shop-dashboard-actions > * {
+		flex: 1 1 0;
+	}
+
+	.shop-empty {
+		padding: 14px;
+		border-radius: 18px;
+		color: var(--shop-muted);
+		background: #f8fbff;
+		font-weight: 800;
 	}
 
 	.shop-pix-summary {
@@ -1604,6 +2245,7 @@ const products = [
 		.shop-support-links,
 		.shop-hero-actions,
 		.shop-button,
+		.shop-account-button,
 		.shop-top-nav a,
 		.shop-support-links a {
 			width: 100%;
@@ -1634,16 +2276,52 @@ const products = [
 		}
 
 		.shop-pix-modal,
-		.shop-account-modal {
+		.shop-account-modal,
+		.shop-login-modal,
+		.shop-dashboard-modal {
 			align-items: end;
 			padding: 10px;
 		}
 
-		.shop-pix-dialog {
+		.shop-pix-dialog,
+		.shop-dashboard-dialog {
 			width: 100%;
 			max-height: calc(100vh - 20px);
 			padding: 22px 18px;
 			border-radius: 24px;
+		}
+
+		.shop-dashboard-head {
+			align-items: flex-start;
+		}
+
+		.shop-dashboard-skin {
+			width: 92px;
+			height: 116px;
+		}
+
+		.shop-dashboard-skin img {
+			width: 72px;
+			height: 108px;
+		}
+
+		.shop-dashboard-stats,
+		.shop-vehicle-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.shop-vehicle-card {
+			grid-template-columns: 96px 1fr;
+		}
+
+		.shop-vehicle-card img {
+			width: 96px;
+		}
+
+		.shop-order-item,
+		.shop-dashboard-actions {
+			flex-direction: column;
+			align-items: stretch;
 		}
 
 		.shop-account-result,
