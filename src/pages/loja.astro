@@ -7,6 +7,7 @@ const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
 const faviconHref = withBase('favicon.png');
 const roleplayUrl = withBase('171-brasil-roleplay/');
 const discordUrl = 'https://discord.gg/6GwbJRFhQU';
+const storeApiBaseUrl = 'https://liberty-immovably-bacon.ngrok-free.dev';
 const studioAsset = withBase('midnight-toronto/assets');
 const logoImage = `${studioAsset}/images/midnight-city/171-brasil-roleplay-logo-v3.png`;
 const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/171-brasil-roleplay-logo-v3.png')}`;
@@ -22,6 +23,7 @@ const categories = [
 const products = [
 	{
 		category: 'dinheiro',
+		checkoutProductId: 'cash_4kk',
 		icon: '4KK',
 		name: '4kk de dinheiro',
 		description: 'Saldo inicial para comprar itens, veículos e recursos dentro da cidade.',
@@ -30,6 +32,7 @@ const products = [
 	},
 	{
 		category: 'dinheiro',
+		checkoutProductId: 'cash_8kk',
 		icon: '8KK',
 		name: '8kk de dinheiro',
 		description: 'Pacote equilibrado para começar com mais liberdade no roleplay.',
@@ -39,6 +42,7 @@ const products = [
 	},
 	{
 		category: 'dinheiro',
+		checkoutProductId: 'cash_15kk',
 		icon: '15KK',
 		name: '15kk de dinheiro',
 		description: 'Mais saldo para guardar, investir e aproveitar futuras novidades.',
@@ -65,6 +69,7 @@ const products = [
 	},
 	{
 		category: 'garagem',
+		checkoutProductId: 'garage_slot_1',
 		icon: '🚗',
 		name: '+1 slot de garagem',
 		description: 'Libera mais um espaço para guardar veículo na conta do jogador.',
@@ -73,6 +78,7 @@ const products = [
 	},
 	{
 		category: 'garagem',
+		checkoutProductId: 'garage_slot_3',
 		icon: '🏁',
 		name: '+3 slots de garagem',
 		description: 'Mais espaços para quem quer colecionar carros, motos e veículos especiais.',
@@ -151,7 +157,7 @@ const products = [
 		/>
 	</head>
 	<body>
-		<div class="shop-page">
+		<div class="shop-page" data-store-api-base={storeApiBaseUrl}>
 			<header class="shop-header">
 				<div class="shop-container shop-header-inner">
 					<a href={roleplayUrl} class="shop-brand">
@@ -205,6 +211,9 @@ const products = [
 								<input id="account-preview" type="text" placeholder="Ex: 1024" />
 								<button type="button">OK</button>
 							</div>
+							<p class="shop-checkout-status" data-shop-status aria-live="polite">
+								Digite seu ID antes de comprar.
+							</p>
 						</aside>
 					</div>
 				</section>
@@ -263,6 +272,16 @@ const products = [
 														<button type="button" class="shop-product-disabled" disabled>
 															Em breve
 														</button>
+													) : product.checkoutProductId ? (
+														<button
+															type="button"
+															class="shop-buy-button"
+															data-product-id={product.checkoutProductId}
+															data-product-name={product.name}
+															aria-label={`Comprar ${product.name}`}
+														>
+															Comprar
+														</button>
 													) : (
 														<a
 															href={discordUrl}
@@ -270,7 +289,7 @@ const products = [
 															rel="noreferrer"
 															aria-label={`Comprar ${product.name}`}
 														>
-															Comprar
+															Solicitar
 														</a>
 													)}
 												</div>
@@ -304,6 +323,82 @@ const products = [
 				</div>
 			</footer>
 		</div>
+
+		<script>
+			(() => {
+				const page = document.querySelector('.shop-page');
+				const apiBase = page?.getAttribute('data-store-api-base') || '';
+				const accountInput = document.querySelector('#account-preview');
+				const statusEl = document.querySelector('[data-shop-status]');
+				const buyButtons = document.querySelectorAll('.shop-buy-button');
+
+				const setStatus = (message, type = 'info') => {
+					if (!statusEl) return;
+					statusEl.textContent = message;
+					statusEl.dataset.status = type;
+				};
+
+				const getAccountId = () => {
+					const value = Number(String(accountInput?.value || '').trim());
+					return Number.isInteger(value) && value > 0 ? value : null;
+				};
+
+				buyButtons.forEach((button) => {
+					button.addEventListener('click', async () => {
+						const accountId = getAccountId();
+						const productId = button.getAttribute('data-product-id');
+						const productName = button.getAttribute('data-product-name') || 'produto';
+
+						if (!accountId) {
+							setStatus('Digite um ID de conta válido antes de comprar.', 'error');
+							accountInput?.focus();
+							return;
+						}
+
+						if (!apiBase || !productId) {
+							setStatus('Checkout ainda não configurado para este produto.', 'error');
+							return;
+						}
+
+						const originalLabel = button.textContent;
+						button.setAttribute('disabled', 'true');
+						button.textContent = 'Abrindo...';
+						setStatus(`Validando ID ${accountId} e preparando ${productName}...`, 'info');
+
+						try {
+							const response = await fetch(`${apiBase}/api/checkout-pro`, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify({
+									productId,
+									accountId
+								})
+							});
+
+							const data = await response.json().catch(() => ({}));
+
+							if (!response.ok) {
+								throw new Error(data.error || data.details || 'Não foi possível iniciar o checkout.');
+							}
+
+							const checkoutUrl = data.initPoint || data.sandboxInitPoint;
+							if (!checkoutUrl) {
+								throw new Error('Mercado Pago não retornou o link de pagamento.');
+							}
+
+							setStatus(`Conta encontrada: ${data.accountName || accountId}. Redirecionando...`, 'success');
+							window.location.href = checkoutUrl;
+						} catch (error) {
+							setStatus(error.message || 'Erro ao iniciar compra. Chame o suporte.', 'error');
+							button.removeAttribute('disabled');
+							button.textContent = originalLabel;
+						}
+					});
+				});
+			})();
+		</script>
 	</body>
 </html>
 
@@ -447,6 +542,7 @@ const products = [
 	.shop-button,
 	.shop-categories a,
 	.shop-product-bottom a,
+	.shop-buy-button,
 	.shop-product-disabled,
 	.shop-support-links a {
 		display: inline-flex;
@@ -467,6 +563,7 @@ const products = [
 	.shop-button:hover,
 	.shop-categories a:hover,
 	.shop-product-bottom a:hover,
+	.shop-buy-button:hover,
 	.shop-support-links a:hover {
 		transform: translateY(-1px);
 	}
@@ -647,6 +744,23 @@ const products = [
 		border-radius: 14px;
 		color: var(--shop-white);
 		background: var(--shop-blue);
+	}
+
+	.shop-checkout-status {
+		min-height: 24px;
+		margin-top: 12px;
+		color: var(--shop-muted);
+		font-size: 0.9rem;
+		font-weight: 800;
+		line-height: 1.45;
+	}
+
+	.shop-checkout-status[data-status='success'] {
+		color: #0c8a3e;
+	}
+
+	.shop-checkout-status[data-status='error'] {
+		color: #c53030;
 	}
 
 	.shop-support {
@@ -832,6 +946,7 @@ const products = [
 	}
 
 	.shop-product-bottom a,
+	.shop-buy-button,
 	.shop-product-disabled {
 		min-height: 44px;
 		padding: 0 16px;
@@ -841,6 +956,15 @@ const products = [
 		border-radius: var(--shop-radius-pill);
 		color: var(--shop-navy);
 		background: var(--shop-yellow);
+	}
+
+	.shop-buy-button {
+		cursor: pointer;
+	}
+
+	.shop-buy-button:disabled {
+		cursor: wait;
+		opacity: 0.72;
 	}
 
 	.shop-product-disabled {
@@ -954,6 +1078,7 @@ const products = [
 		}
 
 		.shop-product-bottom a,
+		.shop-buy-button,
 		.shop-product-disabled {
 			width: 100%;
 		}
