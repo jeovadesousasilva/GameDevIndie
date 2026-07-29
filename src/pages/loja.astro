@@ -280,7 +280,7 @@ const products = [
 															data-product-name={product.name}
 															aria-label={`Comprar ${product.name}`}
 														>
-															Comprar
+															Pagar Pix
 														</button>
 													) : (
 														<a
@@ -305,11 +305,10 @@ const products = [
 					<div class="shop-container shop-note-card">
 						<span>⚠️</span>
 						<div>
-							<h2>Modelo visual da loja</h2>
+							<h2>Pagamento via Pix</h2>
 							<p>
-								Os produtos aparecem como se a loja já estivesse pronta. Antes das vendas reais,
-								é só ligar o checkout, criar o sistema de dinheiro/VIP no gamemode e conectar a
-								entrega automática com o MySQL.
+								Para dinheiro e slots de garagem, o pagamento é gerado por Pix dentro da loja.
+								Após a confirmação, a entrega é aplicada na conta informada pelo ID.
 							</p>
 						</div>
 					</div>
@@ -324,6 +323,39 @@ const products = [
 			</footer>
 		</div>
 
+		<div class="shop-pix-modal" data-pix-modal hidden>
+			<div class="shop-pix-backdrop" data-pix-close></div>
+			<section class="shop-pix-dialog" role="dialog" aria-modal="true" aria-labelledby="pix-modal-title">
+				<button type="button" class="shop-pix-close" data-pix-close aria-label="Fechar pagamento Pix">
+					×
+				</button>
+				<p class="shop-section-label">Pagamento Pix</p>
+				<h2 id="pix-modal-title">Finalize no Pix</h2>
+				<p class="shop-pix-summary" data-pix-summary>Preparando pagamento...</p>
+
+				<div class="shop-pix-loading" data-pix-loading>
+					<span></span>
+					Gerando QR Code seguro...
+				</div>
+
+				<div class="shop-pix-content" data-pix-content hidden>
+					<div class="shop-pix-qr">
+						<img data-pix-qr alt="QR Code Pix para pagamento" />
+					</div>
+					<label for="pix-copy-code">Pix copia e cola</label>
+					<textarea id="pix-copy-code" data-pix-code readonly></textarea>
+					<button type="button" class="shop-pix-copy" data-pix-copy>Copiar código Pix</button>
+					<a class="shop-pix-open" data-pix-open target="_blank" rel="noreferrer" hidden>
+						Abrir página do Pix
+					</a>
+				</div>
+
+				<div class="shop-pix-state" data-pix-state>
+					Aguardando geração do Pix.
+				</div>
+			</section>
+		</div>
+
 		<script>
 			(() => {
 				const page = document.querySelector('.shop-page');
@@ -331,6 +363,16 @@ const products = [
 				const accountInput = document.querySelector('#account-preview');
 				const statusEl = document.querySelector('[data-shop-status]');
 				const buyButtons = document.querySelectorAll('.shop-buy-button');
+				const modal = document.querySelector('[data-pix-modal]');
+				const modalSummary = document.querySelector('[data-pix-summary]');
+				const modalLoading = document.querySelector('[data-pix-loading]');
+				const modalContent = document.querySelector('[data-pix-content]');
+				const modalQr = document.querySelector('[data-pix-qr]');
+				const modalCode = document.querySelector('[data-pix-code]');
+				const modalCopy = document.querySelector('[data-pix-copy]');
+				const modalOpen = document.querySelector('[data-pix-open]');
+				const modalState = document.querySelector('[data-pix-state]');
+				let pollTimer = null;
 
 				const setStatus = (message, type = 'info') => {
 					if (!statusEl) return;
@@ -342,6 +384,115 @@ const products = [
 					const value = Number(String(accountInput?.value || '').trim());
 					return Number.isInteger(value) && value > 0 ? value : null;
 				};
+
+				const setPixState = (message, type = 'info') => {
+					if (!modalState) return;
+					modalState.textContent = message;
+					modalState.dataset.status = type;
+				};
+
+				const openPixModal = () => {
+					if (!modal) return;
+					modal.hidden = false;
+					document.body.classList.add('shop-modal-open');
+				};
+
+				const closePixModal = () => {
+					if (!modal) return;
+					modal.hidden = true;
+					document.body.classList.remove('shop-modal-open');
+					if (pollTimer) window.clearInterval(pollTimer);
+					pollTimer = null;
+				};
+
+				const resetPixModal = (productName, accountId) => {
+					if (modalSummary) modalSummary.textContent = `${productName} para o ID ${accountId}`;
+					if (modalLoading) modalLoading.hidden = false;
+					if (modalContent) modalContent.hidden = true;
+					if (modalQr) modalQr.removeAttribute('src');
+					if (modalCode) modalCode.value = '';
+					if (modalOpen) {
+						modalOpen.hidden = true;
+						modalOpen.removeAttribute('href');
+					}
+					setPixState('Gerando Pix seguro...', 'info');
+				};
+
+				const renderPixPayment = (data) => {
+					if (modalLoading) modalLoading.hidden = true;
+					if (modalContent) modalContent.hidden = false;
+					if (modalQr && data.qrCodeBase64) {
+						modalQr.src = `data:image/png;base64,${data.qrCodeBase64}`;
+					}
+					if (modalCode) {
+						modalCode.value = data.qrCode || '';
+					}
+					if (modalOpen && data.ticketUrl) {
+						modalOpen.href = data.ticketUrl;
+						modalOpen.hidden = false;
+					}
+					setPixState('Pix gerado. Após pagar, aguarde a confirmação automática.', 'pending');
+				};
+
+				const pollOrderStatus = (orderId) => {
+					if (pollTimer) window.clearInterval(pollTimer);
+
+					const check = async () => {
+						try {
+							const response = await fetch(`${apiBase}/api/orders/${orderId}`);
+							const data = await response.json().catch(() => ({}));
+
+							if (!response.ok) {
+								throw new Error(data.error || 'Não foi possível consultar o pedido.');
+							}
+
+							if (data.status === 'entregue' || data.deliveryStatus === 'entregue') {
+								setPixState('Pagamento aprovado e item entregue na conta. Pode entrar no servidor!', 'success');
+								setStatus('Compra aprovada e entregue na conta.', 'success');
+								if (pollTimer) window.clearInterval(pollTimer);
+								pollTimer = null;
+								return;
+							}
+
+							if (data.status === 'erro' || data.deliveryStatus === 'erro') {
+								setPixState(data.error || 'Pagamento recebido, mas houve erro na entrega. Chame o suporte.', 'error');
+								setStatus('Pagamento recebido, mas a entrega precisa de suporte.', 'error');
+								if (pollTimer) window.clearInterval(pollTimer);
+								pollTimer = null;
+								return;
+							}
+
+							if (data.status === 'pago') {
+								setPixState('Pagamento aprovado. Entregando item na conta...', 'success');
+								return;
+							}
+
+							setPixState('Aguardando confirmação do Pix...', 'pending');
+						} catch (error) {
+							setPixState(error.message || 'Falha ao consultar status. Não feche esta janela ainda.', 'error');
+						}
+					};
+
+					check();
+					pollTimer = window.setInterval(check, 5000);
+				};
+
+				document.querySelectorAll('[data-pix-close]').forEach((button) => {
+					button.addEventListener('click', closePixModal);
+				});
+
+				modalCopy?.addEventListener('click', async () => {
+					const code = modalCode?.value || '';
+					if (!code) return;
+
+					try {
+						await navigator.clipboard.writeText(code);
+						setPixState('Código Pix copiado. Agora é só colar no app do banco.', 'success');
+					} catch {
+						modalCode?.select();
+						setPixState('Selecione e copie o código Pix manualmente.', 'pending');
+					}
+				});
 
 				buyButtons.forEach((button) => {
 					button.addEventListener('click', async () => {
@@ -362,11 +513,13 @@ const products = [
 
 						const originalLabel = button.textContent;
 						button.setAttribute('disabled', 'true');
-						button.textContent = 'Abrindo...';
-						setStatus(`Validando ID ${accountId} e preparando ${productName}...`, 'info');
+						button.textContent = 'Gerando Pix...';
+						resetPixModal(productName, accountId);
+						openPixModal();
+						setStatus(`Validando ID ${accountId} e gerando Pix para ${productName}...`, 'info');
 
 						try {
-							const response = await fetch(`${apiBase}/api/checkout-pro`, {
+							const response = await fetch(`${apiBase}/api/pix`, {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/json'
@@ -383,18 +536,24 @@ const products = [
 								throw new Error(data.error || data.details || 'Não foi possível iniciar o checkout.');
 							}
 
-							const checkoutUrl = data.initPoint || data.sandboxInitPoint;
-							if (!checkoutUrl) {
-								throw new Error('Mercado Pago não retornou o link de pagamento.');
+							if (!data.qrCode && !data.ticketUrl) {
+								throw new Error('Mercado Pago não retornou o Pix.');
 							}
 
-							setStatus(`Conta encontrada: ${data.accountName || accountId}. Redirecionando...`, 'success');
-							window.location.href = checkoutUrl;
+							renderPixPayment(data);
+							pollOrderStatus(data.orderId);
+							setStatus(`Pix gerado para ${data.accountName || accountId}. Aguardando pagamento.`, 'success');
 						} catch (error) {
 							setStatus(error.message || 'Erro ao iniciar compra. Chame o suporte.', 'error');
+							setPixState(error.message || 'Erro ao gerar Pix. Chame o suporte.', 'error');
+							if (modalLoading) modalLoading.hidden = true;
 							button.removeAttribute('disabled');
 							button.textContent = originalLabel;
+							return;
 						}
+
+						button.removeAttribute('disabled');
+						button.textContent = originalLabel;
 					});
 				});
 			})();
@@ -1007,6 +1166,174 @@ const products = [
 		color: #b8c4d8;
 	}
 
+	.shop-modal-open {
+		overflow: hidden;
+	}
+
+	.shop-pix-modal[hidden] {
+		display: none;
+	}
+
+	.shop-pix-modal {
+		position: fixed;
+		inset: 0;
+		z-index: 80;
+		display: grid;
+		place-items: center;
+		padding: 22px;
+	}
+
+	.shop-pix-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(2, 6, 18, 0.78);
+		backdrop-filter: blur(10px);
+	}
+
+	.shop-pix-dialog {
+		position: relative;
+		z-index: 1;
+		width: min(520px, 100%);
+		max-height: calc(100vh - 44px);
+		overflow-y: auto;
+		padding: 26px;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 28px;
+		color: var(--shop-navy);
+		background: var(--shop-white);
+		box-shadow: 0 30px 90px rgba(0, 0, 0, 0.36);
+	}
+
+	.shop-pix-dialog h2 {
+		margin-top: 6px;
+		color: var(--shop-navy);
+	}
+
+	.shop-pix-summary {
+		margin-top: 10px;
+		font-weight: 800;
+	}
+
+	.shop-pix-close {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		display: grid;
+		width: 38px;
+		height: 38px;
+		place-items: center;
+		border: 0;
+		border-radius: 14px;
+		color: var(--shop-navy);
+		background: #eef3ff;
+		cursor: pointer;
+		font-size: 1.5rem;
+		font-weight: 900;
+	}
+
+	.shop-pix-loading,
+	.shop-pix-state {
+		margin-top: 18px;
+		padding: 14px;
+		border-radius: 16px;
+		background: #f4f7ff;
+		color: var(--shop-blue-dark);
+		font-weight: 900;
+	}
+
+	.shop-pix-loading {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.shop-pix-loading span {
+		width: 16px;
+		height: 16px;
+		border: 3px solid rgba(20, 88, 255, 0.18);
+		border-top-color: var(--shop-blue);
+		border-radius: 50%;
+		animation: shop-spin 800ms linear infinite;
+	}
+
+	.shop-pix-content {
+		display: grid;
+		gap: 12px;
+		margin-top: 18px;
+	}
+
+	.shop-pix-content[hidden],
+	.shop-pix-loading[hidden] {
+		display: none;
+	}
+
+	.shop-pix-qr {
+		display: grid;
+		place-items: center;
+		padding: 16px;
+		border: 1px solid var(--shop-line);
+		border-radius: 22px;
+		background: #f8fbff;
+	}
+
+	.shop-pix-qr img {
+		width: min(260px, 100%);
+		border-radius: 14px;
+	}
+
+	.shop-pix-content label {
+		color: var(--shop-navy);
+		font-weight: 900;
+	}
+
+	.shop-pix-content textarea {
+		width: 100%;
+		min-height: 112px;
+		resize: vertical;
+		padding: 12px;
+		border: 1px solid var(--shop-line);
+		border-radius: 16px;
+		color: var(--shop-navy);
+		background: #f8fbff;
+		font: 700 0.86rem/1.45 'Manrope', sans-serif;
+	}
+
+	.shop-pix-copy,
+	.shop-pix-open {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 46px;
+		border: 0;
+		border-radius: var(--shop-radius-pill);
+		color: var(--shop-navy);
+		background: var(--shop-yellow);
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.shop-pix-open {
+		background: #eef3ff;
+		color: var(--shop-blue-dark);
+	}
+
+	.shop-pix-state[data-status='success'] {
+		background: #e7fff0;
+		color: #0c8a3e;
+	}
+
+	.shop-pix-state[data-status='error'] {
+		background: #fff0f0;
+		color: #c53030;
+	}
+
+	@keyframes shop-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
 	.shop-footer {
 		padding: 28px 0;
 		color: rgba(255, 255, 255, 0.76);
@@ -1081,6 +1408,18 @@ const products = [
 		.shop-buy-button,
 		.shop-product-disabled {
 			width: 100%;
+		}
+
+		.shop-pix-modal {
+			align-items: end;
+			padding: 10px;
+		}
+
+		.shop-pix-dialog {
+			width: 100%;
+			max-height: calc(100vh - 20px);
+			padding: 22px 18px;
+			border-radius: 24px;
 		}
 	}
 </style>
