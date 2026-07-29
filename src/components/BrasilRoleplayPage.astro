@@ -16,6 +16,9 @@ const homeUrl = withBase(isEnglish ? 'en/' : '');
 const faviconHref = withBase('favicon.png');
 const studioAsset = withBase('midnight-toronto/assets');
 const discordUrl = 'https://discord.gg/6GwbJRFhQU';
+const storeUrl = withBase('loja/');
+const storeLabel = isEnglish ? 'Server store' : 'Loja do servidor';
+const storeHeroLabel = isEnglish ? 'View store preview' : 'Ver loja do servidor';
 const logoImage = `${studioAsset}/images/midnight-city/171-brasil-roleplay-logo-v3.png`;
 const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/171-brasil-roleplay-logo-v3.png')}`;
 
@@ -252,6 +255,7 @@ const content = pageContent[locale];
 
 					<div class="mc-header-actions">
 						<a href={homeUrl} class="mc-link-back">{content.backLabel}</a>
+						<a href={storeUrl} class="mc-link-store">{storeLabel}</a>
 						<a href={discordUrl} target="_blank" rel="noreferrer" class="mc-link-discord">
 							{content.topCta}
 						</a>
@@ -282,6 +286,7 @@ const content = pageContent[locale];
 								>
 									{content.hero.primaryCta}
 								</a>
+								<a href={storeUrl} class="mc-btn mc-btn-store">{storeHeroLabel}</a>
 								<a href="#reasons" class="mc-btn mc-btn-secondary">{content.hero.secondaryCta}</a>
 							</div>
 
@@ -525,6 +530,7 @@ const content = pageContent[locale];
 	}
 
 	.mc-link-back,
+	.mc-link-store,
 	.mc-link-discord,
 	.mc-btn,
 	.mc-badge {
@@ -536,6 +542,7 @@ const content = pageContent[locale];
 	}
 
 	.mc-link-back,
+	.mc-link-store,
 	.mc-link-discord {
 		min-height: 44px;
 		padding: 0 18px;
@@ -544,6 +551,14 @@ const content = pageContent[locale];
 	.mc-link-back {
 		background: rgba(255, 255, 255, 0.74);
 		border: 1px solid var(--mc-line);
+	}
+
+	.mc-link-store,
+	.mc-btn-store {
+		background: rgba(255, 255, 255, 0.86);
+		border: 1px solid rgba(22, 163, 74, 0.22);
+		color: #0f6b34;
+		box-shadow: 0 12px 28px rgba(22, 163, 74, 0.12);
 	}
 
 	.mc-link-discord,
@@ -684,6 +699,7 @@ const content = pageContent[locale];
 
 	.mc-btn:hover,
 	.mc-link-discord:hover,
+	.mc-link-store:hover,
 	.mc-link-back:hover {
 		transform: translateY(-1px);
 	}
@@ -843,6 +859,7 @@ const content = pageContent[locale];
 		}
 
 		.mc-link-back,
+		.mc-link-store,
 		.mc-link-discord,
 		.mc-btn {
 			width: 100%;

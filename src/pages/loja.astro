@@ -1,0 +1,778 @@
+---
+import { withBase } from '../utils/paths';
+
+const siteUrl = 'https://midnighttoronto.com.br';
+const pagePath = 'loja/';
+const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
+const faviconHref = withBase('favicon.png');
+const roleplayUrl = withBase('171-brasil-roleplay/');
+const discordUrl = 'https://discord.gg/6GwbJRFhQU';
+const studioAsset = withBase('midnight-toronto/assets');
+const logoImage = `${studioAsset}/images/midnight-city/171-brasil-roleplay-logo-v3.png`;
+const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/171-brasil-roleplay-logo-v3.png')}`;
+
+const coinPackages = [
+	{
+		name: '10 mil moedas',
+		coins: '10.000',
+		price: 'R$ 10,00',
+		tag: 'Entrada',
+		description: 'Pacote inicial para testar vantagens, recursos e compras dentro do servidor.',
+		highlight: false
+	},
+	{
+		name: '25 mil moedas',
+		coins: '25.000',
+		price: 'R$ 25,00',
+		tag: 'Mais escolhido',
+		description: 'Um equilíbrio bom para jogadores que querem começar com mais liberdade no RP.',
+		highlight: true
+	},
+	{
+		name: '50 mil moedas',
+		coins: '50.000',
+		price: 'R$ 50,00',
+		tag: 'Maior saldo',
+		description: 'Pacote maior para quem quer guardar moedas e aproveitar futuras novidades.',
+		highlight: false
+	}
+];
+
+const vipFeatures = [
+	'Tag especial VIP quando o sistema for implementado',
+	'Benefícios exclusivos planejados para a abertura',
+	'Prioridade para testar ideias futuras da comunidade'
+];
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Loja 171 Brasil Roleplay | Pacotes de moedas e VIP</title>
+		<meta
+			name="description"
+			content="Loja em desenvolvimento da 171 Brasil Roleplay com pacotes de moedas e prévia de VIP para o servidor SA-MP."
+		/>
+		<meta
+			name="keywords"
+			content="loja 171 brasil roleplay, moedas samp, vip samp, samp mobile, servidor roleplay"
+		/>
+		<meta name="author" content="Jeová de Sousa" />
+		<meta name="robots" content="index, follow" />
+		<link rel="canonical" href={canonicalUrl} />
+		<link rel="icon" type="image/png" href={faviconHref} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="pt_BR" />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content="Loja 171 Brasil Roleplay" />
+		<meta
+			property="og:description"
+			content="Pacotes de moedas e prévia de VIP para a loja da 171 Brasil Roleplay."
+		/>
+		<meta property="og:image" content={socialImage} />
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalUrl} />
+		<meta property="twitter:title" content="Loja 171 Brasil Roleplay" />
+		<meta
+			property="twitter:description"
+			content="Pacotes de moedas e prévia de VIP para a loja da 171 Brasil Roleplay."
+		/>
+		<meta property="twitter:image" content={socialImage} />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@500;700;800&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<div class="store-page">
+			<header class="store-header">
+				<div class="store-container store-header-inner">
+					<a href={roleplayUrl} class="store-brand">
+						<div class="store-brand-logo-shell">
+							<img src={logoImage} alt="Logo da 171 Brasil Roleplay" class="store-brand-logo" />
+						</div>
+						<div>
+							<span class="store-brand-name">171 Brasil Roleplay</span>
+							<span class="store-brand-sub">Loja do servidor</span>
+						</div>
+					</a>
+
+					<nav class="store-nav" aria-label="Navegação da loja">
+						<a href={roleplayUrl}>Voltar ao projeto</a>
+						<a href="#pacotes">Pacotes</a>
+						<a href={discordUrl} target="_blank" rel="noreferrer" class="store-nav-strong">
+							Discord
+						</a>
+					</nav>
+				</div>
+			</header>
+
+			<main>
+				<section class="store-hero">
+					<div class="store-hero-bg" aria-hidden="true">
+						<img src={logoImage} alt="" />
+					</div>
+
+					<div class="store-container store-hero-grid">
+						<div class="store-hero-copy">
+							<p class="store-kicker">Loja em desenvolvimento</p>
+							<h1>Pacotes de moedas para a 171 Brasil Roleplay</h1>
+							<p class="store-hero-lead">
+								Esta é uma prévia da loja do servidor. Por enquanto, os sistemas de moedas,
+								VIP, pagamento e entrega automática ainda serão implementados no SA-MP e no
+								banco MySQL.
+							</p>
+
+							<div class="store-actions">
+								<a href="#pacotes" class="store-btn store-btn-primary">Ver pacotes</a>
+								<a href="#como-vai-funcionar" class="store-btn store-btn-secondary">
+									Como vai funcionar
+								</a>
+							</div>
+						</div>
+
+						<aside class="store-status-card">
+							<span class="store-pill">Modo conceito</span>
+							<h2>Entrega automática futura</h2>
+							<p>
+								Quando o sistema estiver pronto, o jogador vai informar o ID da conta, pagar
+								e receber as moedas após confirmação.
+							</p>
+							<div class="store-flow">
+								<span>Site</span>
+								<span>Pagamento</span>
+								<span>MySQL</span>
+								<span>Servidor SA-MP</span>
+							</div>
+						</aside>
+					</div>
+				</section>
+
+				<section id="pacotes" class="store-section">
+					<div class="store-container">
+						<div class="store-section-heading">
+							<p class="store-kicker">Moedas VIP</p>
+							<h2>Escolha um pacote</h2>
+							<p>
+								Cada 1.000 moedas custa R$ 1,00. Os botões ainda não cobram de verdade; eles
+								servem como base para o futuro checkout.
+							</p>
+						</div>
+
+						<div class="store-package-grid">
+							{coinPackages.map((pack) => (
+								<article class:list={['store-package-card', { 'store-package-featured': pack.highlight }]}>
+									<span class="store-package-tag">{pack.tag}</span>
+									<h3>{pack.name}</h3>
+									<p class="store-coins">{pack.coins} moedas</p>
+									<p class="store-price">{pack.price}</p>
+									<p>{pack.description}</p>
+									<a
+										href={`${discordUrl}`}
+										target="_blank"
+										rel="noreferrer"
+										class="store-btn store-btn-card"
+										aria-label={`Simular compra do pacote ${pack.name}`}
+									>
+										Simular pedido
+									</a>
+								</article>
+							))}
+						</div>
+					</div>
+				</section>
+
+				<section class="store-section store-section-soft">
+					<div class="store-container store-vip-grid">
+						<div class="store-section-heading">
+							<p class="store-kicker">Item especial</p>
+							<h2>VIP Fundador</h2>
+							<p>
+								Este item fica como ideia visual para quando o sistema de VIP existir no servidor.
+								Os benefícios finais ainda podem mudar conforme o gamemode evoluir.
+							</p>
+						</div>
+
+						<article class="store-vip-card">
+							<span class="store-package-tag">Em breve</span>
+							<h3>VIP Fundador</h3>
+							<p class="store-price">Preço a definir</p>
+							<ul>
+								{vipFeatures.map((feature) => <li>{feature}</li>)}
+							</ul>
+							<a href={discordUrl} target="_blank" rel="noreferrer" class="store-btn store-btn-card">
+								Acompanhar no Discord
+							</a>
+						</article>
+					</div>
+				</section>
+
+				<section id="como-vai-funcionar" class="store-section">
+					<div class="store-container">
+						<div class="store-section-heading">
+							<p class="store-kicker">Integração futura</p>
+							<h2>Como a compra poderá ser entregue no servidor</h2>
+							<p>
+								A entrega automática ideal usa uma API segura entre o pagamento e o banco de
+								dados. Assim nenhuma senha do MySQL fica exposta no site.
+							</p>
+						</div>
+
+						<div class="store-steps">
+							<article>
+								<span>01</span>
+								<h3>Jogador informa o ID</h3>
+								<p>O checkout pede o ID da conta do jogador no servidor.</p>
+							</article>
+							<article>
+								<span>02</span>
+								<h3>Pagamento é confirmado</h3>
+								<p>Um gateway como Pix ou cartão confirma a compra por webhook.</p>
+							</article>
+							<article>
+								<span>03</span>
+								<h3>Entrega entra no MySQL</h3>
+								<p>O backend cria uma entrega pendente para aquela conta.</p>
+							</article>
+							<article>
+								<span>04</span>
+								<h3>SA-MP aplica as moedas</h3>
+								<p>O servidor lê a entrega pendente e adiciona o saldo na conta do jogador.</p>
+							</article>
+						</div>
+					</div>
+				</section>
+
+				<section class="store-section">
+					<div class="store-container">
+						<div class="store-warning">
+							<div>
+								<p class="store-kicker">Aviso importante</p>
+								<h2>Compras reais ainda não estão ativas</h2>
+								<p>
+									Esta página é uma prévia para planejar a loja. Antes de vender de verdade,
+									será necessário implementar moedas/VIP no servidor, criar a API e configurar
+									o pagamento.
+								</p>
+							</div>
+							<a href={discordUrl} target="_blank" rel="noreferrer" class="store-btn store-btn-primary">
+								Entrar no Discord
+							</a>
+						</div>
+					</div>
+				</section>
+			</main>
+
+			<footer class="store-footer">
+				<div class="store-container store-footer-inner">
+					<p>171 Brasil Roleplay · Loja em desenvolvimento</p>
+					<a href={roleplayUrl}>Voltar para a página principal</a>
+				</div>
+			</footer>
+		</div>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--store-bg: #eef8f5;
+		--store-paper: rgba(255, 255, 255, 0.92);
+		--store-paper-strong: rgba(255, 255, 255, 0.98);
+		--store-line: rgba(19, 92, 70, 0.14);
+		--store-text: #0d2430;
+		--store-muted: #456067;
+		--store-blue: #0b61d9;
+		--store-green: #16a34a;
+		--store-gold: #f6b73c;
+		--store-shadow: 0 20px 54px rgba(11, 47, 76, 0.15);
+		--store-radius-xl: 36px;
+		--store-radius-lg: 28px;
+		--store-radius-md: 22px;
+		--store-radius-pill: 999px;
+	}
+
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		min-width: 320px;
+		font-family: 'Manrope', sans-serif;
+		color: var(--store-text);
+		background:
+			radial-gradient(circle at top left, rgba(80, 176, 255, 0.24), transparent 30%),
+			radial-gradient(circle at top right, rgba(77, 214, 121, 0.18), transparent 28%),
+			linear-gradient(180deg, #f6fffd 0%, #eef8f5 52%, #edf7ff 100%);
+	}
+
+	img {
+		display: block;
+		max-width: 100%;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.store-container {
+		width: min(1160px, calc(100% - 40px));
+		margin: 0 auto;
+	}
+
+	.store-header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		padding: 16px 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.58);
+		background: rgba(249, 255, 253, 0.88);
+		backdrop-filter: blur(14px);
+	}
+
+	.store-header-inner,
+	.store-brand,
+	.store-nav,
+	.store-actions,
+	.store-footer-inner,
+	.store-warning {
+		display: flex;
+		align-items: center;
+	}
+
+	.store-header-inner,
+	.store-footer-inner,
+	.store-warning {
+		justify-content: space-between;
+		gap: 18px;
+	}
+
+	.store-brand {
+		gap: 14px;
+		min-width: 0;
+	}
+
+	.store-brand-logo-shell {
+		width: 58px;
+		height: 58px;
+		flex-shrink: 0;
+		overflow: hidden;
+		border: 1px solid rgba(11, 97, 217, 0.08);
+		border-radius: 18px;
+		background: linear-gradient(135deg, #ffffff 0%, #d8f4e2 100%);
+		box-shadow: 0 10px 22px rgba(11, 54, 87, 0.14);
+	}
+
+	.store-brand-logo {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.store-brand-name,
+	.store-brand-sub {
+		display: block;
+	}
+
+	.store-brand-name,
+	.store-kicker,
+	.store-package-tag,
+	.store-pill,
+	.store-steps span {
+		font-weight: 800;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	.store-brand-name,
+	h1,
+	h2,
+	h3 {
+		font-family: 'Syne', sans-serif;
+	}
+
+	.store-brand-name {
+		font-size: 1rem;
+	}
+
+	.store-brand-sub,
+	.store-nav a,
+	.store-footer p,
+	.store-footer a {
+		color: var(--store-muted);
+		font-size: 0.92rem;
+	}
+
+	.store-nav {
+		gap: 12px;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+	}
+
+	.store-nav a,
+	.store-btn,
+	.store-pill,
+	.store-package-tag {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--store-radius-pill);
+	}
+
+	.store-nav a {
+		min-height: 44px;
+		padding: 0 18px;
+		border: 1px solid var(--store-line);
+		background: rgba(255, 255, 255, 0.74);
+		font-weight: 800;
+	}
+
+	.store-nav .store-nav-strong,
+	.store-btn-primary {
+		color: #ffffff;
+		border-color: transparent;
+		background: linear-gradient(135deg, #0c66e3 0%, #159947 100%);
+		box-shadow: 0 16px 32px rgba(12, 102, 227, 0.22);
+	}
+
+	.store-hero {
+		position: relative;
+		overflow: hidden;
+		padding: clamp(48px, 7vw, 92px) 0 clamp(54px, 8vw, 96px);
+	}
+
+	.store-hero-bg,
+	.store-hero-bg::after {
+		position: absolute;
+		inset: 0;
+	}
+
+	.store-hero-bg {
+		overflow: hidden;
+		background:
+			radial-gradient(circle at 18% 14%, rgba(103, 187, 255, 0.3), transparent 26%),
+			linear-gradient(135deg, #dff5ff 0%, #edfdf3 52%, #eff7ff 100%);
+	}
+
+	.store-hero-bg::after {
+		content: '';
+		background:
+			linear-gradient(90deg, rgba(248, 255, 254, 0.96) 0%, rgba(248, 255, 254, 0.9) 48%, rgba(248, 255, 254, 0.72) 100%);
+	}
+
+	.store-hero-bg img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: blur(18px) saturate(0.95) brightness(1.08);
+		opacity: 0.2;
+		transform: scale(1.08);
+	}
+
+	.store-hero-grid {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.58fr);
+		gap: clamp(24px, 4vw, 42px);
+		align-items: stretch;
+	}
+
+	.store-hero-copy,
+	.store-status-card,
+	.store-package-card,
+	.store-vip-card,
+	.store-steps article,
+	.store-warning {
+		border: 1px solid rgba(255, 255, 255, 0.72);
+		background: var(--store-paper);
+		backdrop-filter: blur(16px);
+		box-shadow: var(--store-shadow);
+	}
+
+	.store-hero-copy,
+	.store-status-card {
+		border-radius: var(--store-radius-xl);
+		padding: clamp(28px, 5vw, 46px);
+	}
+
+	.store-kicker,
+	.store-package-tag,
+	.store-pill,
+	.store-steps span {
+		color: #0a4cb0;
+		font-size: 0.78rem;
+	}
+
+	h1,
+	h2,
+	h3 {
+		letter-spacing: -0.03em;
+		line-height: 0.98;
+	}
+
+	h1 {
+		max-width: 12ch;
+		margin-top: 18px;
+		font-size: clamp(3rem, 7vw, 5.4rem);
+	}
+
+	h2 {
+		font-size: clamp(1.8rem, 3vw, 3rem);
+	}
+
+	h3 {
+		font-size: clamp(1.35rem, 2vw, 1.9rem);
+	}
+
+	p,
+	li {
+		font-size: 1.02rem;
+		line-height: 1.7;
+		color: var(--store-muted);
+	}
+
+	.store-hero-lead {
+		max-width: 62ch;
+		margin-top: 20px;
+		font-size: clamp(1.08rem, 1.8vw, 1.26rem);
+		font-weight: 700;
+		color: var(--store-text);
+	}
+
+	.store-actions {
+		flex-wrap: wrap;
+		gap: 14px;
+		margin-top: 30px;
+	}
+
+	.store-btn {
+		min-height: 54px;
+		padding: 0 22px;
+		border: 1px solid transparent;
+		font-weight: 800;
+		transition: transform 180ms ease, box-shadow 180ms ease;
+	}
+
+	.store-btn:hover,
+	.store-nav a:hover {
+		transform: translateY(-1px);
+	}
+
+	.store-btn-secondary,
+	.store-btn-card {
+		background: rgba(255, 255, 255, 0.84);
+		border-color: rgba(11, 97, 217, 0.14);
+		color: var(--store-text);
+	}
+
+	.store-btn-card {
+		width: 100%;
+		margin-top: 22px;
+		border-color: rgba(22, 163, 74, 0.22);
+		color: #0f6b34;
+	}
+
+	.store-status-card {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(234, 248, 255, 0.96) 48%, rgba(236, 255, 243, 0.96) 100%);
+	}
+
+	.store-status-card h2,
+	.store-status-card p {
+		margin-top: 18px;
+	}
+
+	.store-pill,
+	.store-package-tag {
+		width: fit-content;
+		min-height: 34px;
+		padding: 0 13px;
+		border: 1px solid rgba(11, 97, 217, 0.12);
+		background: rgba(255, 255, 255, 0.74);
+	}
+
+	.store-flow {
+		display: grid;
+		gap: 10px;
+		margin-top: 28px;
+	}
+
+	.store-flow span {
+		padding: 13px 16px;
+		border: 1px solid var(--store-line);
+		border-radius: 16px;
+		background: rgba(255, 255, 255, 0.68);
+		font-weight: 800;
+	}
+
+	.store-section {
+		padding: clamp(56px, 8vw, 96px) 0;
+	}
+
+	.store-section-soft {
+		border-block: 1px solid rgba(255, 255, 255, 0.44);
+		background: linear-gradient(180deg, rgba(236, 248, 255, 0.6) 0%, rgba(236, 252, 243, 0.62) 100%);
+	}
+
+	.store-section-heading {
+		display: grid;
+		gap: 16px;
+		max-width: 760px;
+	}
+
+	.store-package-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 22px;
+		margin-top: 32px;
+	}
+
+	.store-package-card,
+	.store-vip-card,
+	.store-steps article,
+	.store-warning {
+		border-radius: var(--store-radius-lg);
+		padding: 28px;
+	}
+
+	.store-package-featured {
+		position: relative;
+		border-color: rgba(22, 163, 74, 0.3);
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(235, 255, 242, 0.96) 100%);
+		transform: translateY(-10px);
+	}
+
+	.store-package-card h3,
+	.store-vip-card h3 {
+		margin-top: 18px;
+	}
+
+	.store-coins {
+		margin-top: 14px;
+		font-weight: 800;
+		color: var(--store-text);
+	}
+
+	.store-price {
+		margin-top: 8px;
+		margin-bottom: 14px;
+		font-family: 'Syne', sans-serif;
+		font-size: clamp(2rem, 3vw, 3rem);
+		font-weight: 800;
+		line-height: 1;
+		color: var(--store-blue);
+	}
+
+	.store-vip-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(300px, 0.52fr);
+		gap: 28px;
+		align-items: start;
+	}
+
+	.store-vip-card ul {
+		display: grid;
+		gap: 12px;
+		margin-top: 18px;
+		padding-left: 20px;
+	}
+
+	.store-steps {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 18px;
+		margin-top: 32px;
+	}
+
+	.store-steps h3 {
+		margin-top: 16px;
+	}
+
+	.store-steps p {
+		margin-top: 12px;
+	}
+
+	.store-warning {
+		background: linear-gradient(135deg, rgba(252, 255, 255, 0.96) 0%, rgba(239, 249, 255, 0.96) 50%, rgba(239, 255, 244, 0.96) 100%);
+	}
+
+	.store-warning p {
+		max-width: 62ch;
+		margin-top: 14px;
+	}
+
+	.store-footer {
+		padding: 0 0 40px;
+	}
+
+	.store-footer-inner {
+		padding-top: 18px;
+		border-top: 1px solid var(--store-line);
+	}
+
+	@media (max-width: 1040px) {
+		.store-hero-grid,
+		.store-package-grid,
+		.store-vip-grid,
+		.store-steps,
+		.store-warning {
+			grid-template-columns: 1fr;
+		}
+
+		.store-warning {
+			display: grid;
+		}
+
+		.store-package-featured {
+			transform: none;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.store-container {
+			width: min(100% - 28px, 1160px);
+		}
+
+		.store-header-inner,
+		.store-footer-inner {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.store-nav,
+		.store-actions,
+		.store-btn,
+		.store-nav a {
+			width: 100%;
+		}
+
+		h1 {
+			max-width: none;
+			font-size: clamp(2.55rem, 13vw, 4rem);
+		}
+
+		.store-hero-copy,
+		.store-status-card,
+		.store-package-card,
+		.store-vip-card,
+		.store-steps article,
+		.store-warning {
+			padding: 22px;
+		}
+	}
+</style>
