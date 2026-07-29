@@ -346,6 +346,7 @@ const products = [
 
 				<div class="shop-account-result" data-account-result hidden>
 					<div class="shop-skin-card">
+						<img data-account-skin-image alt="Modelo visual da skin da conta" />
 						<span>Skin</span>
 						<strong data-account-skin>#0</strong>
 					</div>
@@ -397,6 +398,14 @@ const products = [
 					</a>
 				</div>
 
+				<div class="shop-pix-success" data-pix-success hidden>
+					<div class="shop-success-icon">✓</div>
+					<h3>Pedido confirmado</h3>
+					<p>
+						Pagamento aprovado e item entregue na conta. Pode entrar no servidor para conferir.
+					</p>
+				</div>
+
 				<div class="shop-pix-state" data-pix-state>
 					Aguardando geração do Pix.
 				</div>
@@ -416,6 +425,7 @@ const products = [
 				const accountResult = document.querySelector('[data-account-result]');
 				const accountName = document.querySelector('[data-account-name]');
 				const accountSkin = document.querySelector('[data-account-skin]');
+				const accountSkinImage = document.querySelector('[data-account-skin-image]');
 				const accountLevel = document.querySelector('[data-account-level]');
 				const accountState = document.querySelector('[data-account-state]');
 				const accountVerify = document.querySelector('[data-account-verify]');
@@ -425,6 +435,7 @@ const products = [
 				const modalSummary = document.querySelector('[data-pix-summary]');
 				const modalLoading = document.querySelector('[data-pix-loading]');
 				const modalContent = document.querySelector('[data-pix-content]');
+				const modalSuccess = document.querySelector('[data-pix-success]');
 				const modalQr = document.querySelector('[data-pix-qr]');
 				const modalCode = document.querySelector('[data-pix-code]');
 				const modalCopy = document.querySelector('[data-pix-copy]');
@@ -491,6 +502,7 @@ const products = [
 					if (modalSummary) modalSummary.textContent = `${productName} para o ID ${accountId}`;
 					if (modalLoading) modalLoading.hidden = false;
 					if (modalContent) modalContent.hidden = true;
+					if (modalSuccess) modalSuccess.hidden = true;
 					if (modalQr) modalQr.removeAttribute('src');
 					if (modalCode) modalCode.value = '';
 					if (modalOpen) {
@@ -531,6 +543,9 @@ const products = [
 							}
 
 							if (data.status === 'entregue' || data.deliveryStatus === 'entregue') {
+								if (modalContent) modalContent.hidden = true;
+								if (modalLoading) modalLoading.hidden = true;
+								if (modalSuccess) modalSuccess.hidden = false;
 								setPixState('Pagamento aprovado e item entregue na conta. Pode entrar no servidor!', 'success');
 								setStatus('Compra aprovada e entregue na conta.', 'success');
 								if (pollTimer) window.clearInterval(pollTimer);
@@ -589,6 +604,11 @@ const products = [
 						selectedAccount = data;
 						if (accountName) accountName.textContent = data.name || 'Jogador';
 						if (accountSkin) accountSkin.textContent = `#${data.skin ?? '-'}`;
+						if (accountSkinImage) {
+							const skin = Number.isInteger(Number(data.skin)) ? Number(data.skin) : 0;
+							accountSkinImage.src = `https://assets.open.mp/assets/images/skins/${skin}.png`;
+							accountSkinImage.hidden = false;
+						}
 						if (accountLevel) accountLevel.textContent = data.level ?? 'Não disponível';
 						if (accountResult) accountResult.hidden = false;
 						if (accountConfirm) accountConfirm.hidden = false;
@@ -1417,6 +1437,14 @@ const products = [
 			#eef3ff !important;
 	}
 
+	.shop-skin-card img {
+		width: 64px;
+		height: 118px;
+		object-fit: contain;
+		object-position: bottom center;
+		filter: drop-shadow(0 12px 18px rgba(7, 20, 38, 0.22));
+	}
+
 	.shop-skin-card strong {
 		font-size: 1.7rem;
 		color: var(--shop-blue-dark);
@@ -1514,6 +1542,46 @@ const products = [
 		color: var(--shop-navy);
 		background: #f8fbff;
 		font: 700 0.86rem/1.45 'Manrope', sans-serif;
+	}
+
+	.shop-pix-success {
+		display: grid;
+		place-items: center;
+		gap: 10px;
+		margin-top: 20px;
+		padding: 24px;
+		border: 1px solid rgba(12, 138, 62, 0.18);
+		border-radius: 22px;
+		background: linear-gradient(180deg, #effff5 0%, #ffffff 100%);
+		text-align: center;
+	}
+
+	.shop-pix-success[hidden] {
+		display: none;
+	}
+
+	.shop-success-icon {
+		display: grid;
+		width: 64px;
+		height: 64px;
+		place-items: center;
+		border-radius: 22px;
+		color: #ffffff;
+		background: #0c8a3e;
+		font-size: 2rem;
+		font-weight: 900;
+		box-shadow: 0 14px 28px rgba(12, 138, 62, 0.22);
+	}
+
+	.shop-pix-success h3 {
+		color: var(--shop-navy);
+		font-size: 1.45rem;
+	}
+
+	.shop-pix-success p {
+		max-width: 34ch;
+		color: var(--shop-muted);
+		font-weight: 800;
 	}
 
 	.shop-pix-copy,
