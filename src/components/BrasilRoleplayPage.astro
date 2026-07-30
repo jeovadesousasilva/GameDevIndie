@@ -15,203 +15,148 @@ const enUrl = `${siteUrl}${withBase('en/171-brasil-roleplay/')}`;
 const homeUrl = withBase(isEnglish ? 'en/' : '');
 const faviconHref = withBase('favicon.png');
 const studioAsset = withBase('midnight-toronto/assets');
+const serverAsset = withBase('midnight-toronto/assets/images/171-brasil-roleplay');
 const discordUrl = 'https://discord.gg/6GwbJRFhQU';
 const storeUrl = withBase('loja/');
-const storeLabel = isEnglish ? 'Server store' : 'Loja do servidor';
-const storeHeroLabel = isEnglish ? 'View store preview' : 'Ver loja do servidor';
 const logoImage = `${studioAsset}/images/midnight-city/171-brasil-roleplay-logo-v3.png`;
 const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/171-brasil-roleplay-logo-v3.png')}`;
 
-const pageContent = {
-	'pt-BR': {
-		locale: 'pt-BR',
-		seo: {
-			title: '171 Brasil Roleplay | Servidor SA-MP Mobile em desenvolvimento',
+const content = isEnglish
+	? {
+			locale: 'en',
+			seoTitle: '171 Brasil Roleplay | SA-MP Mobile server by Midnight Toronto',
+			seoDescription:
+				'171 Brasil Roleplay is a SA-MP Mobile roleplay server project by Midnight Toronto, with inventory, garages, vehicle trunks, mobile HUD and in-game systems.',
+			backLabel: 'Midnight Toronto',
+			storeLabel: 'Store',
+			supportLabel: 'Support',
+			kicker: 'SA-MP Mobile roleplay',
+			title: 'A Brazilian roleplay city built for mobile.',
 			description:
-				'171 Brasil Roleplay é um novo projeto de SA-MP Mobile em desenvolvimento. Entre no Discord para acompanhar a comunidade, votar em ideias e ficar perto das primeiras fases.',
-			keywords:
-				'171 brasil roleplay, samp mobile, sa-mp mobile, servidor roleplay mobile, discord samp, midnight toronto',
-			ogLocale: 'pt_BR'
-		},
-		backLabel: 'Midnight Toronto',
-		topCta: 'Entrar no Discord',
-		hero: {
-			eyebrow: 'Nova comunidade SA-MP Mobile',
-			title: '171 Brasil Roleplay',
-			subtitle:
-				'Um novo projeto de roleplay mobile em desenvolvimento, com comunidade sendo formada agora antes da abertura oficial.',
+				'171 Brasil Roleplay is being shaped as a complete city experience: account progression, vehicles, inventory, garage slots, economy and immersive systems prepared for the official launch.',
+			primaryCta: 'Open server store',
+			secondaryCta: 'View systems',
+			badges: ['Mobile-first', 'Custom systems', 'Project by Midnight Toronto'],
+			systemsTitle: 'Server systems',
+			systemsIntro:
+				'A cleaner look for the website, showing what the player can expect inside the city without turning the homepage into only a Discord invite.',
+			features: [
+				{
+					title: 'Inventory and backpack',
+					description: 'Organized slots, item weight and quick actions for daily roleplay.',
+					image: `${serverAsset}/inventario.png`,
+					label: 'Inventory'
+				},
+				{
+					title: 'Garage and vehicle slots',
+					description: 'A visual garage for personal and work vehicles, with fuel, armor and condition details.',
+					image: `${serverAsset}/garagem.png`,
+					label: 'Garage'
+				},
+				{
+					title: 'Vehicle trunk',
+					description: 'Vehicle storage designed for player logistics and roleplay economy.',
+					image: `${serverAsset}/bau-veiculo.png`,
+					label: 'Trunk'
+				},
+				{
+					title: 'Mobile gameplay',
+					description: 'Interface and HUD prepared for a comfortable SA-MP Mobile experience.',
+					image: `${serverAsset}/mobile-gameplay.png`,
+					label: 'Mobile'
+				},
+				{
+					title: 'Illegal economy areas',
+					description: 'Restricted markets and risky interactions to create story opportunities.',
+					image: `${serverAsset}/armas-ilegais.png`,
+					label: 'Roleplay'
+				}
+			],
+			stats: [
+				['Focus', 'SA-MP Mobile'],
+				['Store', 'Pix integration'],
+				['Delivery', 'Automatic queue']
+			],
+			ctaTitle: 'Follow the project and prepare your account for launch.',
+			ctaDescription:
+				'The store preview is already connected to the purchase flow, while the server systems continue evolving toward the official release.',
+			rights:
+				'Midnight Toronto © 2026. 171 Brasil Roleplay is a Midnight Toronto project. All rights reserved.'
+		}
+	: {
+			locale: 'pt-BR',
+			seoTitle: '171 Brasil Roleplay | Servidor SA-MP Mobile da Midnight Toronto',
+			seoDescription:
+				'171 Brasil Roleplay é um servidor de SA-MP Mobile em desenvolvimento pela Midnight Toronto, com inventário, garagem, baú, HUD mobile e sistemas próprios.',
+			backLabel: 'Midnight Toronto',
+			storeLabel: 'Loja',
+			supportLabel: 'Suporte',
+			kicker: 'Roleplay SA-MP Mobile',
+			title: 'Uma cidade brasileira feita para jogar no celular.',
 			description:
-				'Quem entrar no Discord vai entender tudo rápido: a proposta do projeto, as próximas novidades e como acompanhar as primeiras fases mais de perto.',
-			primaryCta: 'Entrar no Discord agora',
-			secondaryCta: 'Entender o projeto',
-			badges: ['Tema claro e direto', 'Comunidade em formação', 'Paleta azul, verde e branco']
-		},
-		snapshotTitle: 'Em poucos segundos, o que importa saber',
-		snapshot: [
-			{
-				label: 'O que é',
-				value: '171 Brasil Roleplay é uma nova comunidade focada em SA-MP Mobile.'
-			},
-			{
-				label: 'Em que fase está',
-				value: 'O projeto ainda está em desenvolvimento e reunindo a comunidade inicial.'
-			},
-			{
-				label: 'O que fazer agora',
-				value: 'Entrar no Discord para acompanhar as atualizações desde o começo.'
-			}
-		],
-		reasonsTitle: 'Por que entrar agora faz sentido',
-		reasonsIntro:
-			'Quem chega cedo acompanha a evolução do projeto com mais clareza e participa mais de perto da construção da comunidade.',
-		reasons: [
-			{
-				title: 'Acompanhar as novidades primeiro',
-				description:
-					'As principais atualizações, anúncios e mudanças de direção vão aparecer primeiro dentro da comunidade.'
-			},
-			{
-				title: 'Participar com opinião real',
-				description:
-					'Você pode votar em enquetes, sugerir ideias e ajudar a mostrar o que combina com a proposta do servidor.'
-			},
-			{
-				title: 'Ficar perto das primeiras fases',
-				description:
-					'Quando surgirem novas etapas e testes, o Discord será o caminho mais natural para acompanhar tudo.'
-			}
-		],
-		discordTitle: 'O Discord será o centro da 171 Brasil Roleplay',
-		discordIntro:
-			'É lá que a comunidade vai crescer nesta fase inicial, com comunicação mais simples, anúncios rápidos e espaço para acompanhar a evolução do projeto.',
-		discordPoints: [
-			{
-				step: '01',
-				title: 'Atualizações e anúncios',
-				description:
-					'Você vê rapidamente o que mudou, o que está sendo preparado e quais serão os próximos passos.'
-			},
-			{
-				step: '02',
-				title: 'Enquetes e sugestões',
-				description:
-					'A comunidade ajuda a apontar preferências, ideias e prioridades para deixar o projeto mais alinhado com o público.'
-			},
-			{
-				step: '03',
-				title: 'Mais proximidade com o projeto',
-				description:
-					'Entrar agora é a forma mais simples de ficar perto da identidade da 171 Brasil Roleplay desde o começo.'
-			}
-		],
-		ctaTitle: 'Se você curte SA-MP Mobile, este é um bom momento para entrar.',
-		ctaDescription:
-			'Entre no Discord da 171 Brasil Roleplay e acompanhe a comunidade desde o início.',
-		ctaButton: 'Participar da comunidade',
-		footer: '171 Brasil Roleplay',
-		logoAlt: 'Logo da 171 Brasil Roleplay'
-	},
-	en: {
-		locale: 'en',
-		seo: {
-			title: '171 Brasil Roleplay | SA-MP Mobile project in development',
-			description:
-				'171 Brasil Roleplay is a new SA-MP Mobile project in development. Join the Discord to follow the community, vote on ideas, and stay close to early phases.',
-			keywords:
-				'171 brasil roleplay, samp mobile, sa-mp mobile, mobile roleplay server, discord samp, midnight toronto',
-			ogLocale: 'en_US'
-		},
-		backLabel: 'Midnight Toronto',
-		topCta: 'Join Discord',
-		hero: {
-			eyebrow: 'New SA-MP Mobile community',
-			title: '171 Brasil Roleplay',
-			subtitle:
-				'A new mobile roleplay project in development, with its first community being formed before the official opening.',
-			description:
-				'People who join the Discord will understand the project quickly: the proposal, the next updates, and how to stay closer to the first phases.',
-			primaryCta: 'Join Discord now',
-			secondaryCta: 'Understand the project',
-			badges: ['Clear and welcoming theme', 'Community forming now', 'Blue, green, and white identity']
-		},
-		snapshotTitle: 'What matters most at a glance',
-		snapshot: [
-			{
-				label: 'What it is',
-				value: '171 Brasil Roleplay is a new community focused on SA-MP Mobile.'
-			},
-			{
-				label: 'Current stage',
-				value: 'The project is still in development and gathering its first community.'
-			},
-			{
-				label: 'What to do now',
-				value: 'Join the Discord to follow updates from the very beginning.'
-			}
-		],
-		reasonsTitle: 'Why joining now makes sense',
-		reasonsIntro:
-			'People who arrive early can follow the project more clearly and stay closer to the way the community is taking shape.',
-		reasons: [
-			{
-				title: 'See updates first',
-				description:
-					'The main news, announcements, and direction changes will show up inside the community first.'
-			},
-			{
-				title: 'Take part with real feedback',
-				description:
-					'You can vote in polls, suggest ideas, and help show what best fits the server vision.'
-			},
-			{
-				title: 'Stay closer to early phases',
-				description:
-					'When new phases and tests start to appear, Discord will be the easiest place to follow everything.'
-			}
-		],
-		discordTitle: 'Discord will be the center of 171 Brasil Roleplay',
-		discordIntro:
-			'That is where the community will grow during this early phase, with simple communication, quick updates, and a clear place to follow the project.',
-		discordPoints: [
-			{
-				step: '01',
-				title: 'Updates and announcements',
-				description:
-					'You can quickly see what changed, what is being prepared, and what comes next.'
-			},
-			{
-				step: '02',
-				title: 'Polls and suggestions',
-				description:
-					'The community helps point to preferences, ideas, and priorities so the project feels closer to its audience.'
-			},
-			{
-				step: '03',
-				title: 'Closer to the project',
-				description:
-					'Joining now is the simplest way to stay close to the identity of 171 Brasil Roleplay from the start.'
-			}
-		],
-		ctaTitle: 'If you enjoy SA-MP Mobile, this is a great moment to join.',
-		ctaDescription:
-			'Join the 171 Brasil Roleplay Discord and follow the community from the beginning.',
-		ctaButton: 'Join the community',
-		footer: '171 Brasil Roleplay',
-		logoAlt: '171 Brasil Roleplay logo'
-	}
-} as const;
-
-const content = pageContent[locale];
+				'O 171 Brasil Roleplay está sendo construído como uma experiência completa de cidade: evolução de conta, veículos, inventário, garagem, economia e sistemas imersivos preparados para a abertura oficial.',
+			primaryCta: 'Abrir loja do servidor',
+			secondaryCta: 'Ver sistemas',
+			badges: ['Pensado para mobile', 'Sistemas próprios', 'Projeto Midnight Toronto'],
+			systemsTitle: 'Sistemas do servidor',
+			systemsIntro:
+				'A página agora apresenta o servidor com calma, mostrando o que o jogador pode esperar dentro da cidade, sem parecer apenas um convite para Discord.',
+			features: [
+				{
+					title: 'Inventário e mochila',
+					description: 'Slots organizados, peso dos itens e ações rápidas para o roleplay do dia a dia.',
+					image: `${serverAsset}/inventario.png`,
+					label: 'Inventário'
+				},
+				{
+					title: 'Garagem e slots',
+					description: 'Garagem visual para veículos pessoais e de trabalho, com combustível, blindagem e lataria.',
+					image: `${serverAsset}/garagem.png`,
+					label: 'Garagem'
+				},
+				{
+					title: 'Baú de veículos',
+					description: 'Armazenamento no veículo para dar mais peso à economia e à logística dos jogadores.',
+					image: `${serverAsset}/bau-veiculo.png`,
+					label: 'Baú'
+				},
+				{
+					title: 'Gameplay mobile',
+					description: 'Interface e HUD preparados para uma experiência confortável no SA-MP Mobile.',
+					image: `${serverAsset}/mobile-gameplay.png`,
+					label: 'Mobile'
+				},
+				{
+					title: 'Áreas de economia ilegal',
+					description: 'Mercados restritos e interações de risco para criar histórias dentro do roleplay.',
+					image: `${serverAsset}/armas-ilegais.png`,
+					label: 'Roleplay'
+				}
+			],
+			stats: [
+				['Foco', 'SA-MP Mobile'],
+				['Loja', 'Pix integrado'],
+				['Entrega', 'Fila automática']
+			],
+			ctaTitle: 'Acompanhe o projeto e prepare sua conta para a abertura.',
+			ctaDescription:
+				'A loja já está em prévia com fluxo de compra, enquanto os sistemas do servidor evoluem para a versão oficial.',
+			rights:
+				'Midnight Toronto © 2026. 171 Brasil Roleplay é um projeto de Midnight Toronto. Todos os direitos reservados.'
+		};
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={content.locale}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>{content.seo.title}</title>
-		<meta name="description" content={content.seo.description} />
-		<meta name="keywords" content={content.seo.keywords} />
+		<title>{content.seoTitle}</title>
+		<meta name="description" content={content.seoDescription} />
+		<meta
+			name="keywords"
+			content="171 brasil roleplay, samp mobile, sa-mp mobile, servidor roleplay, midnight toronto"
+		/>
 		<meta name="author" content="Jeová de Sousa" />
 		<meta name="robots" content="index, follow" />
 		<link rel="canonical" href={canonicalUrl} />
@@ -221,166 +166,121 @@ const content = pageContent[locale];
 		<link rel="icon" type="image/png" href={faviconHref} />
 
 		<meta property="og:type" content="website" />
-		<meta property="og:locale" content={content.seo.ogLocale} />
+		<meta property="og:locale" content={isEnglish ? 'en_US' : 'pt_BR'} />
 		<meta property="og:url" content={canonicalUrl} />
-		<meta property="og:title" content={content.seo.title} />
-		<meta property="og:description" content={content.seo.description} />
+		<meta property="og:title" content={content.seoTitle} />
+		<meta property="og:description" content={content.seoDescription} />
 		<meta property="og:image" content={socialImage} />
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:url" content={canonicalUrl} />
-		<meta property="twitter:title" content={content.seo.title} />
-		<meta property="twitter:description" content={content.seo.description} />
+		<meta property="twitter:title" content={content.seoTitle} />
+		<meta property="twitter:description" content={content.seoDescription} />
 		<meta property="twitter:image" content={socialImage} />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@500;700;800&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap"
 			rel="stylesheet"
 		/>
 	</head>
 	<body>
-		<div class="mc-page">
-			<header class="mc-header">
-				<div class="mc-container mc-header-inner">
-					<a href={homeUrl} class="mc-brand">
-						<div class="mc-brand-logo-shell">
-							<img src={logoImage} alt={content.logoAlt} class="mc-brand-logo" />
-						</div>
-						<div class="mc-brand-copy">
-							<span class="mc-brand-name">171 Brasil Roleplay</span>
-							<span class="mc-brand-sub">{content.backLabel}</span>
-						</div>
+		<div class="rp-page">
+			<header class="rp-header">
+				<div class="rp-container rp-header-inner">
+					<a href={homeUrl} class="rp-brand" aria-label="Midnight Toronto">
+						<span class="rp-logo">
+							<img src={logoImage} alt="171 Brasil Roleplay" />
+						</span>
+						<span>
+							<strong>171 Brasil RP</strong>
+							<small>{content.backLabel}</small>
+						</span>
 					</a>
 
-					<div class="mc-header-actions">
-						<a href={homeUrl} class="mc-link-back">{content.backLabel}</a>
-						<a href={storeUrl} class="mc-link-store">{storeLabel}</a>
-						<a href={discordUrl} target="_blank" rel="noreferrer" class="mc-link-discord">
-							{content.topCta}
-						</a>
-					</div>
+					<nav class="rp-nav" aria-label="Navegação principal">
+						<a href={storeUrl}>{content.storeLabel}</a>
+						<a href={discordUrl} target="_blank" rel="noreferrer">{content.supportLabel}</a>
+					</nav>
 				</div>
 			</header>
 
 			<main>
-				<section class="mc-hero">
-					<div class="mc-hero-backdrop" aria-hidden="true">
-						<img src={logoImage} alt="" class="mc-hero-backdrop-image" />
-						<div class="mc-hero-overlay"></div>
-					</div>
+				<section class="rp-hero">
+					<div class="rp-container rp-hero-grid">
+						<div class="rp-hero-copy">
+							<p class="rp-kicker">{content.kicker}</p>
+							<h1>{content.title}</h1>
+							<p class="rp-lead">{content.description}</p>
 
-					<div class="mc-container mc-hero-layout">
-						<div class="mc-hero-copy">
-							<p class="mc-kicker">{content.hero.eyebrow}</p>
-							<h1>{content.hero.title}</h1>
-							<p class="mc-hero-subtitle">{content.hero.subtitle}</p>
-							<p class="mc-hero-description">{content.hero.description}</p>
-
-							<div class="mc-actions">
-								<a
-									href={discordUrl}
-									target="_blank"
-									rel="noreferrer"
-									class="mc-btn mc-btn-primary"
-								>
-									{content.hero.primaryCta}
-								</a>
-								<a href={storeUrl} class="mc-btn mc-btn-store">{storeHeroLabel}</a>
-								<a href="#reasons" class="mc-btn mc-btn-secondary">{content.hero.secondaryCta}</a>
+							<div class="rp-actions">
+								<a href={storeUrl} class="rp-button rp-button-primary">{content.primaryCta}</a>
+								<a href="#sistemas" class="rp-button rp-button-dark">{content.secondaryCta}</a>
 							</div>
 
-							<div class="mc-badges">
-								{content.hero.badges.map((badge) => (
-									<span class="mc-badge">{badge}</span>
+							<div class="rp-badges">
+								{content.badges.map((badge) => <span>{badge}</span>)}
+							</div>
+						</div>
+
+						<div class="rp-hero-showcase">
+							<div class="rp-phone-frame">
+								<img src={`${serverAsset}/mobile-gameplay.png`} alt="Gameplay mobile do 171 Brasil Roleplay" />
+							</div>
+							<div class="rp-stat-card">
+								{content.stats.map(([label, value]) => (
+									<article>
+										<span>{label}</span>
+										<strong>{value}</strong>
+									</article>
 								))}
 							</div>
 						</div>
-
-						<aside class="mc-hero-side">
-							<div class="mc-logo-card">
-								<img src={logoImage} alt={content.logoAlt} class="mc-hero-logo" />
-							</div>
-
-							<div class="mc-snapshot-card">
-								<h2>{content.snapshotTitle}</h2>
-								<div class="mc-snapshot-list">
-									{content.snapshot.map((item) => (
-										<div class="mc-snapshot-item">
-											<span>{item.label}</span>
-											<p>{item.value}</p>
-										</div>
-									))}
-								</div>
-							</div>
-						</aside>
 					</div>
 				</section>
 
-				<section id="reasons" class="mc-section">
-					<div class="mc-container">
-						<div class="mc-section-heading">
-							<p class="mc-kicker">171 Brasil Roleplay</p>
-							<h2>{content.reasonsTitle}</h2>
-							<p>{content.reasonsIntro}</p>
+				<section id="sistemas" class="rp-section">
+					<div class="rp-container">
+						<div class="rp-section-head">
+							<p class="rp-kicker">171 Brasil Roleplay</p>
+							<h2>{content.systemsTitle}</h2>
+							<p>{content.systemsIntro}</p>
 						</div>
 
-						<div class="mc-card-grid">
-							{content.reasons.map((reason) => (
-								<article class="mc-card">
-									<h3>{reason.title}</h3>
-									<p>{reason.description}</p>
+						<div class="rp-gallery">
+							{content.features.map((feature, index) => (
+								<article class:list={['rp-feature-card', index === 0 && 'rp-feature-wide']}>
+									<div class="rp-feature-image">
+										<img src={feature.image} alt={feature.title} loading={index > 1 ? 'lazy' : undefined} />
+										<span>{feature.label}</span>
+									</div>
+									<div class="rp-feature-body">
+										<h3>{feature.title}</h3>
+										<p>{feature.description}</p>
+									</div>
 								</article>
 							))}
 						</div>
 					</div>
 				</section>
 
-				<section class="mc-section mc-section-soft">
-					<div class="mc-container">
-						<div class="mc-section-heading">
-							<p class="mc-kicker">Discord</p>
-							<h2>{content.discordTitle}</h2>
-							<p>{content.discordIntro}</p>
-						</div>
-
-						<div class="mc-card-grid">
-							{content.discordPoints.map((item) => (
-								<article class="mc-card mc-card-step">
-									<span class="mc-step">{item.step}</span>
-									<h3>{item.title}</h3>
-									<p>{item.description}</p>
-								</article>
-							))}
-						</div>
-					</div>
-				</section>
-
-				<section class="mc-section">
-					<div class="mc-container">
-						<div class="mc-cta-panel">
+				<section class="rp-section rp-final-section">
+					<div class="rp-container">
+						<div class="rp-final-card">
 							<div>
-								<p class="mc-kicker">Discord</p>
+								<p class="rp-kicker">Midnight Toronto</p>
 								<h2>{content.ctaTitle}</h2>
 								<p>{content.ctaDescription}</p>
 							</div>
-
-							<a
-								href={discordUrl}
-								target="_blank"
-								rel="noreferrer"
-								class="mc-btn mc-btn-primary mc-btn-large"
-							>
-								{content.ctaButton}
-							</a>
+							<a href={storeUrl} class="rp-button rp-button-primary">{content.primaryCta}</a>
 						</div>
 					</div>
 				</section>
 			</main>
 
-			<footer class="mc-footer">
-				<div class="mc-container mc-footer-inner">
-					<p>{content.footer} by Midnight Toronto</p>
+			<footer class="rp-footer">
+				<div class="rp-container rp-footer-inner">
+					<p>{content.rights}</p>
 					<a href={homeUrl}>{content.backLabel}</a>
 				</div>
 			</footer>
@@ -390,21 +290,18 @@ const content = pageContent[locale];
 
 <style is:global>
 	:root {
-		--mc-bg: #eef8f5;
-		--mc-bg-soft: #f9fffd;
-		--mc-paper: rgba(255, 255, 255, 0.9);
-		--mc-paper-strong: rgba(255, 255, 255, 0.96);
-		--mc-line: rgba(25, 93, 82, 0.14);
-		--mc-text: #0f2230;
-		--mc-muted: #3f5e63;
-		--mc-accent: #0b61d9;
-		--mc-accent-strong: #0a4cb0;
-		--mc-accent-alt: #16a34a;
-		--mc-shadow: 0 18px 48px rgba(11, 47, 76, 0.14);
-		--mc-radius-xl: 36px;
-		--mc-radius-lg: 28px;
-		--mc-radius-md: 22px;
-		--mc-radius-sm: 999px;
+		--rp-bg: #05070c;
+		--rp-card: #0c0d11;
+		--rp-card-soft: #111216;
+		--rp-line: rgba(255, 255, 255, 0.13);
+		--rp-text: #ffffff;
+		--rp-muted: #b8c4d8;
+		--rp-yellow: #ffc928;
+		--rp-blue: #1458ff;
+		--rp-blue-dark: #0c35a8;
+		--rp-radius-xl: 34px;
+		--rp-radius-lg: 24px;
+		--rp-radius-pill: 999px;
 	}
 
 	* {
@@ -420,16 +317,8 @@ const content = pageContent[locale];
 	body {
 		min-width: 320px;
 		font-family: 'Manrope', sans-serif;
-		color: var(--mc-text);
-		background:
-			radial-gradient(circle at top left, rgba(80, 176, 255, 0.24), transparent 30%),
-			radial-gradient(circle at top right, rgba(77, 214, 121, 0.2), transparent 28%),
-			linear-gradient(180deg, #f6fffd 0%, #eef8f5 48%, #edf7ff 100%);
-	}
-
-	img {
-		display: block;
-		max-width: 100%;
+		color: var(--rp-text);
+		background: var(--rp-bg);
 	}
 
 	a {
@@ -437,454 +326,475 @@ const content = pageContent[locale];
 		text-decoration: none;
 	}
 
-	.mc-container {
-		width: min(1160px, calc(100% - 40px));
+	img {
+		display: block;
+		max-width: 100%;
+	}
+
+	.rp-page {
+		min-height: 100vh;
+		background:
+			linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+			radial-gradient(circle at 82% 10%, rgba(255, 201, 40, 0.22), transparent 30%),
+			radial-gradient(circle at 10% 20%, rgba(20, 88, 255, 0.18), transparent 28%),
+			var(--rp-bg);
+		background-size: 64px 64px, 64px 64px, auto, auto, auto;
+	}
+
+	.rp-container {
+		width: min(1360px, calc(100% - 36px));
 		margin: 0 auto;
 	}
 
-	.mc-header {
+	.rp-header {
 		position: sticky;
 		top: 0;
-		z-index: 100;
-		padding: 16px 0;
-		background: rgba(249, 255, 253, 0.88);
+		z-index: 20;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		background: rgba(5, 5, 7, 0.94);
 		backdrop-filter: blur(14px);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.55);
 	}
 
-	.mc-header-inner,
-	.mc-footer-inner,
-	.mc-header-actions,
-	.mc-brand,
-	.mc-actions,
-	.mc-badges {
+	.rp-header-inner,
+	.rp-brand,
+	.rp-nav,
+	.rp-actions,
+	.rp-badges,
+	.rp-footer-inner {
 		display: flex;
 		align-items: center;
 	}
 
-	.mc-header-inner,
-	.mc-footer-inner {
+	.rp-header-inner,
+	.rp-footer-inner {
 		justify-content: space-between;
 		gap: 18px;
 	}
 
-	.mc-brand {
-		gap: 14px;
-		min-width: 0;
+	.rp-header-inner {
+		min-height: 78px;
+		padding-top: env(safe-area-inset-top);
 	}
 
-	.mc-brand-logo-shell {
-		width: 58px;
-		height: 58px;
-		border-radius: 18px;
-		background: linear-gradient(135deg, #ffffff 0%, #d8f4e2 100%);
-		box-shadow: 0 10px 22px rgba(11, 54, 87, 0.14);
+	.rp-brand {
+		gap: 13px;
+	}
+
+	.rp-logo {
+		display: grid;
+		width: 50px;
+		height: 50px;
 		overflow: hidden;
-		flex-shrink: 0;
-		border: 1px solid rgba(11, 97, 217, 0.08);
+		place-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 12px;
+		background: #050505;
 	}
 
-	.mc-brand-logo {
+	.rp-logo img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
 
-	.mc-brand-copy {
-		display: grid;
-		gap: 2px;
+	.rp-brand strong,
+	.rp-kicker,
+	.rp-badges span,
+	.rp-nav a,
+	.rp-button {
+		font-weight: 900;
 	}
 
-	.mc-brand-name,
-	.mc-kicker,
-	.mc-step,
-	.mc-snapshot-item span {
-		font-weight: 800;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
-	}
-
-	.mc-brand-name,
+	.rp-brand strong,
 	h1,
 	h2,
 	h3 {
 		font-family: 'Syne', sans-serif;
 	}
 
-	.mc-brand-name {
-		font-size: 1rem;
+	.rp-brand small {
+		display: block;
+		color: var(--rp-muted);
+		font-size: 0.8rem;
 	}
 
-	.mc-brand-sub,
-	.mc-link-back,
-	.mc-footer a,
-	.mc-footer p {
-		color: var(--mc-muted);
-		font-size: 0.92rem;
+	.rp-nav {
+		gap: 10px;
 	}
 
-	.mc-header-actions {
-		gap: 12px;
-		flex-wrap: wrap;
-		justify-content: flex-end;
-	}
-
-	.mc-link-back,
-	.mc-link-store,
-	.mc-link-discord,
-	.mc-btn,
-	.mc-badge {
+	.rp-nav a,
+	.rp-button {
 		display: inline-flex;
+		min-height: 46px;
 		align-items: center;
 		justify-content: center;
-		border-radius: var(--mc-radius-sm);
-		font-weight: 700;
-	}
-
-	.mc-link-back,
-	.mc-link-store,
-	.mc-link-discord {
-		min-height: 44px;
 		padding: 0 18px;
+		border-radius: var(--rp-radius-pill);
+		transition: transform 180ms ease, border-color 180ms ease;
 	}
 
-	.mc-link-back {
-		background: rgba(255, 255, 255, 0.74);
-		border: 1px solid var(--mc-line);
+	.rp-nav a {
+		border: 1px solid var(--rp-line);
+		background: rgba(255, 255, 255, 0.045);
+		color: #edf2ff;
 	}
 
-	.mc-link-store,
-	.mc-btn-store {
-		background: linear-gradient(135deg, #ffc928 0%, #ffe27a 100%);
-		border: 1px solid rgba(11, 97, 217, 0.18);
-		color: #0d2430;
-		box-shadow: 0 12px 28px rgba(255, 201, 40, 0.2);
+	.rp-nav a:first-child,
+	.rp-button-primary {
+		border-color: rgba(255, 201, 40, 0.72);
+		background: var(--rp-yellow);
+		color: #071426;
+		box-shadow: 0 18px 38px rgba(255, 201, 40, 0.18);
 	}
 
-	.mc-link-discord,
-	.mc-btn-primary {
-		background: linear-gradient(135deg, #0c66e3 0%, #159947 100%);
-		color: #ffffff;
-		box-shadow: 0 16px 32px rgba(12, 102, 227, 0.22);
+	.rp-nav a:hover,
+	.rp-button:hover {
+		transform: translateY(-1px);
 	}
 
-	.mc-hero {
-		position: relative;
-		overflow: hidden;
-		padding: clamp(44px, 7vw, 88px) 0 clamp(52px, 7vw, 80px);
+	.rp-hero {
+		padding: clamp(48px, 7vw, 96px) 0 clamp(44px, 7vw, 82px);
 	}
 
-	.mc-hero-backdrop,
-	.mc-hero-overlay {
-		position: absolute;
-		inset: 0;
-	}
-
-	.mc-hero-backdrop {
-		overflow: hidden;
-		background:
-			radial-gradient(circle at 20% 16%, rgba(103, 187, 255, 0.3), transparent 26%),
-			linear-gradient(135deg, #dff5ff 0%, #edfdf3 52%, #eff7ff 100%);
-	}
-
-	.mc-hero-backdrop-image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		filter: blur(18px) saturate(0.92) brightness(1.08);
-		transform: scale(1.08);
-		opacity: 0.22;
-	}
-
-	.mc-hero-overlay {
-		background:
-			linear-gradient(90deg, rgba(248, 255, 254, 0.94) 0%, rgba(248, 255, 254, 0.88) 48%, rgba(248, 255, 254, 0.66) 76%, rgba(248, 255, 254, 0.52) 100%);
-	}
-
-	.mc-hero-layout {
-		position: relative;
-		z-index: 1;
+	.rp-hero-grid {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
-		gap: clamp(24px, 4vw, 42px);
-		align-items: start;
+		grid-template-columns: minmax(0, 0.95fr) minmax(380px, 0.8fr);
+		gap: clamp(26px, 5vw, 56px);
+		align-items: center;
 	}
 
-	.mc-hero-copy,
-	.mc-logo-card,
-	.mc-snapshot-card,
-	.mc-card,
-	.mc-cta-panel {
-		border: 1px solid rgba(255, 255, 255, 0.7);
-		background: var(--mc-paper);
-		backdrop-filter: blur(16px);
-		box-shadow: var(--mc-shadow);
+	.rp-hero-copy,
+	.rp-feature-card,
+	.rp-final-card,
+	.rp-stat-card {
+		border: 1px solid var(--rp-line);
+		background: linear-gradient(180deg, rgba(19, 20, 26, 0.94), rgba(9, 10, 14, 0.98));
+		box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
 	}
 
-	.mc-hero-copy {
-		padding: clamp(28px, 5vw, 44px);
-		border-radius: var(--mc-radius-xl);
+	.rp-hero-copy {
+		padding: clamp(26px, 5vw, 50px);
+		border-radius: var(--rp-radius-xl);
 	}
 
-	.mc-kicker,
-	.mc-step,
-	.mc-snapshot-item span {
-		color: var(--mc-accent-strong);
+	.rp-kicker {
+		color: var(--rp-yellow);
 		font-size: 0.78rem;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
 	}
 
 	h1,
 	h2,
 	h3 {
-		letter-spacing: -0.03em;
-		line-height: 0.98;
+		letter-spacing: -0.045em;
+		line-height: 0.96;
 	}
 
 	h1 {
-		max-width: 10ch;
-		margin-top: 18px;
-		font-size: clamp(3rem, 7vw, 5.5rem);
+		max-width: 12ch;
+		margin-top: 14px;
+		font-size: clamp(3.2rem, 8vw, 7rem);
 	}
 
 	h2 {
-		font-size: clamp(1.8rem, 3vw, 3rem);
+		font-size: clamp(2.2rem, 5vw, 4.5rem);
 	}
 
 	h3 {
-		font-size: clamp(1.35rem, 2vw, 1.85rem);
+		font-size: 1.35rem;
 	}
 
-	p {
-		font-size: 1.02rem;
-		line-height: 1.7;
-		color: var(--mc-muted);
-	}
-
-	.mc-hero-subtitle {
-		max-width: 56ch;
-		margin-top: 20px;
-		font-size: clamp(1.1rem, 1.8vw, 1.28rem);
+	.rp-lead,
+	.rp-section-head p,
+	.rp-feature-body p,
+	.rp-final-card p,
+	.rp-footer p {
+		color: var(--rp-muted);
 		font-weight: 700;
-		color: var(--mc-text);
+		line-height: 1.7;
 	}
 
-	.mc-hero-description {
-		max-width: 60ch;
-		margin-top: 16px;
-	}
-
-	.mc-actions,
-	.mc-badges {
-		flex-wrap: wrap;
-		gap: 14px;
-	}
-
-	.mc-actions {
-		margin-top: 30px;
-	}
-
-	.mc-btn {
-		min-height: 54px;
-		padding: 0 22px;
-		border: 1px solid transparent;
-		font-weight: 800;
-		transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
-	}
-
-	.mc-btn-secondary {
-		background: rgba(255, 255, 255, 0.82);
-		border-color: rgba(11, 97, 217, 0.14);
-		color: var(--mc-text);
-	}
-
-	.mc-btn:hover,
-	.mc-link-discord:hover,
-	.mc-link-store:hover,
-	.mc-link-back:hover {
-		transform: translateY(-1px);
-	}
-
-	.mc-badges {
-		margin-top: 24px;
-	}
-
-	.mc-badge {
-		min-height: 40px;
-		padding: 0 16px;
-		background: rgba(255, 255, 255, 0.84);
-		border: 1px solid rgba(11, 97, 217, 0.1);
-		color: var(--mc-text);
-		font-size: 0.9rem;
-	}
-
-	.mc-hero-side {
-		display: grid;
-		gap: 18px;
-	}
-
-	.mc-logo-card,
-	.mc-snapshot-card,
-	.mc-card,
-	.mc-cta-panel {
-		border-radius: var(--mc-radius-lg);
-	}
-
-	.mc-logo-card {
-		padding: 18px;
-		background: linear-gradient(135deg, rgba(236, 250, 242, 0.96) 0%, rgba(237, 245, 255, 0.98) 100%);
-	}
-
-	.mc-hero-logo {
-		width: 100%;
-		border-radius: 22px;
-	}
-
-	.mc-snapshot-card {
-		padding: 26px;
-		background: var(--mc-paper-strong);
-	}
-
-	.mc-snapshot-list {
-		display: grid;
-		gap: 16px;
+	.rp-lead {
+		max-width: 66ch;
 		margin-top: 18px;
+		font-size: clamp(1rem, 1.6vw, 1.2rem);
 	}
 
-	.mc-snapshot-item {
-		padding-top: 16px;
-		border-top: 1px solid var(--mc-line);
+	.rp-actions,
+	.rp-badges {
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 28px;
 	}
 
-	.mc-snapshot-item:first-child {
-		padding-top: 0;
-		border-top: none;
+	.rp-button-dark {
+		border: 1px solid var(--rp-line);
+		background: rgba(255, 255, 255, 0.055);
+		color: #ffffff;
 	}
 
-	.mc-snapshot-item p {
-		margin-top: 8px;
+	.rp-badges {
+		margin-top: 22px;
 	}
 
-	.mc-section {
-		padding: clamp(56px, 8vw, 96px) 0;
+	.rp-badges span {
+		display: inline-flex;
+		min-height: 38px;
+		align-items: center;
+		padding: 0 14px;
+		border: 1px solid var(--rp-line);
+		border-radius: var(--rp-radius-pill);
+		background: rgba(255, 255, 255, 0.045);
+		color: #dfe8f7;
+		font-size: 0.84rem;
 	}
 
-	.mc-section-soft {
-		background: linear-gradient(180deg, rgba(236, 248, 255, 0.6) 0%, rgba(236, 252, 243, 0.62) 100%);
-		border-block: 1px solid rgba(255, 255, 255, 0.44);
-	}
-
-	.mc-section-heading {
+	.rp-hero-showcase {
 		display: grid;
 		gap: 16px;
-		max-width: 760px;
 	}
 
-	.mc-card-grid {
+	.rp-phone-frame {
+		position: relative;
+		overflow: hidden;
+		padding: 10px;
+		border: 1px solid var(--rp-line);
+		border-radius: 32px;
+		background:
+			linear-gradient(135deg, rgba(255, 201, 40, 0.28), transparent 38%),
+			rgba(255, 255, 255, 0.055);
+		box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+	}
+
+	.rp-phone-frame::after,
+	.rp-feature-image::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		background: linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+	}
+
+	.rp-phone-frame img {
+		width: 100%;
+		aspect-ratio: 16 / 8.4;
+		border-radius: 24px;
+		object-fit: cover;
+		filter: saturate(1.08) contrast(1.04);
+	}
+
+	.rp-stat-card {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 22px;
-		margin-top: 32px;
+		gap: 1px;
+		overflow: hidden;
+		border-radius: var(--rp-radius-lg);
 	}
 
-	.mc-card {
-		padding: 28px;
+	.rp-stat-card article {
+		padding: 18px;
+		background: rgba(255, 255, 255, 0.035);
 	}
 
-	.mc-card p {
+	.rp-stat-card span {
+		display: block;
+		color: var(--rp-muted);
+		font-size: 0.76rem;
+		font-weight: 900;
+		text-transform: uppercase;
+	}
+
+	.rp-stat-card strong {
+		display: block;
+		margin-top: 6px;
+		color: #ffffff;
+		font-size: 1rem;
+	}
+
+	.rp-section {
+		padding: clamp(54px, 7vw, 92px) 0;
+	}
+
+	.rp-section-head {
+		max-width: 780px;
+	}
+
+	.rp-section-head h2 {
+		margin-top: 10px;
+	}
+
+	.rp-section-head p {
 		margin-top: 14px;
+		font-size: 1.05rem;
 	}
 
-	.mc-card-step .mc-step {
+	.rp-gallery {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 18px;
+		margin-top: 34px;
+	}
+
+	.rp-feature-card {
+		overflow: hidden;
+		border-radius: var(--rp-radius-lg);
+	}
+
+	.rp-feature-wide {
+		grid-column: span 2;
+	}
+
+	.rp-feature-image {
+		position: relative;
+		overflow: hidden;
+		min-height: 238px;
+		background: #07080b;
+	}
+
+	.rp-feature-image img {
+		width: 100%;
+		height: 100%;
+		min-height: 238px;
+		object-fit: cover;
+		filter: saturate(1.08) contrast(1.05) brightness(0.9);
+		transform: scale(1.01);
+	}
+
+	.rp-feature-wide .rp-feature-image {
+		min-height: 310px;
+	}
+
+	.rp-feature-wide .rp-feature-image img {
+		min-height: 310px;
+	}
+
+	.rp-feature-image span {
+		position: absolute;
+		left: 16px;
+		bottom: 16px;
+		z-index: 1;
 		display: inline-flex;
-		margin-bottom: 18px;
+		min-height: 38px;
+		align-items: center;
+		padding: 0 14px;
+		border: 1px solid rgba(255, 201, 40, 0.56);
+		border-radius: var(--rp-radius-pill);
+		background: rgba(255, 201, 40, 0.12);
+		color: var(--rp-yellow);
+		font-weight: 900;
 	}
 
-	.mc-cta-panel {
+	.rp-feature-body {
+		padding: 20px;
+		border-top: 1px solid var(--rp-line);
+	}
+
+	.rp-feature-body p {
+		margin-top: 10px;
+	}
+
+	.rp-final-section {
+		padding-top: 0;
+	}
+
+	.rp-final-card {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) auto;
 		gap: 20px;
 		align-items: center;
-		padding: clamp(28px, 4vw, 42px);
-		background: linear-gradient(135deg, rgba(252, 255, 255, 0.96) 0%, rgba(239, 249, 255, 0.96) 50%, rgba(239, 255, 244, 0.96) 100%);
+		padding: clamp(24px, 4vw, 40px);
+		border-radius: var(--rp-radius-xl);
 	}
 
-	.mc-cta-panel p {
-		margin-top: 14px;
-		max-width: 58ch;
+	.rp-final-card h2 {
+		margin-top: 10px;
+		font-size: clamp(2rem, 4vw, 3.6rem);
 	}
 
-	.mc-btn-large {
-		min-width: 220px;
+	.rp-final-card p {
+		max-width: 62ch;
+		margin-top: 12px;
 	}
 
-	.mc-footer {
-		padding: 0 0 40px;
+	.rp-footer {
+		padding: 0 0 34px;
 	}
 
-	.mc-footer-inner {
-		padding-top: 18px;
-		border-top: 1px solid var(--mc-line);
+	.rp-footer-inner {
+		padding-top: 20px;
+		border-top: 1px solid var(--rp-line);
 	}
 
-	@media (max-width: 1024px) {
-		.mc-hero-layout,
-		.mc-card-grid,
-		.mc-cta-panel {
+	.rp-footer a {
+		color: var(--rp-yellow);
+		font-weight: 900;
+	}
+
+	@media (max-width: 980px) {
+		.rp-hero-grid,
+		.rp-final-card {
 			grid-template-columns: 1fr;
 		}
 
-		h1 {
-			max-width: 11ch;
+		.rp-gallery {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
-		.mc-btn-large {
-			width: 100%;
+		.rp-feature-wide {
+			grid-column: span 2;
 		}
 	}
 
-	@media (max-width: 720px) {
-		.mc-container {
-			width: min(100% - 28px, 1160px);
+	@media (max-width: 680px) {
+		.rp-container {
+			width: min(100% - 28px, 1360px);
 		}
 
-		.mc-header {
+		.rp-header {
 			position: static;
 		}
 
-		.mc-header-inner,
-		.mc-footer-inner {
-			flex-direction: column;
-			align-items: flex-start;
+		.rp-header-inner {
+			min-height: 68px;
 		}
 
-		.mc-header-actions,
-		.mc-actions {
-			width: 100%;
+		.rp-brand strong {
+			max-width: 138px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
-		.mc-link-back,
-		.mc-link-store,
-		.mc-link-discord,
-		.mc-btn {
-			width: 100%;
-		}
-
-		.mc-hero-copy,
-		.mc-logo-card,
-		.mc-snapshot-card,
-		.mc-card,
-		.mc-cta-panel {
-			padding: 22px;
+		.rp-nav a {
+			min-height: 42px;
+			padding: 0 12px;
+			font-size: 0.84rem;
 		}
 
 		h1 {
 			max-width: none;
-			font-size: clamp(2.6rem, 13vw, 4rem);
+			font-size: clamp(2.8rem, 15vw, 4.6rem);
 		}
 
-		.mc-hero-overlay {
-			background:
-				linear-gradient(180deg, rgba(248, 255, 254, 0.94) 0%, rgba(248, 255, 254, 0.9) 56%, rgba(248, 255, 254, 0.82) 100%);
+		.rp-actions a,
+		.rp-final-card a {
+			width: 100%;
+		}
+
+		.rp-gallery,
+		.rp-feature-wide,
+		.rp-stat-card {
+			grid-template-columns: 1fr;
+			grid-column: auto;
+		}
+
+		.rp-feature-image,
+		.rp-feature-image img,
+		.rp-feature-wide .rp-feature-image,
+		.rp-feature-wide .rp-feature-image img {
+			min-height: 210px;
 		}
 	}
 </style>

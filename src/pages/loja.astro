@@ -6,11 +6,14 @@ const pagePath = 'loja/';
 const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
 const faviconHref = withBase('favicon.png');
 const roleplayUrl = withBase('171-brasil-roleplay/');
+const termsUrl = withBase('termos-loja/');
 const discordUrl = 'https://discord.gg/6GwbJRFhQU';
 const storeApiBaseUrl = 'https://liberty-immovably-bacon.ngrok-free.dev';
 const studioAsset = withBase('midnight-toronto/assets');
 const logoImage = `${studioAsset}/images/midnight-city/171-brasil-roleplay-logo-v3.png`;
 const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/171-brasil-roleplay-logo-v3.png')}`;
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
+const storeTermsVersion = '2026-07-30';
 
 const categories = [
 	{ id: 'dinheiro', label: 'Dinheiro', icon: '💵' },
@@ -159,9 +162,17 @@ const products = [
 			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap"
 			rel="stylesheet"
 		/>
+		{turnstileSiteKey && (
+			<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+		)}
 	</head>
 	<body>
-		<div class="shop-page" data-store-api-base={storeApiBaseUrl}>
+		<div
+			class="shop-page"
+			data-store-api-base={storeApiBaseUrl}
+			data-turnstile-site-key={turnstileSiteKey}
+			data-terms-version={storeTermsVersion}
+		>
 			<header class="shop-header">
 				<div class="shop-container shop-header-inner">
 					<a href={roleplayUrl} class="shop-brand">
@@ -429,6 +440,10 @@ const products = [
 					<label for="site-login-password">Senha</label>
 					<input id="site-login-password" data-login-password type="password" placeholder="Senha da conta" autocomplete="current-password" />
 
+					<div class="shop-captcha-box" data-login-turnstile>
+						<span>Proteção anti-robô será exibida aqui.</span>
+					</div>
+
 					<button type="button" class="shop-pix-copy" data-login-submit>Entrar na conta</button>
 					<button type="button" class="shop-pix-open" data-login-skip>Comprar sem login</button>
 				</div>
@@ -558,6 +573,48 @@ const products = [
 			</section>
 		</div>
 
+		<div class="shop-terms-modal" data-terms-modal hidden>
+			<div class="shop-pix-backdrop" data-terms-close></div>
+			<section class="shop-pix-dialog shop-terms-dialog" role="dialog" aria-modal="true" aria-labelledby="terms-modal-title">
+				<button type="button" class="shop-pix-close" data-terms-close aria-label="Fechar termos da loja">
+					×
+				</button>
+				<p class="shop-section-label">Termos da loja</p>
+				<h2 id="terms-modal-title">Confirme antes de gerar o Pix</h2>
+				<p class="shop-pix-summary" data-terms-summary>
+					Revise as regras da compra antes de continuar.
+				</p>
+
+				<div class="shop-terms-card">
+					<ul>
+						<li>Você confirma que o ID informado é da sua conta no servidor.</li>
+						<li>A entrega é automática após a confirmação do pagamento pelo Mercado Pago.</li>
+						<li>Produtos digitais não devem ser transferidos para outra conta sem suporte.</li>
+						<li>Compras suspeitas, duplicadas ou contestadas podem ser bloqueadas para análise.</li>
+					</ul>
+					<a href={termsUrl} target="_blank" rel="noreferrer">Abrir termos completos</a>
+				</div>
+
+				<label class="shop-terms-check">
+					<input type="checkbox" data-terms-check />
+					<span>Li e aceito os termos da loja do 171 Brasil Roleplay.</span>
+				</label>
+
+				<div class="shop-captcha-box" data-checkout-turnstile>
+					<span>Confirmação anti-robô será exibida aqui para compras sem login.</span>
+				</div>
+
+				<div class="shop-account-actions">
+					<button type="button" class="shop-pix-open" data-terms-back>Voltar</button>
+					<button type="button" class="shop-pix-copy" data-terms-confirm disabled>Gerar Pix</button>
+				</div>
+
+				<div class="shop-pix-state" data-terms-state>
+					Marque o aceite para continuar.
+				</div>
+			</section>
+		</div>
+
 		<div class="shop-pix-modal" data-pix-modal hidden>
 			<div class="shop-pix-backdrop" data-pix-close></div>
 			<section class="shop-pix-dialog" role="dialog" aria-modal="true" aria-labelledby="pix-modal-title">
@@ -622,6 +679,8 @@ const products = [
 			(() => {
 				const page = document.querySelector('.shop-page');
 				const apiBase = page?.getAttribute('data-store-api-base') || '';
+				const turnstileSiteKey = page?.getAttribute('data-turnstile-site-key') || '';
+				const termsVersion = page?.getAttribute('data-terms-version') || '2026-07-30';
 				const statusEl = document.querySelector('[data-shop-status]');
 				const buyButtons = document.querySelectorAll('.shop-buy-button');
 				const productSearch = document.querySelector('[data-product-search]');
@@ -667,6 +726,14 @@ const products = [
 				const accountVerify = document.querySelector('[data-account-verify]');
 				const accountConfirm = document.querySelector('[data-account-confirm]');
 				const accountChange = document.querySelector('[data-account-change]');
+				const termsModal = document.querySelector('[data-terms-modal]');
+				const termsSummary = document.querySelector('[data-terms-summary]');
+				const termsCheck = document.querySelector('[data-terms-check]');
+				const termsConfirm = document.querySelector('[data-terms-confirm]');
+				const termsBack = document.querySelector('[data-terms-back]');
+				const termsState = document.querySelector('[data-terms-state]');
+				const loginTurnstile = document.querySelector('[data-login-turnstile]');
+				const checkoutTurnstile = document.querySelector('[data-checkout-turnstile]');
 				const pixModal = document.querySelector('[data-pix-modal]');
 				const modalSummary = document.querySelector('[data-pix-summary]');
 				const modalLoading = document.querySelector('[data-pix-loading]');
@@ -710,6 +777,12 @@ const products = [
 					loginState.dataset.status = type;
 				};
 
+				const setTermsState = (message, type = 'info') => {
+					if (!termsState) return;
+					termsState.textContent = message;
+					termsState.dataset.status = type;
+				};
+
 				const setDashboardState = (message, type = 'info') => {
 					if (!dashboardState) return;
 					dashboardState.textContent = message;
@@ -747,6 +820,65 @@ const products = [
 						"'": '&#39;'
 					})[character]);
 
+				const captcha = {
+					login: { target: loginTurnstile, widgetId: null, token: '' },
+					checkout: { target: checkoutTurnstile, widgetId: null, token: '' }
+				};
+
+				const renderCaptcha = (name) => {
+					const item = captcha[name];
+					if (!item?.target) return;
+
+					if (!turnstileSiteKey) {
+						item.target.innerHTML = '<span>Captcha não configurado neste ambiente de teste.</span>';
+						return;
+					}
+
+					if (!window.turnstile) {
+						window.setTimeout(() => renderCaptcha(name), 180);
+						return;
+					}
+
+					if (item.widgetId !== null) return;
+					item.target.innerHTML = '';
+					item.widgetId = window.turnstile.render(item.target, {
+						sitekey: turnstileSiteKey,
+						callback: (token) => {
+							item.token = token;
+							if (name === 'checkout') setTermsState('Proteção confirmada. Você já pode gerar o Pix.', 'success');
+							if (name === 'login') setLoginState('Proteção confirmada. Agora é só entrar.', 'success');
+						},
+						'expired-callback': () => {
+							item.token = '';
+							if (name === 'checkout') setTermsState('Captcha expirou. Confirme novamente para continuar.', 'error');
+							if (name === 'login') setLoginState('Captcha expirou. Confirme novamente para entrar.', 'error');
+						},
+						'error-callback': () => {
+							item.token = '';
+							if (name === 'checkout') setTermsState('Não foi possível carregar o captcha. Tente novamente.', 'error');
+							if (name === 'login') setLoginState('Não foi possível carregar o captcha. Tente novamente.', 'error');
+						}
+					});
+				};
+
+				const resetCaptcha = (name) => {
+					const item = captcha[name];
+					if (!item) return;
+					item.token = '';
+					if (item.widgetId !== null && window.turnstile) {
+						window.turnstile.reset(item.widgetId);
+					}
+				};
+
+				const getCaptchaToken = (name) => {
+					if (!turnstileSiteKey) return '';
+					const token = captcha[name]?.token || '';
+					if (!token) {
+						throw new Error('Confirme o captcha para continuar.');
+					}
+					return token;
+				};
+
 				const openModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = false;
@@ -756,7 +888,7 @@ const products = [
 				const closeModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = true;
-					if (accountModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden && accountPanel?.hidden) {
+					if (accountModal?.hidden && termsModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden && accountPanel?.hidden) {
 						document.body.classList.remove('shop-modal-open');
 					}
 				};
@@ -817,7 +949,7 @@ const products = [
 				const closeAccountPanel = () => {
 					if (!accountPanel) return;
 					accountPanel.hidden = true;
-					if (accountModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
+					if (accountModal?.hidden && termsModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
 						document.body.classList.remove('shop-modal-open');
 					}
 				};
@@ -980,7 +1112,11 @@ const products = [
 								...fetchHeaders
 							},
 							credentials: 'include',
-							body: JSON.stringify({ accountId, password })
+							body: JSON.stringify({
+								accountId,
+								password,
+								captchaToken: getCaptchaToken('login')
+							})
 						});
 						const data = await response.json().catch(() => ({}));
 
@@ -993,6 +1129,7 @@ const products = [
 						closeModal(loginModal);
 						openAccountPanel();
 					} catch (error) {
+						resetCaptcha('login');
 						setLoginState(error.message || 'ID ou senha incorretos.', 'error');
 					} finally {
 						if (loginLoading) loginLoading.hidden = true;
@@ -1015,6 +1152,7 @@ const products = [
 					updateAccountButton();
 					closeAccountPanel();
 					openModal(loginModal);
+					renderCaptcha('login');
 					setLoginState('Você saiu da conta neste navegador.', 'success');
 				};
 
@@ -1041,6 +1179,27 @@ const products = [
 					if (accountConfirm) accountConfirm.hidden = false;
 					if (accountChange) accountChange.hidden = false;
 					setAccountState('Você está comprando para a conta logada. Confira antes de continuar.', 'success');
+				};
+
+				const resetTermsModal = () => {
+					if (termsSummary) {
+						termsSummary.textContent = `${selectedProduct?.name || 'Produto selecionado'} para o ID ${selectedAccount?.accountId || '--'}`;
+					}
+					if (termsCheck) termsCheck.checked = false;
+					if (termsConfirm) termsConfirm.disabled = true;
+					if (checkoutTurnstile) checkoutTurnstile.hidden = Boolean(loggedAccount);
+					resetCaptcha('checkout');
+					setTermsState(loggedAccount
+						? 'Confira os termos e confirme para gerar o Pix.'
+						: 'Confirme os termos e o captcha para gerar o Pix.', 'info');
+				};
+
+				const openTermsModal = () => {
+					if (!selectedProduct || !selectedAccount) return;
+					closeModal(accountModal);
+					resetTermsModal();
+					openModal(termsModal);
+					if (!loggedAccount) renderCaptcha('checkout');
 				};
 
 				const renderPixPayment = (data) => {
@@ -1183,11 +1342,13 @@ const products = [
 					if (!selectedProduct || !selectedAccount) return;
 
 					closeModal(accountModal);
+					closeModal(termsModal);
 					resetPixModal(selectedProduct.name, selectedAccount.accountId);
 					openModal(pixModal);
 					setStatus(`Gerando Pix para ${selectedAccount.name || selectedAccount.accountId}...`, 'info');
 
 					try {
+						const captchaToken = loggedAccount ? '' : getCaptchaToken('checkout');
 						const response = await fetch(`${apiBase}/api/pix`, {
 							method: 'POST',
 							headers: {
@@ -1197,7 +1358,10 @@ const products = [
 							credentials: 'include',
 							body: JSON.stringify({
 								productId: selectedProduct.id,
-								accountId: selectedAccount.accountId
+								accountId: selectedAccount.accountId,
+								termsAccepted: true,
+								termsVersion,
+								captchaToken
 							})
 						});
 
@@ -1215,6 +1379,7 @@ const products = [
 						pollOrderStatus(data.orderId);
 						setStatus(`Pix gerado para ${data.accountName || selectedAccount.name}. Aguardando pagamento.`, 'success');
 					} catch (error) {
+						resetCaptcha('checkout');
 						setStatus(error.message || 'Erro ao gerar Pix. Chame o suporte.', 'error');
 						setPixState(error.message || 'Erro ao gerar Pix. Chame o suporte.', 'error');
 						if (modalLoading) modalLoading.hidden = true;
@@ -1227,6 +1392,10 @@ const products = [
 
 				document.querySelectorAll('[data-account-close]').forEach((button) => {
 					button.addEventListener('click', () => closeModal(accountModal));
+				});
+
+				document.querySelectorAll('[data-terms-close]').forEach((button) => {
+					button.addEventListener('click', () => closeModal(termsModal));
 				});
 
 				document.querySelectorAll('[data-login-close]').forEach((button) => {
@@ -1248,9 +1417,11 @@ const products = [
 							openAccountPanel();
 						} else {
 							openModal(loginModal);
+							renderCaptcha('login');
 						}
 					} else {
 						openModal(loginModal);
+						renderCaptcha('login');
 						window.setTimeout(() => loginId?.focus(), 80);
 					}
 				});
@@ -1281,7 +1452,7 @@ const products = [
 				accountInput?.addEventListener('keydown', (event) => {
 					if (event.key === 'Enter') verifyAccount();
 				});
-				accountConfirm?.addEventListener('click', startPixPayment);
+				accountConfirm?.addEventListener('click', openTermsModal);
 				accountChange?.addEventListener('click', () => {
 					if (accountInput) {
 						accountInput.disabled = false;
@@ -1292,6 +1463,23 @@ const products = [
 					if (accountChange) accountChange.hidden = true;
 					selectedAccount = null;
 					setAccountState('Digite o ID correto e verifique novamente.', 'info');
+				});
+				termsCheck?.addEventListener('change', () => {
+					if (termsConfirm) termsConfirm.disabled = !termsCheck.checked;
+					setTermsState(termsCheck.checked
+						? 'Termos aceitos. Gere o Pix para continuar.'
+						: 'Marque o aceite para continuar.', termsCheck.checked ? 'success' : 'info');
+				});
+				termsBack?.addEventListener('click', () => {
+					closeModal(termsModal);
+					openModal(accountModal);
+				});
+				termsConfirm?.addEventListener('click', () => {
+					if (!termsCheck?.checked) {
+						setTermsState('VocÃª precisa aceitar os termos para continuar.', 'error');
+						return;
+					}
+					startPixPayment();
 				});
 
 				modalCopy?.addEventListener('click', async () => {
@@ -2354,14 +2542,16 @@ const products = [
 	.shop-pix-modal[hidden],
 	.shop-account-modal[hidden],
 	.shop-login-modal[hidden],
-	.shop-dashboard-modal[hidden] {
+	.shop-dashboard-modal[hidden],
+	.shop-terms-modal[hidden] {
 		display: none;
 	}
 
 	.shop-pix-modal,
 	.shop-account-modal,
 	.shop-login-modal,
-	.shop-dashboard-modal {
+	.shop-dashboard-modal,
+	.shop-terms-modal {
 		position: fixed;
 		inset: 0;
 		z-index: 80;
@@ -2432,6 +2622,80 @@ const products = [
 	.shop-login-form input:focus {
 		border-color: rgba(20, 88, 255, 0.45);
 		box-shadow: 0 0 0 4px rgba(20, 88, 255, 0.1);
+	}
+
+	.shop-captcha-box {
+		display: grid;
+		min-height: 72px;
+		place-items: center;
+		padding: 10px;
+		border: 1px dashed rgba(20, 88, 255, 0.28);
+		border-radius: 18px;
+		background: #f8fbff;
+		color: var(--shop-muted);
+		font-size: 0.82rem;
+		font-weight: 900;
+		text-align: center;
+	}
+
+	.shop-captcha-box[hidden] {
+		display: none;
+	}
+
+	.shop-terms-dialog {
+		width: min(560px, 100%);
+	}
+
+	.shop-terms-card {
+		display: grid;
+		gap: 12px;
+		margin-top: 18px;
+		padding: 18px;
+		border: 1px solid var(--shop-line);
+		border-radius: 20px;
+		background:
+			radial-gradient(circle at top right, rgba(255, 201, 40, 0.18), transparent 34%),
+			#f8fbff;
+	}
+
+	.shop-terms-card ul {
+		display: grid;
+		gap: 10px;
+		padding-left: 18px;
+		color: var(--shop-navy);
+		font-weight: 800;
+		line-height: 1.55;
+	}
+
+	.shop-terms-card a {
+		width: fit-content;
+		color: var(--shop-blue-dark);
+		font-weight: 900;
+	}
+
+	.shop-terms-check {
+		display: flex;
+		gap: 12px;
+		align-items: flex-start;
+		margin: 16px 0 12px;
+		color: var(--shop-navy);
+		font-weight: 900;
+		line-height: 1.45;
+	}
+
+	.shop-terms-check input {
+		width: 20px;
+		height: 20px;
+		margin-top: 2px;
+		accent-color: var(--shop-yellow);
+		flex: 0 0 auto;
+	}
+
+	.shop-pix-copy:disabled,
+	.shop-pix-open:disabled {
+		opacity: 0.48;
+		cursor: not-allowed;
+		transform: none;
 	}
 
 	.shop-dashboard-dialog {
@@ -3167,13 +3431,15 @@ const products = [
 		.shop-pix-modal,
 		.shop-account-modal,
 		.shop-login-modal,
-		.shop-dashboard-modal {
+		.shop-dashboard-modal,
+		.shop-terms-modal {
 			align-items: end;
 			padding: 10px;
 		}
 
 		.shop-pix-dialog,
-		.shop-dashboard-dialog {
+		.shop-dashboard-dialog,
+		.shop-terms-dialog {
 			width: 100%;
 			max-height: calc(100vh - 20px);
 			padding: 22px 18px;
