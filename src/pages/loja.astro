@@ -234,8 +234,14 @@ const products = [
 				</section>
 
 				<section class="shop-account-panel" data-account-panel hidden>
+					<button type="button" class="shop-account-page-backdrop" data-account-panel-close aria-label="Voltar para a loja"></button>
 					<div class="shop-container">
 						<div class="shop-account-shell">
+							<button type="button" class="shop-account-back" data-account-panel-close>
+								<span>←</span>
+								Voltar para loja
+							</button>
+
 							<div class="shop-account-cover">
 								<div class="shop-dashboard-skin">
 									<img data-dashboard-skin alt="Skin da conta logada" />
@@ -750,7 +756,7 @@ const products = [
 				const closeModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = true;
-					if (accountModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
+					if (accountModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden && accountPanel?.hidden) {
 						document.body.classList.remove('shop-modal-open');
 					}
 				};
@@ -802,10 +808,18 @@ const products = [
 						: 'Entrar';
 				};
 
-				const scrollToAccountPanel = () => {
+				const openAccountPanel = () => {
 					if (!accountPanel) return;
 					accountPanel.hidden = false;
-					accountPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					document.body.classList.add('shop-modal-open');
+				};
+
+				const closeAccountPanel = () => {
+					if (!accountPanel) return;
+					accountPanel.hidden = true;
+					if (accountModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
+						document.body.classList.remove('shop-modal-open');
+					}
 				};
 
 				const setAccountTab = (target) => {
@@ -868,7 +882,6 @@ const products = [
 					updateAccountButton();
 
 					if (!loggedAccount) return;
-					if (accountPanel) accountPanel.hidden = false;
 
 					if (dashboardName) dashboardName.textContent = loggedAccount.name || 'Jogador';
 					if (dashboardId) dashboardId.textContent = `ID #${loggedAccount.idPublico || '---'}`;
@@ -978,7 +991,7 @@ const products = [
 						renderDashboard(data);
 						setLoginState('Login confirmado.', 'success');
 						closeModal(loginModal);
-						scrollToAccountPanel();
+						openAccountPanel();
 					} catch (error) {
 						setLoginState(error.message || 'ID ou senha incorretos.', 'error');
 					} finally {
@@ -1000,7 +1013,7 @@ const products = [
 
 					loggedAccount = null;
 					updateAccountButton();
-					if (accountPanel) accountPanel.hidden = true;
+					closeAccountPanel();
 					openModal(loginModal);
 					setLoginState('Você saiu da conta neste navegador.', 'success');
 				};
@@ -1224,11 +1237,15 @@ const products = [
 					button.addEventListener('click', () => closeModal(dashboardModal));
 				});
 
+				document.querySelectorAll('[data-account-panel-close]').forEach((button) => {
+					button.addEventListener('click', closeAccountPanel);
+				});
+
 				openLoginButton?.addEventListener('click', async () => {
 					if (loggedAccount) {
 						const data = await loadDashboard({ silent: false });
 						if (data) {
-							scrollToAccountPanel();
+							openAccountPanel();
 						} else {
 							openModal(loginModal);
 						}
@@ -1318,12 +1335,7 @@ const products = [
 					});
 				});
 
-				loadDashboard({ silent: true }).then((data) => {
-					if (!data && !sessionStorage.getItem('lojaLoginSkipped')) {
-						openModal(loginModal);
-						window.setTimeout(() => loginId?.focus(), 120);
-					}
-				});
+				loadDashboard({ silent: true });
 				revealProducts();
 			})();
 		</script>
@@ -1787,8 +1799,13 @@ const products = [
 	}
 
 	.shop-account-panel {
-		scroll-margin-top: 110px;
-		padding: 24px 0 10px;
+		position: fixed;
+		inset: 0;
+		z-index: 76;
+		display: flex;
+		justify-content: flex-end;
+		padding: 0;
+		color: var(--shop-navy);
 	}
 
 	.shop-account-panel[hidden],
@@ -1796,15 +1813,69 @@ const products = [
 		display: none;
 	}
 
+	.shop-account-page-backdrop {
+		position: absolute;
+		inset: 0;
+		border: 0;
+		background: rgba(0, 0, 0, 0.66);
+		backdrop-filter: blur(8px);
+		cursor: pointer;
+	}
+
+	.shop-account-panel > .shop-container {
+		position: relative;
+		z-index: 1;
+		width: min(620px, 100%);
+		height: 100%;
+		margin: 0;
+	}
+
 	.shop-account-shell {
+		height: 100%;
+		overflow-y: auto;
 		padding: clamp(18px, 3vw, 28px);
 		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 32px;
+		border-right: 0;
+		border-radius: 32px 0 0 32px;
 		background:
 			radial-gradient(circle at top right, rgba(255, 201, 40, 0.2), transparent 30%),
 			linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 246, 255, 0.98) 100%);
 		box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
 		color: var(--shop-navy);
+		animation: shop-account-slide-in 260ms ease both;
+	}
+
+	.shop-account-back {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		gap: 9px;
+		margin-bottom: 18px;
+		padding: 0 16px;
+		border: 0;
+		border-radius: var(--shop-radius-pill);
+		color: var(--shop-navy);
+		background: var(--shop-yellow);
+		font: inherit;
+		font-weight: 900;
+		cursor: pointer;
+	}
+
+	.shop-account-back span {
+		font-size: 1.12rem;
+		line-height: 1;
+	}
+
+	@keyframes shop-account-slide-in {
+		from {
+			transform: translateX(26px);
+			opacity: 0;
+		}
+
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
 	}
 
 	.shop-account-cover {
@@ -3115,6 +3186,21 @@ const products = [
 
 		.shop-account-cover {
 			align-items: flex-start;
+		}
+
+		.shop-account-panel > .shop-container {
+			width: 100%;
+		}
+
+		.shop-account-shell {
+			padding-top: calc(18px + env(safe-area-inset-top));
+			border-radius: 0;
+			border-left: 0;
+		}
+
+		.shop-account-back {
+			width: 100%;
+			justify-content: center;
 		}
 
 		.shop-account-tabs {
