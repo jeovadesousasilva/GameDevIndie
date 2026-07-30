@@ -13,7 +13,7 @@ const studioAsset = withBase('midnight-toronto/assets');
 const logoImage = `${studioAsset}/images/midnight-city/171-brasil-roleplay-logo-v3.png`;
 const socialImage = `${siteUrl}${withBase('midnight-toronto/assets/images/midnight-city/171-brasil-roleplay-logo-v3.png')}`;
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
-const storeTermsVersion = '2026-07-30';
+const storeTermsVersion = '2026-07-30-v2';
 
 const categories = [
 	{ id: 'dinheiro', label: 'Dinheiro', icon: '💵' },
@@ -589,6 +589,7 @@ const products = [
 					<ul>
 						<li>Você confirma que o ID informado é da sua conta no servidor.</li>
 						<li>A entrega é automática após a confirmação do pagamento pelo Mercado Pago.</li>
+						<li>Por se tratar de produto digital entregue na conta, não realizamos reembolsos.</li>
 						<li>Produtos digitais não devem ser transferidos para outra conta sem suporte.</li>
 						<li>Compras suspeitas, duplicadas ou contestadas podem ser bloqueadas para análise.</li>
 					</ul>
@@ -680,7 +681,7 @@ const products = [
 				const page = document.querySelector('.shop-page');
 				const apiBase = page?.getAttribute('data-store-api-base') || '';
 				const turnstileSiteKey = page?.getAttribute('data-turnstile-site-key') || '';
-				const termsVersion = page?.getAttribute('data-terms-version') || '2026-07-30';
+				const termsVersion = page?.getAttribute('data-terms-version') || '2026-07-30-v2';
 				const statusEl = document.querySelector('[data-shop-status]');
 				const buyButtons = document.querySelectorAll('.shop-buy-button');
 				const productSearch = document.querySelector('[data-product-search]');
@@ -830,10 +831,11 @@ const products = [
 					if (!item?.target) return;
 
 					if (!turnstileSiteKey) {
-						item.target.innerHTML = '<span>Captcha não configurado neste ambiente de teste.</span>';
+						item.target.hidden = true;
 						return;
 					}
 
+					item.target.hidden = false;
 					if (!window.turnstile) {
 						window.setTimeout(() => renderCaptcha(name), 180);
 						return;
@@ -3433,15 +3435,19 @@ const products = [
 		.shop-login-modal,
 		.shop-dashboard-modal,
 		.shop-terms-modal {
-			align-items: end;
-			padding: 10px;
+			align-items: start;
+			overflow-y: auto;
+			padding:
+				calc(12px + env(safe-area-inset-top))
+				10px
+				calc(18px + env(safe-area-inset-bottom));
 		}
 
 		.shop-pix-dialog,
 		.shop-dashboard-dialog,
 		.shop-terms-dialog {
 			width: 100%;
-			max-height: calc(100vh - 20px);
+			max-height: calc(100dvh - 30px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 			padding: 22px 18px;
 			border-radius: 24px;
 		}
