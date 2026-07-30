@@ -51,7 +51,7 @@ const products = [
 	},
 	{
 		category: 'vips',
-		icon: '👑',
+		icon: 'VIP',
 		name: 'VIP Mensal',
 		description: 'Tag VIP, visual especial e benefícios planejados para quem quer apoiar o servidor.',
 		price: 'R$ 25,00',
@@ -60,7 +60,7 @@ const products = [
 	},
 	{
 		category: 'inventario',
-		icon: '🎒',
+		icon: 'BAG',
 		name: 'Página extra de inventário',
 		description: 'Mais uma página para guardar itens importantes. Produto planejado para uma fase futura.',
 		price: 'Em breve',
@@ -70,7 +70,7 @@ const products = [
 	{
 		category: 'garagem',
 		checkoutProductId: 'garage_slot_1',
-		icon: '🚗',
+		icon: '+1',
 		name: '+1 slot de garagem',
 		description: 'Libera mais um espaço para guardar veículo na conta do jogador.',
 		price: 'R$ 0,10',
@@ -79,7 +79,7 @@ const products = [
 	{
 		category: 'garagem',
 		checkoutProductId: 'garage_slot_3',
-		icon: '🏁',
+		icon: '+3',
 		name: '+3 slots de garagem',
 		description: 'Mais espaços para quem quer colecionar carros, motos e veículos especiais.',
 		price: 'R$ 0,10',
@@ -87,7 +87,7 @@ const products = [
 	},
 	{
 		category: 'ids',
-		icon: '🆔',
+		icon: 'ID3',
 		name: 'ID 3 dígitos',
 		description: 'Reserva de ID especial com três dígitos para deixar a conta mais marcante.',
 		price: 'R$ 20,00',
@@ -96,7 +96,7 @@ const products = [
 	},
 	{
 		category: 'ids',
-		icon: '⭐',
+		icon: 'ID2',
 		name: 'ID 2 dígitos',
 		description: 'ID curto e raro para jogadores que querem uma identificação premium.',
 		price: 'R$ 40,00',
@@ -105,7 +105,7 @@ const products = [
 	},
 	{
 		category: 'ids',
-		icon: '🔢',
+		icon: 'ID+',
 		name: 'ID personalizado',
 		description: 'Escolha um ID disponível e combine a reserva com a equipe do servidor.',
 		price: 'R$ 60,00',
@@ -173,23 +173,26 @@ const products = [
 						</span>
 					</a>
 
-					<nav class="shop-top-nav" aria-label="Navegação principal">
-						<a href={roleplayUrl}>Início</a>
-						<a href="#produtos">Produtos</a>
-						<a href={discordUrl} target="_blank" rel="noreferrer" class="shop-discord">
-							Suporte
+					<div class="shop-header-actions">
+						<a href={roleplayUrl} class="shop-icon-button" aria-label="Início">
+							<span>🏠</span>
 						</a>
-					</nav>
-
-					<label class="shop-search" aria-label="Buscar produto">
-						<span>⌕</span>
+						<button type="button" class="shop-icon-button" data-search-toggle aria-label="Pesquisar produto">
+							<span>🔍</span>
+						</button>
+						<a href={discordUrl} target="_blank" rel="noreferrer" class="shop-icon-button" aria-label="Suporte">
+							<span>🎧</span>
+						</a>
+					<label class="shop-search" data-search-box aria-label="Buscar produto" hidden>
+						<span>🔍</span>
 						<input data-product-search type="search" placeholder="Buscar produto" />
 					</label>
 
-					<button type="button" class="shop-account-button" data-open-login>
+					<button type="button" class="shop-account-button shop-icon-button" data-open-login aria-label="Conta do jogador">
 						<span>👤</span>
-						<strong data-account-button-label>Entrar</strong>
+						<strong data-account-button-label>Conta</strong>
 					</button>
+					</div>
 				</div>
 			</header>
 
@@ -611,6 +614,8 @@ const products = [
 				const statusEl = document.querySelector('[data-shop-status]');
 				const buyButtons = document.querySelectorAll('.shop-buy-button');
 				const productSearch = document.querySelector('[data-product-search]');
+				const searchBox = document.querySelector('[data-search-box]');
+				const searchToggle = document.querySelector('[data-search-toggle]');
 				const productCards = document.querySelectorAll('[data-product-card]');
 				const categoryBlocks = document.querySelectorAll('.shop-category-block');
 				const openLoginButton = document.querySelector('[data-open-login]');
@@ -819,6 +824,38 @@ const products = [
 						const visibleCards = section.querySelectorAll('[data-product-card]:not([hidden])');
 						section.hidden = Boolean(search) && visibleCards.length === 0;
 					});
+				};
+
+				const revealProducts = () => {
+					if (!('IntersectionObserver' in window)) {
+						productCards.forEach((card) => card.classList.add('is-visible'));
+						return;
+					}
+
+					const observer = new IntersectionObserver((entries) => {
+						entries.forEach((entry) => {
+							if (!entry.isIntersecting) return;
+							entry.target.classList.add('is-visible');
+							observer.unobserve(entry.target);
+						});
+					}, { threshold: 0.14 });
+
+					productCards.forEach((card, index) => {
+						card.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+						observer.observe(card);
+					});
+				};
+
+				const toggleSearch = () => {
+					if (!searchBox) return;
+					const shouldOpen = searchBox.hidden;
+					searchBox.hidden = !shouldOpen;
+					if (shouldOpen) {
+						window.setTimeout(() => productSearch?.focus(), 80);
+					} else if (productSearch) {
+						productSearch.value = '';
+						filterProducts();
+					}
 				};
 
 				const renderDashboard = (data) => {
@@ -1209,7 +1246,11 @@ const products = [
 				});
 				dashboardRefresh?.addEventListener('click', () => loadDashboard({ silent: false }));
 				logoutButton?.addEventListener('click', logoutAccount);
+				searchToggle?.addEventListener('click', toggleSearch);
 				productSearch?.addEventListener('input', filterProducts);
+				productSearch?.addEventListener('keydown', (event) => {
+					if (event.key === 'Escape') toggleSearch();
+				});
 				accountTabs.forEach((tab) => {
 					tab.addEventListener('click', () => setAccountTab(tab.getAttribute('data-account-tab') || 'resumo'));
 				});
@@ -1278,6 +1319,7 @@ const products = [
 						window.setTimeout(() => loginId?.focus(), 120);
 					}
 				});
+				revealProducts();
 			})();
 		</script>
 	</body>
@@ -1360,6 +1402,7 @@ const products = [
 
 	.shop-header-inner,
 	.shop-brand,
+	.shop-header-actions,
 	.shop-top-nav,
 	.shop-hero-actions,
 	.shop-support-inner,
@@ -1384,6 +1427,7 @@ const products = [
 
 	.shop-header-inner {
 		min-height: 78px;
+		padding-top: env(safe-area-inset-top);
 	}
 
 	.shop-brand {
@@ -1431,10 +1475,54 @@ const products = [
 		justify-content: flex-end;
 	}
 
+	.shop-header-actions {
+		position: relative;
+		gap: 10px;
+		justify-content: flex-end;
+	}
+
+	.shop-icon-button {
+		display: inline-grid;
+		width: 48px;
+		height: 48px;
+		place-items: center;
+		border: 1px solid rgba(255, 255, 255, 0.11);
+		border-radius: 15px;
+		color: var(--shop-white);
+		background: rgba(255, 255, 255, 0.055);
+		font: inherit;
+		font-size: 1.25rem;
+		font-weight: 900;
+		cursor: pointer;
+		transition: transform 170ms ease, border-color 170ms ease, background 170ms ease;
+	}
+
+	.shop-icon-button:hover {
+		transform: translateY(-1px);
+		border-color: rgba(255, 201, 40, 0.48);
+		background: rgba(255, 201, 40, 0.12);
+	}
+
+	.shop-account-button.shop-icon-button {
+		border-color: rgba(255, 201, 40, 0.44);
+		color: var(--shop-navy);
+		background: var(--shop-yellow);
+		box-shadow: none;
+	}
+
+	.shop-account-button.shop-icon-button strong {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+
 	.shop-search {
 		display: flex;
 		align-items: center;
-		min-width: min(420px, 34vw);
+		min-width: min(360px, 44vw);
 		min-height: 44px;
 		gap: 10px;
 		padding: 0 16px;
@@ -1442,6 +1530,10 @@ const products = [
 		border-radius: var(--shop-radius-pill);
 		color: rgba(255, 255, 255, 0.74);
 		background: rgba(255, 255, 255, 0.075);
+	}
+
+	.shop-search[hidden] {
+		display: none;
 	}
 
 	.shop-search span {
@@ -1499,20 +1591,20 @@ const products = [
 	}
 
 	.shop-account-button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 44px;
+		display: inline-grid;
+		width: 48px;
+		height: 48px;
+		min-height: 0;
 		gap: 8px;
-		padding: 0 16px;
+		padding: 0;
 		border: 1px solid rgba(255, 201, 40, 0.42);
-		border-radius: var(--shop-radius-pill);
+		border-radius: 15px;
 		color: var(--shop-navy);
-		background: var(--shop-white);
+		background: var(--shop-yellow);
 		font: inherit;
 		font-weight: 900;
 		cursor: pointer;
-		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+		box-shadow: none;
 		transition: transform 170ms ease, box-shadow 170ms ease;
 	}
 
@@ -1860,7 +1952,19 @@ const products = [
 			linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0.01) 100%),
 			var(--shop-card);
 		box-shadow: 0 20px 38px rgba(0, 0, 0, 0.28);
+		opacity: 0;
+		transform: translateY(18px) scale(0.98);
 		transition: transform 170ms ease, border-color 170ms ease, box-shadow 170ms ease;
+	}
+
+	.shop-product.is-visible {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+		transition:
+			opacity 520ms ease var(--reveal-delay, 0ms),
+			transform 520ms ease var(--reveal-delay, 0ms),
+			border-color 170ms ease,
+			box-shadow 170ms ease;
 	}
 
 	.shop-product:hover {
@@ -1890,7 +1994,7 @@ const products = [
 		overflow: hidden;
 		border-bottom: 1px solid var(--shop-card-line);
 		background:
-			radial-gradient(circle at 50% 44%, rgba(255, 201, 40, 0.16), transparent 34%),
+			radial-gradient(circle at 50% 44%, rgba(255, 201, 40, 0.2), transparent 34%),
 			linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.01));
 	}
 
@@ -1908,9 +2012,11 @@ const products = [
 
 	.shop-product-visual {
 		position: relative;
-		width: 180px;
-		height: 150px;
-		transform: rotate(-7deg);
+		width: 174px;
+		height: 174px;
+		display: grid;
+		place-items: center;
+		transform: none;
 	}
 
 	.shop-product-visual::before,
@@ -1922,87 +2028,75 @@ const products = [
 	}
 
 	.shop-product-visual::before {
-		bottom: 22px;
-		width: 150px;
-		height: 78px;
-		border: 5px solid #4e5053;
-		border-top-color: #74777b;
-		border-radius: 14px 14px 24px 24px;
-		background: linear-gradient(145deg, #17191d 0%, #323438 100%);
-		box-shadow: 0 18px 30px rgba(0, 0, 0, 0.42);
+		top: 18px;
+		width: 138px;
+		height: 138px;
+		border: 1px solid rgba(255, 201, 40, 0.38);
+		border-radius: 36px;
+		background:
+			linear-gradient(135deg, rgba(255, 201, 40, 0.28), rgba(255, 255, 255, 0.055)),
+			#101115;
+		box-shadow:
+			0 24px 44px rgba(0, 0, 0, 0.4),
+			inset 0 1px 0 rgba(255, 255, 255, 0.12);
 	}
 
 	.shop-product-visual::after {
-		bottom: 42px;
-		width: 106px;
-		height: 44px;
-		border-radius: 10px;
+		top: 38px;
+		width: 92px;
+		height: 92px;
+		border-radius: 28px;
 		background:
-			repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.32) 0 6px, transparent 6px 14px),
-			linear-gradient(135deg, #b8ff79 0%, #6fc948 100%);
-		box-shadow: 0 8px 0 rgba(40, 82, 32, 0.65);
+			radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.55), transparent 18%),
+			linear-gradient(135deg, #ffe083, var(--shop-yellow));
+		box-shadow: 0 14px 24px rgba(255, 201, 40, 0.2);
 	}
 
 	.shop-product-icon {
-		position: absolute;
+		position: relative;
 		z-index: 2;
-		left: 50%;
-		top: 44%;
-		transform: translate(-50%, -50%) rotate(7deg);
 		display: grid;
-		width: 82px;
-		height: 82px;
+		width: 88px;
+		height: 88px;
 		place-items: center;
-		border-radius: 22px;
-		background: rgba(255, 201, 40, 0.95);
+		border-radius: 26px;
+		background: rgba(8, 9, 12, 0.94);
 		color: #090a0d;
 		font-family: 'Syne', sans-serif;
-		font-size: 1.55rem;
+		font-size: 1.5rem;
 		font-weight: 900;
-		box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+		color: var(--shop-yellow);
+		box-shadow: inset 0 0 0 1px rgba(255, 201, 40, 0.28), 0 16px 34px rgba(0, 0, 0, 0.28);
 	}
 
 	.shop-product-vips .shop-product-visual::before,
 	.shop-product-ids .shop-product-visual::before,
 	.shop-product-inventario .shop-product-visual::before {
-		width: 112px;
-		height: 132px;
-		bottom: 8px;
-		border-color: #3b3d42;
-		border-radius: 24px;
-		background: linear-gradient(135deg, #96703c 0%, #d8a64e 100%);
+		border-color: rgba(255, 255, 255, 0.2);
+		background:
+			linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 201, 40, 0.18)),
+			#111216;
 	}
 
 	.shop-product-vips .shop-product-visual::after,
 	.shop-product-ids .shop-product-visual::after,
 	.shop-product-inventario .shop-product-visual::after {
-		width: 108px;
-		height: 108px;
-		bottom: 56px;
-		border: 18px solid #ff0d35;
-		border-left-color: transparent;
-		border-bottom-color: transparent;
-		border-radius: 50%;
-		background: transparent;
-		box-shadow: none;
+		background:
+			radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.4), transparent 18%),
+			linear-gradient(135deg, #2c88ff, #8ce3ff);
 	}
 
 	.shop-product-garagem .shop-product-visual::before {
-		width: 158px;
-		height: 72px;
-		bottom: 34px;
-		border: 0;
-		border-radius: 44px 44px 22px 22px;
-		background: linear-gradient(135deg, #1d66ff 0%, #092152 100%);
+		border-color: rgba(50, 120, 255, 0.42);
+		background:
+			linear-gradient(135deg, rgba(20, 88, 255, 0.34), rgba(255, 201, 40, 0.12)),
+			#101115;
 	}
 
 	.shop-product-garagem .shop-product-visual::after {
-		width: 142px;
-		height: 34px;
-		bottom: 22px;
-		border-radius: 18px;
-		background: linear-gradient(90deg, #20242a 0 18%, transparent 18% 78%, #20242a 78%);
-		box-shadow: none;
+		background:
+			radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.48), transparent 18%),
+			linear-gradient(135deg, #1458ff, #6fc1ff);
 	}
 
 	.shop-product-body {
@@ -2044,7 +2138,15 @@ const products = [
 		justify-content: space-between;
 		gap: 12px;
 		color: rgba(255, 255, 255, 0.68);
+		font-size: 0.92rem;
 		font-weight: 800;
+	}
+
+	.shop-product-meta span,
+	.shop-buy-button,
+	.shop-product-disabled,
+	.shop-product-bottom a {
+		white-space: nowrap;
 	}
 
 	.shop-product-meta em {
@@ -2109,6 +2211,13 @@ const products = [
 	.shop-product[hidden],
 	.shop-category-block[hidden] {
 		display: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.shop-product {
+			opacity: 1;
+			transform: none;
+		}
 	}
 
 	.shop-note {
@@ -2757,25 +2866,77 @@ const products = [
 		}
 
 		.shop-header {
-			position: static;
+			position: sticky;
+			top: 0;
 		}
 
-		.shop-header-inner,
 		.shop-support-inner,
 		.shop-footer-inner {
 			flex-direction: column;
 			align-items: flex-start;
 		}
 
+		.shop-header-inner {
+			position: relative;
+			min-height: 66px;
+			gap: 10px;
+		}
+
+		.shop-brand {
+			min-width: 0;
+			gap: 9px;
+		}
+
+		.shop-logo {
+			width: 42px;
+			height: 42px;
+			border-radius: 10px;
+		}
+
+		.shop-brand strong {
+			max-width: 118px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.shop-brand small {
+			display: none;
+		}
+
+		.shop-header-actions {
+			position: static;
+			flex: 0 0 auto;
+			gap: 7px;
+		}
+
+		.shop-icon-button,
+		.shop-account-button {
+			width: 42px;
+			height: 42px;
+			border-radius: 13px;
+			font-size: 1.08rem;
+		}
+
 		.shop-top-nav,
 		.shop-support-links,
 		.shop-hero-actions,
 		.shop-button,
-		.shop-search,
-		.shop-account-button,
 		.shop-top-nav a,
 		.shop-support-links a {
 			width: 100%;
+		}
+
+		.shop-search {
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: calc(100% + 8px);
+			width: 100%;
+			min-width: 0;
+			z-index: 5;
+			background: rgba(12, 13, 17, 0.98);
+			box-shadow: 0 18px 34px rgba(0, 0, 0, 0.36);
 		}
 
 		.shop-grid {
@@ -2784,6 +2945,7 @@ const products = [
 		}
 
 		.shop-categories {
+			position: static;
 			top: 0;
 			margin-bottom: 38px;
 		}
@@ -2815,19 +2977,21 @@ const products = [
 
 		.shop-product-visual {
 			width: 128px;
-			height: 112px;
+			height: 128px;
 		}
 
 		.shop-product-visual::before {
-			width: 112px;
-			height: 58px;
-			bottom: 18px;
+			top: 12px;
+			width: 104px;
+			height: 104px;
+			border-radius: 26px;
 		}
 
 		.shop-product-visual::after {
-			width: 78px;
-			height: 32px;
-			bottom: 34px;
+			top: 29px;
+			width: 72px;
+			height: 72px;
+			border-radius: 20px;
 		}
 
 		.shop-product-icon {
@@ -2860,7 +3024,8 @@ const products = [
 		}
 
 		.shop-product-meta {
-			font-size: 0.82rem;
+			gap: 6px;
+			font-size: 0.76rem;
 		}
 
 		.shop-product-meta em {
@@ -2877,8 +3042,9 @@ const products = [
 		.shop-product-disabled,
 		.shop-product-bottom a {
 			min-height: 42px;
-			padding: 0 10px;
-			font-size: 0.88rem;
+			gap: 6px;
+			padding: 0 8px;
+			font-size: 0.78rem;
 		}
 
 		h1 {
