@@ -110,7 +110,8 @@ const products = [
 		description: 'Escolha um ID disponível e combine a reserva com a equipe do servidor.',
 		price: 'R$ 60,00',
 		badge: 'indisponível',
-		unavailable: true
+		unavailable: true,
+		compactIcon: true
 	}
 ];
 ---
@@ -335,7 +336,11 @@ const products = [
 											<article class:list={[
 												'shop-product',
 												`shop-product-${product.category}`,
-												{ 'shop-product-featured': product.featured, 'shop-product-unavailable': product.unavailable }
+												{
+													'shop-product-featured': product.featured,
+													'shop-product-unavailable': product.unavailable,
+													'shop-product-compact-icon': product.compactIcon
+												}
 											]} data-product-card data-search={`${product.name} ${product.description} ${product.badge} ${category.label}`}>
 												<div class="shop-product-media" aria-hidden="true">
 													<div class="shop-product-visual">
@@ -2072,6 +2077,11 @@ const products = [
 		box-shadow: inset 0 0 0 1px rgba(255, 201, 40, 0.28), 0 16px 34px rgba(0, 0, 0, 0.28);
 	}
 
+	.shop-product-compact-icon .shop-product-icon {
+		font-size: 1.22rem;
+		letter-spacing: -0.04em;
+	}
+
 	.shop-product-vips .shop-product-visual::before,
 	.shop-product-ids .shop-product-visual::before,
 	.shop-product-inventario .shop-product-visual::before {
@@ -3012,6 +3022,11 @@ const products = [
 			padding: 0 5px;
 			border-radius: 16px;
 			font-size: 0.82rem;
+		}
+
+		.shop-product-compact-icon .shop-product-icon {
+			font-size: 0.66rem;
+			letter-spacing: -0.05em;
 		}
 
 		.shop-product-body {
