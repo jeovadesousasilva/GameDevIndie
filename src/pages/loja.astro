@@ -125,7 +125,7 @@ const products = [
 const vipBenefits = [
 	'+1 slot de garagem permanente, uma vez por conta',
 	'1 veículo da lista VIP Beta, sem modelos raros ou apelões',
-	'2x XP em salários durante a beta',
+	'Dobro de XP e pontos de reputação ao receber salário',
 	'+25% nos salários dos empregos legais',
 	'Permissão para ter até 2 casas na cidade',
 	'ID permanente de 4 dígitos',
@@ -402,15 +402,21 @@ const vipBenefits = [
 														{product.price}
 													</strong>
 													{product.benefitsTarget ? (
-														<button
-															type="button"
-															class="shop-benefits-button"
-															data-benefits-target={product.benefitsTarget}
-															aria-label={`Ver benefícios do ${product.name}`}
-														>
-															<span>💎</span>
-															Ver benefícios
-														</button>
+														<div class="shop-vip-card-actions">
+															<button type="button" class="shop-vip-buy-disabled" disabled>
+																<span>🛒</span>
+																Comprar VIP
+															</button>
+															<button
+																type="button"
+																class="shop-benefits-button"
+																data-benefits-target={product.benefitsTarget}
+																aria-label={`Ver benefícios do ${product.name}`}
+															>
+																<span>💎</span>
+																Ver benefícios
+															</button>
+														</div>
 													) : product.unavailable ? (
 														<button type="button" class="shop-product-disabled" disabled>
 															Indisponível
@@ -2535,6 +2541,7 @@ const vipBenefits = [
 	.shop-product-meta span,
 	.shop-buy-button,
 	.shop-benefits-button,
+	.shop-vip-buy-disabled,
 	.shop-product-disabled,
 	.shop-product-bottom a {
 		white-space: nowrap;
@@ -2590,7 +2597,8 @@ const vipBenefits = [
 	.shop-product-bottom a,
 	.shop-buy-button,
 	.shop-product-disabled,
-	.shop-benefits-button {
+	.shop-benefits-button,
+	.shop-vip-buy-disabled {
 		width: 100%;
 		min-height: 46px;
 		gap: 10px;
@@ -2603,9 +2611,20 @@ const vipBenefits = [
 		background: var(--shop-yellow);
 	}
 
+	.shop-vip-card-actions {
+		display: grid;
+		gap: 8px;
+	}
+
 	.shop-buy-button,
 	.shop-benefits-button {
 		cursor: pointer;
+	}
+
+	.shop-benefits-button {
+		color: var(--shop-yellow);
+		background: rgba(255, 201, 40, 0.12);
+		border: 1px solid rgba(255, 201, 40, 0.22);
 	}
 
 	.shop-buy-button:disabled {
@@ -2613,10 +2632,20 @@ const vipBenefits = [
 		opacity: 0.72;
 	}
 
-	.shop-product-disabled {
+	.shop-product-disabled,
+	.shop-vip-buy-disabled {
 		cursor: not-allowed;
+	}
+
+	.shop-product-disabled {
 		color: rgba(255, 255, 255, 0.42);
 		background: rgba(255, 255, 255, 0.1);
+	}
+
+	.shop-vip-buy-disabled {
+		color: var(--shop-navy);
+		background: var(--shop-yellow);
+		opacity: 0.82;
 	}
 
 	.shop-product[hidden],
@@ -3650,6 +3679,7 @@ const vipBenefits = [
 
 		.shop-buy-button,
 		.shop-benefits-button,
+		.shop-vip-buy-disabled,
 		.shop-product-disabled,
 		.shop-product-bottom a {
 			min-height: 38px;
@@ -3672,8 +3702,13 @@ const vipBenefits = [
 		.shop-product-bottom a,
 		.shop-buy-button,
 		.shop-benefits-button,
+		.shop-vip-buy-disabled,
 		.shop-product-disabled {
 			width: 100%;
+		}
+
+		.shop-vip-card-actions {
+			gap: 6px;
 		}
 
 		.shop-pix-modal,
