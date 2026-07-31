@@ -378,7 +378,7 @@ const vipBenefits = [
 												}
 											]} data-product-card data-search={`${product.name} ${product.description} ${product.badge} ${category.label}`}>
 												{product.vipOffer && (
-													<div class="shop-vip-ribbon">Preço beta por tempo limitado</div>
+													<div class="shop-vip-ribbon">Oferta beta</div>
 												)}
 												<div class="shop-product-media" aria-hidden="true">
 													<div class="shop-product-visual">
@@ -3536,39 +3536,53 @@ const vipBenefits = [
 		}
 
 		.shop-product {
-			min-height: 342px;
+			min-height: 320px;
 			border-radius: 10px;
 		}
 
 		.shop-product-media {
-			min-height: 164px;
+			min-height: 148px;
+		}
+
+		.shop-vip-ribbon {
+			top: 8px;
+			left: 8px;
+			max-width: calc(100% - 16px);
+			padding: 5px 8px;
+			font-size: 0.52rem;
+			line-height: 1.1;
+			white-space: nowrap;
+		}
+
+		.shop-product-vip-offer .shop-product-media {
+			padding-top: 18px;
 		}
 
 		.shop-product-visual {
-			width: 128px;
-			height: 128px;
+			width: 116px;
+			height: 116px;
 		}
 
 		.shop-product-visual::before {
 			top: 12px;
-			width: 104px;
-			height: 104px;
-			border-radius: 26px;
+			width: 94px;
+			height: 94px;
+			border-radius: 24px;
 		}
 
 		.shop-product-visual::after {
-			top: 29px;
-			width: 72px;
-			height: 72px;
-			border-radius: 20px;
+			top: 28px;
+			width: 64px;
+			height: 64px;
+			border-radius: 18px;
 		}
 
 		.shop-product-icon {
-			width: 58px;
-			height: 58px;
+			width: 52px;
+			height: 52px;
 			padding: 0 5px;
-			border-radius: 16px;
-			font-size: 0.82rem;
+			border-radius: 15px;
+			font-size: 0.76rem;
 		}
 
 		.shop-product-compact-icon .shop-product-icon {
@@ -3577,8 +3591,8 @@ const vipBenefits = [
 		}
 
 		.shop-product-body {
-			padding: 14px;
-			gap: 8px;
+			padding: 12px;
+			gap: 7px;
 		}
 
 		.shop-product-top {
@@ -3587,11 +3601,15 @@ const vipBenefits = [
 
 		.shop-badge {
 			display: inline-flex;
-			margin-top: 8px;
+			margin-top: 7px;
+			padding: 6px 8px;
+			font-size: 0.6rem;
+			line-height: 1;
 		}
 
 		.shop-product h4 {
-			font-size: 0.98rem;
+			font-size: 0.84rem;
+			line-height: 1.08;
 		}
 
 		.shop-product p {
@@ -3599,30 +3617,46 @@ const vipBenefits = [
 		}
 
 		.shop-product-meta {
-			gap: 6px;
-			font-size: 0.72rem;
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			gap: 5px;
+			font-size: 0.62rem;
+			line-height: 1.1;
+		}
+
+		.shop-product-meta span {
+			flex: 0 1 auto;
+			overflow: visible;
+			text-overflow: clip;
+			white-space: normal;
 		}
 
 		.shop-product-meta em {
-			min-width: 28px;
-			height: 28px;
+			min-width: 26px;
+			height: 24px;
 			padding: 0 5px;
 			border-radius: 8px;
-			font-size: 0.56rem;
+			font-size: 0.5rem;
 		}
 
 		.shop-product-bottom strong {
-			font-size: 1.18rem;
+			font-size: 1.04rem;
+			line-height: 1.05;
+		}
+
+		.shop-product-bottom strong del {
+			font-size: 0.64rem;
 		}
 
 		.shop-buy-button,
 		.shop-benefits-button,
 		.shop-product-disabled,
 		.shop-product-bottom a {
-			min-height: 42px;
-			gap: 6px;
-			padding: 0 8px;
-			font-size: 0.78rem;
+			min-height: 38px;
+			gap: 5px;
+			padding: 0 7px;
+			font-size: 0.68rem;
+			line-height: 1;
 		}
 
 		h1 {
