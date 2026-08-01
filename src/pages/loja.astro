@@ -28,13 +28,14 @@ const products = [
 		category: 'vips',
 		icon: 'VIP',
 		name: 'VIP Beta 30 dias',
-		description: 'Passe especial de 30 dias com benefícios de lançamento para apoiar a cidade desde o beta.',
-		price: 'R$ 14,99',
+		description: 'Passe especial de 30 dias com ID de 4 dígitos, veículo temporário e benefícios de lançamento.',
+		price: 'R$ 0,10',
 		originalPrice: 'R$ 29,99',
 		badge: '50% OFF beta',
 		duration: '30 dias',
 		featured: true,
 		vipOffer: true,
+		checkoutProductId: 'vip_beta_30d',
 		benefitsTarget: 'vip-beta'
 	},
 	{
@@ -124,11 +125,11 @@ const products = [
 
 const vipBenefits = [
 	'+1 slot de garagem permanente, uma vez por conta',
-	'1 veículo da lista VIP Beta, sem modelos raros ou apelões',
+	'1 veículo da lista VIP Beta disponível somente durante o período VIP',
 	'Dobro de XP e pontos de reputação ao receber salário',
 	'+25% nos salários dos empregos legais',
 	'Permissão para ter até 2 casas na cidade',
-	'ID permanente de 4 dígitos',
+	'ID permanente de 4 dígitos, adquirido uma vez por conta',
 	'Anúncio para a cidade ao entrar no servidor',
 	'Tag VIP acima da cabeça e no chat local',
 	'Proteção hospitalar para não perder os itens ao morrer',
@@ -403,7 +404,14 @@ const vipBenefits = [
 													</strong>
 													{product.benefitsTarget ? (
 														<div class="shop-vip-card-actions">
-															<button type="button" class="shop-vip-buy-disabled" disabled>
+															<button
+																type="button"
+																class="shop-buy-button shop-vip-buy"
+																data-product-id={product.checkoutProductId}
+																data-product-name={product.name}
+																data-product-type="vip"
+																aria-label={`Comprar ${product.name}`}
+															>
 																<span>🛒</span>
 																Comprar VIP
 															</button>
@@ -614,6 +622,76 @@ const vipBenefits = [
 			</section>
 		</div>
 
+		<div class="shop-vip-id-modal" data-vip-id-modal hidden>
+			<div class="shop-pix-backdrop" data-vip-id-close></div>
+			<section class="shop-pix-dialog shop-vip-id-dialog" role="dialog" aria-modal="true" aria-labelledby="vip-id-title">
+				<button type="button" class="shop-pix-close" data-vip-id-close aria-label="Fechar sorteio de ID">
+					×
+				</button>
+				<p class="shop-section-label">Benefício VIP</p>
+				<h2 id="vip-id-title">Seu ID especial</h2>
+				<p class="shop-pix-summary" data-vip-id-summary>
+					Vamos verificar se sua conta precisa receber um ID de 4 dígitos.
+				</p>
+
+				<div class="shop-vip-id-card">
+					<span>ID</span>
+					<strong data-vip-reserved-id>----</strong>
+					<small data-vip-id-note>Sorteando um ID disponível...</small>
+				</div>
+
+				<div class="shop-pix-loading" data-vip-id-loading hidden>
+					<span></span>
+					Conferindo disponibilidade no servidor...
+				</div>
+
+				<div class="shop-account-actions">
+					<button type="button" class="shop-pix-open" data-vip-id-reroll>Sortear outro ID</button>
+					<button type="button" class="shop-pix-copy" data-vip-id-confirm>Confirmar ID</button>
+				</div>
+
+				<div class="shop-pix-state" data-vip-id-state>
+					O ID só será aplicado após o pagamento ser aprovado.
+				</div>
+			</section>
+		</div>
+
+		<div class="shop-vip-vehicle-modal" data-vip-vehicle-modal hidden>
+			<div class="shop-pix-backdrop" data-vip-vehicle-close></div>
+			<section class="shop-pix-dialog shop-vip-vehicle-dialog" role="dialog" aria-modal="true" aria-labelledby="vip-vehicle-title">
+				<button type="button" class="shop-pix-close" data-vip-vehicle-close aria-label="Fechar escolha de veículo VIP">
+					×
+				</button>
+				<p class="shop-section-label">Veículo VIP</p>
+				<h2 id="vip-vehicle-title">Escolha seu veículo</h2>
+				<p class="shop-pix-summary">
+					O veículo escolhido fica disponível somente durante o período VIP dessa compra.
+				</p>
+
+				<div class="shop-vip-vehicle-grid">
+					<button type="button" class="shop-vip-vehicle-option" data-vip-vehicle="411">
+						<img src="https://assets.open.mp/assets/images/vehiclePictures/Vehicle_411.jpg" alt="Infernus" loading="lazy" />
+						<strong>Infernus</strong>
+						<span>Modelo 411</span>
+					</button>
+					<button type="button" class="shop-vip-vehicle-option" data-vip-vehicle="487">
+						<img src="https://assets.open.mp/assets/images/vehiclePictures/Vehicle_487.jpg" alt="Maverick" loading="lazy" />
+						<strong>Maverick</strong>
+						<span>Modelo 487</span>
+					</button>
+					<button type="button" class="shop-vip-vehicle-option" data-vip-vehicle="490">
+						<img src="https://assets.open.mp/assets/images/vehiclePictures/Vehicle_490.jpg" alt="FBI Rancher" loading="lazy" />
+						<strong>FBI Rancher</strong>
+						<span>Modelo 490</span>
+					</button>
+				</div>
+
+				<div class="shop-pix-state" data-vip-vehicle-state>
+					Selecione um veículo para continuar.
+				</div>
+			</section>
+		</div>
+
 		<div class="shop-terms-modal" data-terms-modal hidden>
 			<div class="shop-pix-backdrop" data-terms-close></div>
 			<section class="shop-pix-dialog shop-terms-dialog" role="dialog" aria-modal="true" aria-labelledby="terms-modal-title">
@@ -666,7 +744,7 @@ const vipBenefits = [
 				<p class="shop-section-label">Oferta beta</p>
 				<h2 id="benefits-modal-title">VIP Beta 30 dias</h2>
 				<p class="shop-pix-summary">
-					Preço especial de lançamento: <strong>R$ 14,99</strong>. Valor previsto após a beta:
+					Preço especial de teste: <strong>R$ 0,10</strong>. Valor previsto após a beta:
 					<del>R$ 29,99</del>.
 				</p>
 
@@ -804,6 +882,17 @@ const vipBenefits = [
 				const accountVerify = document.querySelector('[data-account-verify]');
 				const accountConfirm = document.querySelector('[data-account-confirm]');
 				const accountChange = document.querySelector('[data-account-change]');
+				const vipIdModal = document.querySelector('[data-vip-id-modal]');
+				const vipIdSummary = document.querySelector('[data-vip-id-summary]');
+				const vipReservedId = document.querySelector('[data-vip-reserved-id]');
+				const vipIdNote = document.querySelector('[data-vip-id-note]');
+				const vipIdLoading = document.querySelector('[data-vip-id-loading]');
+				const vipIdReroll = document.querySelector('[data-vip-id-reroll]');
+				const vipIdConfirm = document.querySelector('[data-vip-id-confirm]');
+				const vipIdState = document.querySelector('[data-vip-id-state]');
+				const vipVehicleModal = document.querySelector('[data-vip-vehicle-modal]');
+				const vipVehicleOptions = document.querySelectorAll('[data-vip-vehicle]');
+				const vipVehicleState = document.querySelector('[data-vip-vehicle-state]');
 				const termsModal = document.querySelector('[data-terms-modal]');
 				const termsSummary = document.querySelector('[data-terms-summary]');
 				const termsCheck = document.querySelector('[data-terms-check]');
@@ -831,6 +920,8 @@ const vipBenefits = [
 				let deliveryFlowTimers = [];
 				let selectedProduct = null;
 				let selectedAccount = null;
+				let selectedVipReservedId = null;
+				let selectedVipVehicleModel = null;
 				let loggedAccount = null;
 
 				const setStatus = (message, type = 'info') => {
@@ -861,6 +952,18 @@ const vipBenefits = [
 					if (!termsState) return;
 					termsState.textContent = message;
 					termsState.dataset.status = type;
+				};
+
+				const setVipIdState = (message, type = 'info') => {
+					if (!vipIdState) return;
+					vipIdState.textContent = message;
+					vipIdState.dataset.status = type;
+				};
+
+				const setVipVehicleState = (message, type = 'info') => {
+					if (!vipVehicleState) return;
+					vipVehicleState.textContent = message;
+					vipVehicleState.dataset.status = type;
 				};
 
 				const setDashboardState = (message, type = 'info') => {
@@ -969,7 +1072,7 @@ const vipBenefits = [
 				const closeModal = (modal) => {
 					if (!modal) return;
 					modal.hidden = true;
-					if (accountModal?.hidden && termsModal?.hidden && benefitsModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden && accountPanel?.hidden) {
+					if (accountModal?.hidden && vipIdModal?.hidden && vipVehicleModal?.hidden && termsModal?.hidden && benefitsModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden && accountPanel?.hidden) {
 						document.body.classList.remove('shop-modal-open');
 					}
 				};
@@ -984,6 +1087,8 @@ const vipBenefits = [
 
 				const resetAccountModal = () => {
 					selectedAccount = null;
+					selectedVipReservedId = null;
+					selectedVipVehicleModel = null;
 					if (accountInput) {
 						accountInput.value = '';
 						accountInput.disabled = false;
@@ -1030,7 +1135,7 @@ const vipBenefits = [
 				const closeAccountPanel = () => {
 					if (!accountPanel) return;
 					accountPanel.hidden = true;
-					if (accountModal?.hidden && termsModal?.hidden && benefitsModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
+					if (accountModal?.hidden && vipIdModal?.hidden && vipVehicleModal?.hidden && termsModal?.hidden && benefitsModal?.hidden && pixModal?.hidden && loginModal?.hidden && dashboardModal?.hidden) {
 						document.body.classList.remove('shop-modal-open');
 					}
 				};
@@ -1278,9 +1383,77 @@ const vipBenefits = [
 				const openTermsModal = () => {
 					if (!selectedProduct || !selectedAccount) return;
 					closeModal(accountModal);
+					closeModal(vipIdModal);
+					closeModal(vipVehicleModal);
 					resetTermsModal();
 					openModal(termsModal);
 					if (!loggedAccount) renderCaptcha('checkout');
+				};
+
+				const isVipCheckout = () => selectedProduct?.id === 'vip_beta_30d';
+
+				const reserveVipId = async ({ reroll = false } = {}) => {
+					if (!selectedAccount) return;
+					if (vipIdLoading) vipIdLoading.hidden = false;
+					if (vipIdConfirm) vipIdConfirm.disabled = true;
+					if (vipIdReroll) vipIdReroll.disabled = true;
+					setVipIdState(reroll ? 'Sorteando um novo ID...' : 'Verificando se sua conta precisa de ID especial...', 'pending');
+
+					try {
+						const response = await fetch(`${apiBase}/api/vip/reserve-id`, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+								...fetchHeaders
+							},
+							credentials: 'include',
+							body: JSON.stringify({
+								accountId: selectedAccount.accountId,
+								previousReservedId: reroll ? selectedVipReservedId : null
+							})
+						});
+						const data = await response.json().catch(() => ({}));
+						if (!response.ok) {
+							throw new Error(data.error || 'Não foi possível reservar o ID VIP.');
+						}
+
+						selectedVipReservedId = data.required ? data.reservedId : null;
+						if (vipReservedId) vipReservedId.textContent = data.required ? String(data.reservedId) : 'OK';
+						if (vipIdSummary) {
+							vipIdSummary.textContent = data.required
+								? `ID ${data.reservedId} reservado temporariamente para ${selectedAccount.name || selectedAccount.accountId}.`
+								: data.message || 'Sua conta não precisa trocar o ID para receber o VIP.';
+						}
+						if (vipIdNote) {
+							vipIdNote.textContent = data.required
+								? `Reserva válida por ${data.expiresInMinutes || 30} minutos.`
+								: 'O benefício de ID será ignorado para esta conta.';
+						}
+						if (vipIdReroll) vipIdReroll.hidden = !data.required;
+						setVipIdState(data.required ? 'Confira o ID sorteado antes de continuar.' : 'Tudo certo. Você pode continuar.', 'success');
+					} catch (error) {
+						setVipIdState(error.message || 'Erro ao reservar ID.', 'error');
+					} finally {
+						if (vipIdLoading) vipIdLoading.hidden = true;
+						if (vipIdConfirm) vipIdConfirm.disabled = false;
+						if (vipIdReroll) vipIdReroll.disabled = false;
+					}
+				};
+
+				const openVipIdModal = () => {
+					closeModal(accountModal);
+					openModal(vipIdModal);
+					if (vipReservedId) vipReservedId.textContent = '----';
+					if (vipIdNote) vipIdNote.textContent = 'Sorteando um ID disponível...';
+					reserveVipId();
+				};
+
+				const openVipVehicleModal = () => {
+					closeModal(vipIdModal);
+					selectedVipVehicleModel = null;
+					vipVehicleOptions.forEach((option) => option.classList.remove('is-selected'));
+					setVipVehicleState('Selecione um veículo para continuar.', 'info');
+					openModal(vipVehicleModal);
 				};
 
 				const renderPixPayment = (data) => {
@@ -1440,6 +1613,8 @@ const vipBenefits = [
 							body: JSON.stringify({
 								productId: selectedProduct.id,
 								accountId: selectedAccount.accountId,
+								vipReservedId: selectedVipReservedId,
+								vipVehicleModel: selectedVipVehicleModel,
 								termsAccepted: true,
 								termsVersion,
 								captchaToken
@@ -1473,6 +1648,14 @@ const vipBenefits = [
 
 				document.querySelectorAll('[data-account-close]').forEach((button) => {
 					button.addEventListener('click', () => closeModal(accountModal));
+				});
+
+				document.querySelectorAll('[data-vip-id-close]').forEach((button) => {
+					button.addEventListener('click', () => closeModal(vipIdModal));
+				});
+
+				document.querySelectorAll('[data-vip-vehicle-close]').forEach((button) => {
+					button.addEventListener('click', () => closeModal(vipVehicleModal));
 				});
 
 				document.querySelectorAll('[data-terms-close]').forEach((button) => {
@@ -1540,7 +1723,13 @@ const vipBenefits = [
 				accountInput?.addEventListener('keydown', (event) => {
 					if (event.key === 'Enter') verifyAccount();
 				});
-				accountConfirm?.addEventListener('click', openTermsModal);
+				accountConfirm?.addEventListener('click', () => {
+					if (isVipCheckout()) {
+						openVipIdModal();
+					} else {
+						openTermsModal();
+					}
+				});
 				accountChange?.addEventListener('click', () => {
 					if (accountInput) {
 						accountInput.disabled = false;
@@ -1560,7 +1749,11 @@ const vipBenefits = [
 				});
 				termsBack?.addEventListener('click', () => {
 					closeModal(termsModal);
-					openModal(accountModal);
+					if (isVipCheckout()) {
+						openModal(vipVehicleModal);
+					} else {
+						openModal(accountModal);
+					}
 				});
 				termsConfirm?.addEventListener('click', () => {
 					if (!termsCheck?.checked) {
@@ -1568,6 +1761,17 @@ const vipBenefits = [
 						return;
 					}
 					startPixPayment();
+				});
+
+				vipIdReroll?.addEventListener('click', () => reserveVipId({ reroll: true }));
+				vipIdConfirm?.addEventListener('click', openVipVehicleModal);
+				vipVehicleOptions.forEach((option) => {
+					option.addEventListener('click', () => {
+						selectedVipVehicleModel = Number(option.getAttribute('data-vip-vehicle'));
+						vipVehicleOptions.forEach((item) => item.classList.toggle('is-selected', item === option));
+						setVipVehicleState('Veículo escolhido. Indo para os termos...', 'success');
+						window.setTimeout(openTermsModal, 250);
+					});
 				});
 
 				modalCopy?.addEventListener('click', async () => {
@@ -3799,6 +4003,95 @@ const vipBenefits = [
 		.shop-account-actions {
 			grid-template-columns: 1fr;
 			flex-direction: column;
+		}
+	}
+	.shop-vip-id-card {
+		display: grid;
+		gap: 0.35rem;
+		justify-items: center;
+		margin: 1rem 0;
+		padding: 1.25rem;
+		border: 1px solid rgba(255, 201, 40, 0.35);
+		border-radius: 22px;
+		background: radial-gradient(circle at 50% 0%, rgba(255, 201, 40, 0.24), transparent 58%), #f8fbff;
+		color: #06101f;
+	}
+
+	.shop-vip-id-card span {
+		display: inline-grid;
+		place-items: center;
+		width: 42px;
+		height: 42px;
+		border-radius: 14px;
+		background: var(--shop-yellow);
+		font-weight: 950;
+	}
+
+	.shop-vip-id-card strong {
+		font-size: clamp(2.1rem, 8vw, 4rem);
+		line-height: 1;
+		letter-spacing: 0.08em;
+	}
+
+	.shop-vip-id-card small {
+		color: #42526f;
+		font-weight: 800;
+	}
+
+	.shop-vip-vehicle-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin: 1rem 0;
+	}
+
+	.shop-vip-vehicle-option {
+		display: grid;
+		gap: 0.45rem;
+		padding: 0.7rem;
+		border: 1px solid rgba(7, 20, 38, 0.12);
+		border-radius: 18px;
+		background: #f8fbff;
+		color: #071426;
+		text-align: left;
+		cursor: pointer;
+		transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.shop-vip-vehicle-option:hover,
+	.shop-vip-vehicle-option.is-selected {
+		transform: translateY(-2px);
+		border-color: rgba(255, 201, 40, 0.9);
+		box-shadow: 0 14px 30px rgba(255, 201, 40, 0.18);
+	}
+
+	.shop-vip-vehicle-option img {
+		width: 100%;
+		aspect-ratio: 16 / 10;
+		object-fit: contain;
+		border-radius: 14px;
+		background: #eaf0fb;
+	}
+
+	.shop-vip-vehicle-option strong {
+		font-size: 0.95rem;
+	}
+
+	.shop-vip-vehicle-option span {
+		color: #61708a;
+		font-size: 0.78rem;
+		font-weight: 800;
+	}
+
+	@media (max-width: 680px) {
+		.shop-vip-vehicle-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.shop-vip-id-dialog,
+		.shop-vip-vehicle-dialog {
+			max-height: calc(100vh - 24px);
+			overflow-y: auto;
 		}
 	}
 </style>
