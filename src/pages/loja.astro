@@ -29,9 +29,9 @@ const products = [
 		icon: 'VIP',
 		name: 'VIP Beta 30 dias',
 		description: 'Passe especial de 30 dias com ID de 4 dígitos, veículo temporário e benefícios de lançamento.',
-		price: 'R$ 0,10',
+		price: 'R$ 14,99',
 		originalPrice: 'R$ 29,99',
-		badge: '50% OFF beta',
+		badge: '50% OFF',
 		duration: '30 dias',
 		featured: true,
 		vipOffer: true,
@@ -40,39 +40,43 @@ const products = [
 	},
 	{
 		category: 'dinheiro',
-		checkoutProductId: 'cash_4kk',
-		icon: '4KK',
-		name: '4kk de dinheiro',
-		description: 'Saldo inicial para comprar itens, veículos e recursos dentro da cidade.',
-		price: 'R$ 0,10',
-		badge: '4 milhões'
+		checkoutProductId: 'cash_250k',
+		icon: '250K',
+		name: '250 mil de dinheiro',
+		description: 'Pacote promocional para começar com saldo extra na cidade.',
+		price: 'R$ 7,45',
+		originalPrice: 'R$ 9,90',
+		badge: '25% OFF'
 	},
 	{
 		category: 'dinheiro',
-		checkoutProductId: 'cash_8kk',
-		icon: '8KK',
-		name: '8kk de dinheiro',
-		description: 'Pacote equilibrado para começar com mais liberdade no roleplay.',
-		price: 'R$ 0,10',
-		badge: '8 milhões',
+		checkoutProductId: 'cash_500k',
+		icon: '500K',
+		name: '500 mil de dinheiro',
+		description: 'Promoção beta para comprar itens, veículos e recursos com mais folga.',
+		price: 'R$ 11,45',
+		originalPrice: 'R$ 15,90',
+		badge: '28% OFF',
 		featured: true
 	},
 	{
 		category: 'dinheiro',
-		checkoutProductId: 'cash_15kk',
-		icon: '15KK',
-		name: '15kk de dinheiro',
-		description: 'Mais saldo para guardar, investir e aproveitar futuras novidades.',
-		price: 'R$ 0,10',
-		badge: '15 milhões'
+		checkoutProductId: 'cash_1kk',
+		icon: '1KK',
+		name: '1 milhão de dinheiro',
+		description: 'Maior pacote promocional de dinheiro virtual para a fase beta.',
+		price: 'R$ 19,80',
+		originalPrice: 'R$ 29,90',
+		badge: '34% OFF'
 	},
 	{
 		category: 'inventario',
 		icon: '🎒',
 		name: 'Página extra de inventário',
 		description: 'Mais uma página para guardar itens importantes. Produto planejado para uma fase futura.',
-		price: 'Em breve',
-		badge: 'não disponível',
+		price: 'R$ 8,90',
+		originalPrice: 'R$ 12,90',
+		badge: '31% OFF',
 		unavailable: true
 	},
 	{
@@ -81,8 +85,9 @@ const products = [
 		icon: '+1',
 		name: '+1 slot de garagem',
 		description: 'Libera mais um espaço para guardar veículo na conta do jogador.',
-		price: 'R$ 0,10',
-		badge: '+1 veículo'
+		price: 'R$ 6,45',
+		originalPrice: 'R$ 8,90',
+		badge: '28% OFF'
 	},
 	{
 		category: 'garagem',
@@ -90,8 +95,9 @@ const products = [
 		icon: '+3',
 		name: '+3 slots de garagem',
 		description: 'Mais espaços para quem quer colecionar carros, motos e veículos especiais.',
-		price: 'R$ 0,10',
-		badge: '+3 veículos'
+		price: 'R$ 15,45',
+		originalPrice: 'R$ 21,90',
+		badge: '29% OFF'
 	},
 	{
 		category: 'ids',
@@ -679,10 +685,10 @@ const vipBenefits = [
 						<strong>Maverick</strong>
 						<span>Modelo 487</span>
 					</button>
-					<button type="button" class="shop-vip-vehicle-option" data-vip-vehicle="490">
-						<img src="https://assets.open.mp/assets/images/vehiclePictures/Vehicle_490.jpg" alt="FBI Rancher" loading="lazy" />
-						<strong>FBI Rancher</strong>
-						<span>Modelo 490</span>
+					<button type="button" class="shop-vip-vehicle-option" data-vip-vehicle="502">
+						<img src="https://assets.open.mp/assets/images/vehiclePictures/Vehicle_502.jpg" alt="Hotring Racer A" loading="lazy" />
+						<strong>Hotring Racer A</strong>
+						<span>Modelo 502</span>
 					</button>
 				</div>
 
@@ -744,7 +750,7 @@ const vipBenefits = [
 				<p class="shop-section-label">Oferta beta</p>
 				<h2 id="benefits-modal-title">VIP Beta 30 dias</h2>
 				<p class="shop-pix-summary">
-					Preço especial de teste: <strong>R$ 0,10</strong>. Valor previsto após a beta:
+					Preço beta em promoção: <strong>R$ 14,99</strong>. Valor previsto após a beta:
 					<del>R$ 29,99</del>.
 				</p>
 
