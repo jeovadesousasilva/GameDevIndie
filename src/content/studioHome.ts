@@ -8,7 +8,6 @@ type SeoContent = {
 };
 
 type NavContent = {
-	blog: string;
 	vision: string;
 	projects: string;
 	contact: string;
@@ -22,7 +21,6 @@ type HeroContent = {
 	title: string;
 	subtitle: string;
 	primaryCta: string;
-	secondaryCta: string;
 	scrollHint: string;
 };
 
@@ -54,7 +52,6 @@ type ProjectsSectionContent = {
 	kicker: string;
 	title: string;
 	intro: string;
-	ctaLabel: string;
 	items: ProjectContent[];
 };
 
@@ -74,7 +71,6 @@ type ContactContent = {
 	description: string;
 	availability: string;
 	socialsLabel: string;
-	blogLabel: string;
 	rights: string;
 };
 
@@ -101,7 +97,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			ogLocale: 'pt_BR'
 		},
 		nav: {
-			blog: 'Blog',
 			vision: 'Visão',
 			projects: 'Projetos',
 			contact: 'Contato',
@@ -115,7 +110,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			subtitle:
 				'A Midnight Toronto nasce para criar experiências que ficam na memória: mundos compactos, direção visual forte e uma sensação artesanal em cada detalhe.',
 			primaryCta: 'Explorar projetos',
-			secondaryCta: 'Conhecer 171 Brasil Roleplay',
 			scrollHint: 'Role para continuar'
 		},
 		vision: {
@@ -142,7 +136,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			title: 'Três direções, a mesma assinatura.',
 			intro:
 				'Cada jogo segue um caminho próprio, mas todos nascem do mesmo compromisso com atmosfera, legibilidade e presença visual.',
-			ctaLabel: 'Acompanhar no blog',
 			items: [
 				{
 					title: 'Midnight Bubbles',
@@ -210,7 +203,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 				'Se você quer seguir os projetos, conversar sobre desenvolvimento ou observar o estúdio crescendo de perto, os canais abaixo são o melhor caminho.',
 			availability: 'Atualizações, bastidores e novas publicações aparecem primeiro por aqui.',
 			socialsLabel: 'Canais principais',
-			blogLabel: 'Visitar o blog',
 			rights: 'Midnight Toronto'
 		}
 	},
@@ -225,7 +217,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			ogLocale: 'en_US'
 		},
 		nav: {
-			blog: 'Blog',
 			vision: 'Vision',
 			projects: 'Projects',
 			contact: 'Contact',
@@ -239,7 +230,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			subtitle:
 				'Midnight Toronto is shaped to create memorable experiences: compact worlds, deliberate visual direction, and a handcrafted feel in every layer.',
 			primaryCta: 'Explore projects',
-			secondaryCta: 'Meet 171 Brasil Roleplay',
 			scrollHint: 'Scroll to continue'
 		},
 		vision: {
@@ -266,7 +256,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			title: 'Three directions, one signature.',
 			intro:
 				'Each game follows its own path, but all come from the same commitment to atmosphere, readability, and visual presence.',
-			ctaLabel: 'Follow on the blog',
 			items: [
 				{
 					title: 'Midnight Bubbles',
@@ -334,7 +323,6 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 				'If you want to follow the projects, talk about development, or watch the studio take shape over time, these are the right places to stay close.',
 			availability: 'Updates, behind-the-scenes notes, and new posts tend to show up here first.',
 			socialsLabel: 'Main channels',
-			blogLabel: 'Visit the blog',
 			rights: 'Midnight Toronto'
 		}
 	}

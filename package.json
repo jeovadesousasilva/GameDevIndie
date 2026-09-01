@@ -1,5 +1,5 @@
 {
-  "name": "blog-game-dev-2026",
+  "name": "midnight-toronto-site",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -10,7 +10,6 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^2.0.0",
     "@astrojs/sitemap": "^3.7.2",
     "astro": "^4.0.0"
   }

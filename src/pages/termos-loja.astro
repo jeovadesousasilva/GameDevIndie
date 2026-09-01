@@ -5,7 +5,7 @@ const siteUrl = 'https://midnighttoronto.com.br';
 const canonicalUrl = `${siteUrl}${withBase('termos-loja/')}`;
 const faviconHref = withBase('favicon.png');
 const storeUrl = withBase('loja/');
-const roleplayUrl = withBase('171-brasil-roleplay/');
+const homeUrl = withBase();
 ---
 
 <!doctype html>
@@ -85,7 +85,7 @@ const roleplayUrl = withBase('171-brasil-roleplay/');
 
 				<div class="terms-actions">
 					<a href={storeUrl}>Voltar para a loja</a>
-					<a href={roleplayUrl}>Conhecer o servidor</a>
+					<a href={homeUrl}>Midnight Toronto</a>
 				</div>
 			</section>
 		</main>

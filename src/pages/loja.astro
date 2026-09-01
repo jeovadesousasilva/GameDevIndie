@@ -5,7 +5,7 @@ const siteUrl = 'https://midnighttoronto.com.br';
 const pagePath = 'loja/';
 const canonicalUrl = `${siteUrl}${withBase(pagePath)}`;
 const faviconHref = withBase('favicon.png');
-const roleplayUrl = withBase('171-brasil-roleplay/');
+const homeUrl = withBase();
 const termsUrl = withBase('termos-loja/');
 const discordUrl = 'https://discord.gg/6GwbJRFhQU';
 const storeApiBaseUrl = 'https://liberty-immovably-bacon.ngrok-free.dev';
@@ -199,7 +199,7 @@ const vipBenefits = [
 		>
 			<header class="shop-header">
 				<div class="shop-container shop-header-inner">
-					<a href={roleplayUrl} class="shop-brand">
+					<a href={homeUrl} class="shop-brand">
 						<span class="shop-logo">
 							<img src={logoImage} alt="Logo da 171 Brasil Roleplay" />
 						</span>
@@ -210,7 +210,7 @@ const vipBenefits = [
 					</a>
 
 					<div class="shop-header-actions">
-						<a href={roleplayUrl} class="shop-icon-button" aria-label="Início">
+						<a href={homeUrl} class="shop-icon-button" aria-label="Início">
 							<span>🏠</span>
 						</a>
 						<button type="button" class="shop-icon-button" data-search-toggle aria-label="Pesquisar produto">
@@ -263,7 +263,7 @@ const vipBenefits = [
 						<div class="shop-support-links">
 							<a href={discordUrl} target="_blank" rel="noreferrer">Discord</a>
 							<a href="#produtos">Catálogo</a>
-							<a href={roleplayUrl}>Página do servidor</a>
+							<a href={homeUrl}>Midnight Toronto</a>
 						</div>
 					</div>
 				</section>
