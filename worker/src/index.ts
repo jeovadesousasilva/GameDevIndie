@@ -710,6 +710,22 @@ function adminPage(): string {
 
 			.summary-card {
 				padding: 15px;
+				text-align: left;
+				color: var(--text);
+				cursor: pointer;
+				transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+			}
+
+			.summary-card:hover,
+			.summary-card.active {
+				border-color: var(--line-strong);
+				background:
+					linear-gradient(135deg, rgba(83, 250, 172, 0.09), transparent 46%),
+					var(--panel);
+			}
+
+			.summary-card:hover {
+				transform: translateY(-1px);
 			}
 
 			.summary-card span {
@@ -730,6 +746,76 @@ function adminPage(): string {
 				margin: 0 0 14px;
 				color: var(--good);
 				font-weight: 800;
+			}
+
+			.focus-panel {
+				display: grid;
+				gap: 10px;
+				margin-bottom: 14px;
+				padding: 14px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				background: rgba(8, 14, 24, 0.78);
+				box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+			}
+
+			.focus-panel[hidden] {
+				display: none;
+			}
+
+			.focus-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+			}
+
+			.focus-head strong {
+				font-size: 0.96rem;
+			}
+
+			.focus-head button {
+				min-height: 34px;
+			}
+
+			.city-list,
+			.person-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+				gap: 8px;
+			}
+
+			.city-button,
+			.person-pill {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
+				min-height: 44px;
+				padding: 0 12px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				color: var(--text);
+				background: rgba(255, 255, 255, 0.055);
+				font-weight: 800;
+			}
+
+			.city-button {
+				cursor: pointer;
+			}
+
+			.city-button:hover,
+			.city-button.active {
+				border-color: var(--line-strong);
+				color: #03120b;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+			}
+
+			.city-button span,
+			.person-pill span {
+				color: inherit;
+				font-size: 0.8rem;
+				opacity: 0.8;
 			}
 
 			.visits {
@@ -1003,13 +1089,15 @@ function adminPage(): string {
 			<p class="status" id="status"></p>
 
 			<section class="summary" id="summary" hidden>
-				<div class="summary-card"><span>Visitas</span><strong id="totalVisits">0</strong></div>
-				<div class="summary-card"><span>IPs únicos</span><strong id="uniqueIps">0</strong></div>
-				<div class="summary-card"><span>IDs prováveis</span><strong id="uniquePeople">0</strong></div>
-				<div class="summary-card"><span>Cidades</span><strong id="uniqueCities">0</strong></div>
-				<div class="summary-card"><span>Abertos agora</span><strong id="openVisits">0</strong></div>
-				<div class="summary-card"><span>Celulares</span><strong id="mobileVisits">0</strong></div>
+				<button type="button" class="summary-card active" data-summary-filter="all"><span>Visitas</span><strong id="totalVisits">0</strong></button>
+				<button type="button" class="summary-card" data-summary-filter="people"><span>Possível número de pessoas</span><strong id="uniquePeople">0</strong></button>
+				<button type="button" class="summary-card" data-summary-filter="cities"><span>Cidades</span><strong id="uniqueCities">0</strong></button>
+				<button type="button" class="summary-card" data-summary-filter="open"><span>Abertos agora</span><strong id="openVisits">0</strong></button>
+				<button type="button" class="summary-card" data-summary-filter="mobile"><span>Celulares</span><strong id="mobileVisits">0</strong></button>
+				<button type="button" class="summary-card" data-summary-filter="desktop"><span>Desktops</span><strong id="desktopVisits">0</strong></button>
 			</section>
+
+			<section class="focus-panel" id="focusPanel" hidden></section>
 
 			<section class="visits" id="visits">
 				<div class="empty">Digite sua senha para carregar a lista.</div>
@@ -1023,9 +1111,14 @@ function adminPage(): string {
 			const statusEl = document.querySelector('#status');
 			const refresh = document.querySelector('#refresh');
 			const summary = document.querySelector('#summary');
+			const focusPanel = document.querySelector('#focusPanel');
 			const customDays = document.querySelector('#customDays');
 			const filterButtons = Array.from(document.querySelectorAll('[data-range]'));
+			const summaryButtons = Array.from(document.querySelectorAll('[data-summary-filter]'));
 			let activeRange = '24h';
+			let activeSummaryFilter = 'all';
+			let activeCity = null;
+			let currentVisits = [];
 
 			function escapeHtml(value) {
 				return String(value ?? '').replace(/[&<>"']/g, function(char) {
@@ -1141,6 +1234,10 @@ function adminPage(): string {
 				return [visit.city, visit.region, visit.country].filter(Boolean).join(', ') || 'Localização não informada';
 			}
 
+			function locationKey(visit) {
+				return locationTitle(visit);
+			}
+
 			function screenSize(visit) {
 				if (!visit.screen_width || !visit.screen_height) {
 					return '-';
@@ -1185,6 +1282,174 @@ function adminPage(): string {
 						+ '<a class="map-link" href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer">Abrir no Google Maps</a>'
 					+ '</div>'
 				+ '</section>';
+			}
+
+			function groupBy(items, getKey) {
+				return items.reduce(function(groups, item) {
+					const key = getKey(item);
+					if (!groups.has(key)) {
+						groups.set(key, []);
+					}
+
+					groups.get(key).push(item);
+					return groups;
+				}, new Map());
+			}
+
+			function interestingScore(visit) {
+				let score = Number(visit.id || 0) / 1000000;
+
+				if (visit.location_permission === 'granted') {
+					score += 1000;
+				}
+
+				if (visit.precise_latitude && visit.precise_longitude) {
+					score += 700;
+				}
+
+				if (visit.city) {
+					score += 70;
+				}
+
+				if (visit.device_model) {
+					score += 50;
+				}
+
+				if (visit.referrer) {
+					score += 20;
+				}
+
+				if (sessionStatus(visit).className === 'open') {
+					score += 120;
+				}
+
+				score += Math.min(Number(visit.duration_seconds || 0), 900) / 10;
+				return score;
+			}
+
+			function chooseInterestingVisit(visits) {
+				return visits.slice().sort(function(a, b) {
+					return interestingScore(b) - interestingScore(a);
+				})[0];
+			}
+
+			function renderFocus(title, body, showClear) {
+				focusPanel.hidden = false;
+				focusPanel.innerHTML = '<div class="focus-head"><strong>' + escapeHtml(title) + '</strong>'
+					+ (showClear ? '<button type="button" class="secondary" data-clear-focus>Limpar</button>' : '')
+					+ '</div>' + body;
+
+				focusPanel.querySelector('[data-clear-focus]')?.addEventListener('click', function() {
+					activeSummaryFilter = 'all';
+					activeCity = null;
+					updateSummaryButtonState();
+					renderCurrentView();
+				});
+			}
+
+			function hideFocus() {
+				focusPanel.hidden = true;
+				focusPanel.innerHTML = '';
+			}
+
+			function renderCityList(visits) {
+				const cityGroups = Array.from(groupBy(visits.filter(function(visit) {
+					return locationKey(visit) !== 'Localização não informada';
+				}), locationKey).entries()).sort(function(a, b) {
+					return b[1].length - a[1].length || a[0].localeCompare(b[0], 'pt-BR');
+				});
+
+				if (!cityGroups.length) {
+					renderFocus('Cidades encontradas', '<p class="small">Nenhuma cidade disponível neste período.</p>', true);
+					visitsEl.innerHTML = '<div class="empty">Nenhum registro com cidade neste filtro.</div>';
+					return;
+				}
+
+				const body = '<div class="city-list">' + cityGroups.map(function(entry) {
+					const city = entry[0];
+					const count = entry[1].length;
+					return '<button type="button" class="city-button' + (activeCity === city ? ' active' : '') + '" data-city="' + escapeHtml(city) + '">'
+						+ '<strong>' + escapeHtml(city) + '</strong><span>' + escapeHtml(count) + ' acesso' + (count === 1 ? '' : 's') + '</span>'
+					+ '</button>';
+				}).join('') + '</div>';
+
+				renderFocus('Cidades encontradas', body, true);
+
+				focusPanel.querySelectorAll('[data-city]').forEach(function(button) {
+					button.addEventListener('click', function() {
+						activeCity = button.dataset.city;
+						renderCurrentView();
+					});
+				});
+
+				const visibleVisits = activeCity ? visits.filter(function(visit) { return locationKey(visit) === activeCity; }) : [];
+				visitsEl.innerHTML = activeCity
+					? visibleVisits.map(renderVisit).join('')
+					: '<div class="empty">Clique em uma cidade acima para ver os logs correspondentes.</div>';
+			}
+
+			function renderPeopleList(visits) {
+				const groups = Array.from(groupBy(visits.filter(function(visit) {
+					return Boolean(visit.probable_person_id);
+				}), function(visit) {
+					return visit.probable_person_id;
+				}).entries()).sort(function(a, b) {
+					return b[1].length - a[1].length || a[0].localeCompare(b[0]);
+				});
+
+				if (!groups.length) {
+					renderFocus('Possível número de pessoas', '<p class="small">Nenhum MP disponível neste período.</p>', true);
+					visitsEl.innerHTML = '<div class="empty">Nenhum log com ID provável neste filtro.</div>';
+					return;
+				}
+
+				const body = '<div class="person-list">' + groups.map(function(entry) {
+					const id = entry[0];
+					const count = entry[1].length;
+					return '<div class="person-pill"><strong>' + escapeHtml(id) + '</strong><span>' + escapeHtml(count) + ' log' + (count === 1 ? '' : 's') + '</span></div>';
+				}).join('') + '</div>';
+				const representativeVisits = groups.map(function(entry) {
+					return chooseInterestingVisit(entry[1]);
+				});
+
+				renderFocus('Possível número de pessoas: 1 log representativo por MP', body, true);
+				visitsEl.innerHTML = representativeVisits.map(renderVisit).join('');
+			}
+
+			function updateSummaryButtonState() {
+				summaryButtons.forEach(function(button) {
+					button.classList.toggle('active', button.dataset.summaryFilter === activeSummaryFilter);
+				});
+			}
+
+			function renderCurrentView() {
+				let visibleVisits = currentVisits;
+				hideFocus();
+
+				if (activeSummaryFilter === 'people') {
+					renderPeopleList(currentVisits);
+					return;
+				}
+
+				if (activeSummaryFilter === 'cities') {
+					renderCityList(currentVisits);
+					return;
+				}
+
+				if (activeSummaryFilter === 'open') {
+					visibleVisits = currentVisits.filter(function(visit) { return sessionStatus(visit).className === 'open'; });
+					renderFocus('Abertos agora', '<p class="small">Mostrando somente sessões com sinal recente.</p>', true);
+				} else if (activeSummaryFilter === 'mobile') {
+					visibleVisits = currentVisits.filter(function(visit) { return visit.device_type === 'Celular'; });
+					renderFocus('Celulares', '<p class="small">Mostrando somente acessos classificados como celular.</p>', true);
+				} else if (activeSummaryFilter === 'desktop') {
+					visibleVisits = currentVisits.filter(function(visit) { return visit.device_type === 'Desktop'; });
+					renderFocus('Desktops', '<p class="small">Mostrando somente acessos classificados como desktop.</p>', true);
+				}
+
+				visitsEl.innerHTML = visibleVisits.length
+					? visibleVisits.map(renderVisit).join('')
+					: '<div class="empty">Nenhum registro encontrado para este filtro.</div>';
 			}
 
 			function renderVisit(visit) {
@@ -1258,18 +1523,18 @@ function adminPage(): string {
 			}
 
 			function updateSummary(visits) {
-				const ipSet = new Set(visits.map(function(visit) { return visit.ip_hash; }).filter(Boolean));
 				const peopleSet = new Set(visits.map(function(visit) { return visit.probable_person_id; }).filter(Boolean));
 				const citySet = new Set(visits.map(function(visit) { return locationTitle(visit); }).filter(function(item) { return item !== 'Localização não informada'; }));
 				const openCount = visits.filter(function(visit) { return sessionStatus(visit).className === 'open'; }).length;
 				const mobileCount = visits.filter(function(visit) { return visit.device_type === 'Celular'; }).length;
+				const desktopCount = visits.filter(function(visit) { return visit.device_type === 'Desktop'; }).length;
 
 				document.querySelector('#totalVisits').textContent = String(visits.length);
-				document.querySelector('#uniqueIps').textContent = String(ipSet.size);
 				document.querySelector('#uniquePeople').textContent = String(peopleSet.size);
 				document.querySelector('#uniqueCities').textContent = String(citySet.size);
 				document.querySelector('#openVisits').textContent = String(openCount);
 				document.querySelector('#mobileVisits').textContent = String(mobileCount);
+				document.querySelector('#desktopVisits').textContent = String(desktopCount);
 				summary.hidden = false;
 			}
 
@@ -1312,11 +1577,11 @@ function adminPage(): string {
 
 				const data = await response.json();
 				const visits = data.visits || [];
+				currentVisits = visits;
+				activeCity = null;
 				statusEl.textContent = visits.length ? 'Lista atualizada com ' + visits.length + ' visita(s) em ' + filterLabel() + '.' : 'Nenhuma visita registrada em ' + filterLabel() + '.';
 				updateSummary(visits);
-				visitsEl.innerHTML = visits.length
-					? visits.map(renderVisit).join('')
-					: '<div class="empty">Nenhum registro encontrado.</div>';
+				renderCurrentView();
 			}
 
 			form.addEventListener('submit', function(event) {
@@ -1335,15 +1600,27 @@ function adminPage(): string {
 			filterButtons.forEach(function(button) {
 				button.addEventListener('click', function() {
 					activeRange = button.dataset.range || '24h';
+					activeSummaryFilter = 'all';
+					activeCity = null;
 					filterButtons.forEach(function(item) {
 						item.classList.toggle('active', item === button);
 					});
+					updateSummaryButtonState();
 
 					if (token.value.trim()) {
 						loadVisits().catch(function() {
 							statusEl.textContent = 'Não foi possível aplicar o filtro.';
 						});
 					}
+				});
+			});
+
+			summaryButtons.forEach(function(button) {
+				button.addEventListener('click', function() {
+					activeSummaryFilter = button.dataset.summaryFilter || 'all';
+					activeCity = null;
+					updateSummaryButtonState();
+					renderCurrentView();
 				});
 			});
 
