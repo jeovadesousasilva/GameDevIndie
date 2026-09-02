@@ -36,19 +36,29 @@ export default {
 			}
 
 			const limit = clamp(Number(url.searchParams.get('limit') || 100), 1, 500);
+			const range = cleanText(url.searchParams.get('range') || '24h', 16);
+			const days = clamp(Number(url.searchParams.get('days') || 7), 1, 365);
+			const filter = createVisitFilter(range, days);
 			const rows = await env.DB.prepare(
-				`SELECT id, created_at, ip, ip_masked, ip_hash, path, referrer, user_agent,
-				 country, city, region, region_code, postal_code, continent, latitude, longitude,
-				 timezone, asn, as_organization, http_protocol, colo, device_type, device_model, browser_name,
-				 os_name, browser_language, browser_timezone, screen_width, screen_height,
-				 viewport_width, viewport_height, pixel_ratio, session_id, last_seen_at, closed_at,
-				 duration_seconds, is_open, location_permission, precise_latitude, precise_longitude,
-				 precise_accuracy, precise_altitude, precise_heading, precise_speed, visitor_id_hash,
-				 probable_person_id
-				 FROM visits
-				 ORDER BY id DESC
+				`SELECT v.id, v.created_at, v.ip, v.ip_masked, v.ip_hash, v.path, v.referrer, v.user_agent,
+				 v.country, v.city, v.region, v.region_code, v.postal_code, v.continent, v.latitude, v.longitude,
+				 v.timezone, v.asn, v.as_organization, v.http_protocol, v.colo, v.device_type, v.device_model,
+				 v.browser_name, v.os_name, v.browser_language, v.browser_timezone, v.screen_width, v.screen_height,
+				 v.viewport_width, v.viewport_height, v.pixel_ratio, v.session_id, v.last_seen_at, v.closed_at,
+				 v.duration_seconds, v.is_open, v.location_permission, v.precise_latitude, v.precise_longitude,
+				 v.precise_accuracy, v.precise_altitude, v.precise_heading, v.precise_speed, v.visitor_id_hash,
+				 v.probable_person_id, COALESCE(person_counts.access_count, 1) AS probable_access_count
+				 FROM visits v
+				 LEFT JOIN (
+					SELECT probable_person_id, COUNT(*) AS access_count
+					FROM visits
+					WHERE probable_person_id IS NOT NULL
+					GROUP BY probable_person_id
+				 ) person_counts ON person_counts.probable_person_id = v.probable_person_id
+				 ${filter.whereClause}
+				 ORDER BY v.id DESC
 				 LIMIT ?`
-			).bind(limit).all();
+			).bind(...filter.bindings, limit).all();
 
 			return json({ visits: rows.results });
 		}
@@ -375,6 +385,22 @@ function detectDeviceModel(userAgent: string, osName: string): string | null {
 	return osName === 'Android' ? 'Android não informado' : null;
 }
 
+function createVisitFilter(range: string, days: number): { whereClause: string; bindings: string[] } {
+	if (range === '60m') {
+		return { whereClause: "WHERE v.created_at >= datetime('now', ?)", bindings: ['-60 minutes'] };
+	}
+
+	if (range === 'days') {
+		return { whereClause: "WHERE v.created_at >= datetime('now', ?)", bindings: [`-${days} days`] };
+	}
+
+	if (range === 'all') {
+		return { whereClause: '', bindings: [] };
+	}
+
+	return { whereClause: "WHERE v.created_at >= datetime('now', ?)", bindings: ['-24 hours'] };
+}
+
 function clamp(value: number, min: number, max: number): number {
 	if (!Number.isFinite(value)) {
 		return min;
@@ -558,12 +584,86 @@ function adminPage(): string {
 				background: var(--warn-soft);
 			}
 
+			.access-chip {
+				display: inline-flex;
+				align-items: center;
+				min-height: 28px;
+				padding: 0 10px;
+				border: 1px solid rgba(83, 250, 172, 0.26);
+				border-radius: 999px;
+				color: #dcfce7;
+				background: rgba(83, 250, 172, 0.1);
+				font-size: 0.78rem;
+				font-weight: 900;
+			}
+
 			.controls {
 				display: grid;
 				grid-template-columns: 1fr auto auto;
 				gap: 10px;
 				margin: 16px 0;
 				padding: 14px;
+			}
+
+			.filters {
+				display: grid;
+				grid-template-columns: minmax(160px, 0.4fr) minmax(0, 1fr);
+				gap: 14px;
+				align-items: center;
+				margin: 0 0 16px;
+				padding: 14px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				background: rgba(8, 14, 24, 0.76);
+				box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+			}
+
+			.filter-title {
+				display: grid;
+				gap: 4px;
+			}
+
+			.filter-title strong {
+				font-size: 0.9rem;
+			}
+
+			.filter-title span {
+				color: var(--muted);
+				font-size: 0.78rem;
+				font-weight: 800;
+				text-transform: uppercase;
+			}
+
+			.filter-actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				justify-content: flex-end;
+			}
+
+			.filter-button {
+				min-height: 38px;
+				border: 1px solid var(--line);
+				color: var(--text);
+				background: rgba(255, 255, 255, 0.06);
+			}
+
+			.filter-button.active {
+				color: #03120b;
+				border-color: transparent;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+			}
+
+			.custom-days {
+				display: inline-grid;
+				grid-template-columns: 92px auto;
+				gap: 8px;
+				align-items: center;
+			}
+
+			.custom-days input {
+				min-height: 38px;
+				width: 92px;
 			}
 
 			input,
@@ -679,8 +779,9 @@ function adminPage(): string {
 			.visit-grid {
 				display: grid;
 				grid-template-columns: repeat(3, minmax(0, 1fr));
-				gap: 1px;
-				background: rgba(83, 250, 172, 0.12);
+				gap: 10px;
+				padding: 12px;
+				background: transparent;
 			}
 
 			.info-block {
@@ -688,6 +789,8 @@ function adminPage(): string {
 				gap: 10px;
 				align-content: start;
 				padding: 14px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
 				background: rgba(4, 10, 18, 0.82);
 			}
 
@@ -847,9 +950,20 @@ function adminPage(): string {
 				}
 
 				.controls,
+				.filters,
 				.visit-grid,
 				.summary {
 					grid-template-columns: 1fr;
+				}
+
+				.filter-actions {
+					justify-content: stretch;
+				}
+
+				.filter-button,
+				.custom-days,
+				.custom-days input {
+					width: 100%;
 				}
 			}
 		</style>
@@ -859,7 +973,7 @@ function adminPage(): string {
 			<section class="topbar">
 				<div>
 					<h1>Visitas do site</h1>
-					<p>Lista privada com sessão, IP, localização aproximada, localização autorizada e dispositivo.</p>
+					<p>Informações para fins de segurança e revisão técnica de acessos.</p>
 				</div>
 				<span class="badge">Privado</span>
 			</section>
@@ -869,6 +983,22 @@ function adminPage(): string {
 				<button type="submit">Carregar</button>
 				<button type="button" class="secondary" id="refresh">Atualizar</button>
 			</form>
+
+			<section class="filters" id="filters">
+				<div class="filter-title">
+					<span>Período</span>
+					<strong>Filtrar registros</strong>
+				</div>
+				<div class="filter-actions">
+					<button type="button" class="filter-button" data-range="60m">Últimos 60 min</button>
+					<button type="button" class="filter-button active" data-range="24h">Últimas 24h</button>
+					<span class="custom-days">
+						<input id="customDays" type="number" min="1" max="365" value="7" aria-label="Dias para trás">
+						<button type="button" class="filter-button" data-range="days">Dias atrás</button>
+					</span>
+					<button type="button" class="filter-button" data-range="all">Todo período</button>
+				</div>
+			</section>
 
 			<p class="status" id="status"></p>
 
@@ -893,6 +1023,9 @@ function adminPage(): string {
 			const statusEl = document.querySelector('#status');
 			const refresh = document.querySelector('#refresh');
 			const summary = document.querySelector('#summary');
+			const customDays = document.querySelector('#customDays');
+			const filterButtons = Array.from(document.querySelectorAll('[data-range]'));
+			let activeRange = '24h';
 
 			function escapeHtml(value) {
 				return String(value ?? '').replace(/[&<>"']/g, function(char) {
@@ -955,6 +1088,22 @@ function adminPage(): string {
 
 				parts.push(secs + 's');
 				return parts.join(' ');
+			}
+
+			function filterLabel() {
+				if (activeRange === '60m') {
+					return 'últimos 60 minutos';
+				}
+
+				if (activeRange === 'days') {
+					return 'últimos ' + value(customDays.value, '7') + ' dia(s)';
+				}
+
+				if (activeRange === 'all') {
+					return 'todo o período';
+				}
+
+				return 'últimas 24 horas';
 			}
 
 			function sessionStatus(visit) {
@@ -1044,12 +1193,14 @@ function adminPage(): string {
 					? visit.precise_latitude + ', ' + visit.precise_longitude
 					: null;
 				const probableId = value(visit.probable_person_id, 'MP-pendente');
+				const possibleAccesses = Math.max(1, Number(visit.probable_access_count || 1));
 
 				return '<article class="visit-card">'
 					+ '<div class="visit-head">'
 						+ '<div><h2>#' + escapeHtml(visit.id) + ' - ' + escapeHtml(value(visit.path, '/')) + '</h2><p>' + escapeHtml(brDate(visit.created_at)) + ' - horário de Brasília</p></div>'
 						+ '<div class="visit-meta">'
 							+ '<span class="identity-chip">' + escapeHtml(probableId) + '</span>'
+							+ '<span class="access-chip">Possíveis acessos: ' + escapeHtml(possibleAccesses) + ' vez' + (possibleAccesses === 1 ? '' : 'es') + '</span>'
 							+ '<span class="badge ' + status.className + '">' + escapeHtml(status.label) + '</span>'
 						+ '</div>'
 					+ '</div>'
@@ -1122,6 +1273,21 @@ function adminPage(): string {
 				summary.hidden = false;
 			}
 
+			function buildVisitsUrl() {
+				const params = new URLSearchParams({
+					limit: '500',
+					range: activeRange
+				});
+
+				if (activeRange === 'days') {
+					const days = Math.min(Math.max(Number(customDays.value || 7), 1), 365);
+					customDays.value = String(days);
+					params.set('days', String(days));
+				}
+
+				return '/admin/visits?' + params.toString();
+			}
+
 			async function loadVisits(silent) {
 				const password = token.value.trim();
 				if (!password) {
@@ -1133,7 +1299,7 @@ function adminPage(): string {
 					statusEl.textContent = 'Carregando...';
 				}
 
-				const response = await fetch('/admin/visits?limit=100', {
+				const response = await fetch(buildVisitsUrl(), {
 					headers: {
 						authorization: 'Bearer ' + password
 					}
@@ -1146,7 +1312,7 @@ function adminPage(): string {
 
 				const data = await response.json();
 				const visits = data.visits || [];
-				statusEl.textContent = visits.length ? 'Lista atualizada com ' + visits.length + ' visita(s).' : 'Nenhuma visita registrada.';
+				statusEl.textContent = visits.length ? 'Lista atualizada com ' + visits.length + ' visita(s) em ' + filterLabel() + '.' : 'Nenhuma visita registrada em ' + filterLabel() + '.';
 				updateSummary(visits);
 				visitsEl.innerHTML = visits.length
 					? visits.map(renderVisit).join('')
@@ -1163,6 +1329,21 @@ function adminPage(): string {
 			refresh.addEventListener('click', function() {
 				loadVisits().catch(function() {
 					statusEl.textContent = 'Não foi possível atualizar a lista.';
+				});
+			});
+
+			filterButtons.forEach(function(button) {
+				button.addEventListener('click', function() {
+					activeRange = button.dataset.range || '24h';
+					filterButtons.forEach(function(item) {
+						item.classList.toggle('active', item === button);
+					});
+
+					if (token.value.trim()) {
+						loadVisits().catch(function() {
+							statusEl.textContent = 'Não foi possível aplicar o filtro.';
+						});
+					}
 				});
 			});
 
