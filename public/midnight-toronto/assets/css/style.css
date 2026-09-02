@@ -1291,6 +1291,11 @@ textarea {
     }
 
     .hero-panel {
+        display: grid;
+        width: 100%;
+    }
+
+    .hero-panel-copy {
         display: none;
     }
 }
@@ -1341,17 +1346,17 @@ textarea {
     }
 
     .hero {
-        min-height: calc(100svh - 66px);
+        min-height: auto;
         display: grid;
         align-items: end;
         padding-top: 26px;
-        padding-bottom: 34px;
+        padding-bottom: 30px;
     }
 
     .hero::before {
         background:
-            linear-gradient(180deg, rgba(7, 10, 18, 0.24) 0%, rgba(7, 10, 18, 0.68) 48%, rgba(7, 10, 18, 0.98) 100%),
-            url('/midnight-toronto/assets/images/Game04img02-1600.webp') center top / cover no-repeat;
+            radial-gradient(ellipse at 50% 0%, rgba(43, 156, 255, 0.22), transparent 52%),
+            linear-gradient(180deg, rgba(7, 10, 18, 0.86) 0%, rgba(7, 10, 18, 0.98) 100%);
     }
 
     .hero::after {
@@ -1406,6 +1411,19 @@ textarea {
         padding: 0 13px;
         font-size: 0.88rem;
         text-align: center;
+    }
+
+    .hero-art-frame {
+        aspect-ratio: 1600 / 736;
+        border-color: rgba(255, 255, 255, 0.22);
+        box-shadow: 0 14px 30px rgba(8, 10, 16, 0.28);
+    }
+
+    .shellbound-icon {
+        right: 8px;
+        bottom: 8px;
+        width: clamp(58px, 20%, 86px);
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.38));
     }
 
     .projects-grid {
