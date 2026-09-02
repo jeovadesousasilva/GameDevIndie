@@ -89,11 +89,11 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 	'pt-BR': {
 		locale: 'pt-BR',
 		seo: {
-			title: 'Midnight Toronto | Estúdio indie de games',
+			title: 'Midnight Toronto | Shellbound e jogos indie',
 			description:
-				'Midnight Toronto é um estúdio indie focado em experiências autorais, direção estética forte e jogos feitos com cuidado artesanal.',
+				'Midnight Toronto apresenta Shellbound, novo jogo em desenvolvimento, junto ao catálogo autoral de jogos indie do estúdio.',
 			keywords:
-				'midnight toronto, estúdio indie, desenvolvimento de jogos, game dev brasileiro, midnight bubbles, a vingança do herói',
+				'midnight toronto, shellbound, estúdio indie, desenvolvimento de jogos, game dev brasileiro, midnight bubbles, firezone zombies',
 			ogLocale: 'pt_BR'
 		},
 		nav: {
@@ -105,38 +105,49 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			languageLabel: 'Idioma'
 		},
 		hero: {
-			eyebrow: 'Estúdio autoral de desenvolvimento de jogos',
-			title: 'Jogos com atmosfera, ritmo e identidade própria.',
+			eyebrow: 'Novo jogo em desenvolvimento',
+			title: 'Shellbound é guerra de bolso, turno por turno.',
 			subtitle:
-				'A Midnight Toronto nasce para criar experiências que ficam na memória: mundos compactos, direção visual forte e uma sensação artesanal em cada detalhe.',
-			primaryCta: 'Explorar projetos',
+				'Um jogo 2D de batalhas táticas com tanques, leitura rápida e decisões curtas. Cada turno é simples de entender, mas abre espaço para posicionamento, risco e viradas.',
+			primaryCta: 'Ver Shellbound',
 			scrollHint: 'Role para continuar'
 		},
 		vision: {
 			kicker: 'Visão do estúdio',
-			title: 'Uma marca pequena, com intenção clara.',
+			title: 'Jogos pequenos com cara própria.',
 			intro:
-				'A Midnight Toronto foi pensada para parecer um estúdio criativo de verdade: menos ruído, mais intenção, mais personalidade.',
+				'A gente não tenta parecer maior do que é. Preferimos fazer jogos menores, focados em uma ideia boa e com uma identidade própria desde o primeiro contato.',
 			body: [
-				'Os projetos partem de uma ideia simples: jogos independentes podem ser compactos e ainda assim carregar atmosfera, tensão, humor e uma assinatura visual reconhecível.',
-				'Em vez de perseguir excesso, a proposta do estúdio é lapidar o essencial. Mecânicas diretas, arte que sustenta a fantasia e uma experiência que respeita o tempo de quem joga.'
+				'A Midnight Toronto faz jogos compactos, diretos e com bastante foco no visual. A ideia é simples: você bate o olho, entende o que está acontecendo e já quer testar.',
+				'Shellbound representa bem o que queremos fazer daqui pra frente. Decisões simples que realmente fazem diferença.',
+				'Jogos menores, com uma identidade clara e fáceis de reconhecer.'
 			],
 			notes: [
-				'Criação orientada por identidade visual e sensação de mundo.',
-				'Escopo controlado para manter consistência e acabamento.'
+				'Ideias simples, mas bem executadas.',
+				'Projetos com um tamanho que a gente realmente consegue terminar e entregar bem.'
 			],
 			stats: [
-				{ value: '3', label: 'Projetos no catálogo' },
+				{ value: '4', label: 'Projetos no catálogo' },
 				{ value: 'PT + EN', label: 'Apresentação bilíngue do estúdio' },
-				{ value: '100%', label: 'Foco em produção indie autoral' }
+				{ value: '2026', label: 'Nova fase com Shellbound' }
 			]
 		},
 		projects: {
 			kicker: 'Projetos em destaque',
-			title: 'Três direções, a mesma assinatura.',
+			title: 'Quatro jogos, uma assinatura mais ousada.',
 			intro:
-				'Cada jogo segue um caminho próprio, mas todos nascem do mesmo compromisso com atmosfera, legibilidade e presença visual.',
+				'Do puzzle ao FPS, agora com Shellbound no horizonte: cada jogo segue um caminho próprio, mas todos carregam leitura clara, impacto visual e identidade.',
 			items: [
+				{
+					title: 'Shellbound',
+					category: 'Estratégia / Turnos / 2D',
+					status: 'Em desenvolvimento',
+					description:
+						'Batalhas de tanques em 2D, turno por turno, com foco em posicionamento, mira, terreno e decisões curtas que podem virar a partida.',
+					note: 'Projeto em produção, pensado para ser fácil de ler no primeiro olhar e mais interessante a cada troca de tiro.',
+					imageAlt: 'Arte do jogo Shellbound',
+					image: 'Game04img02.jpg'
+				},
 				{
 					title: 'Midnight Bubbles',
 					category: 'Puzzle / Casual',
@@ -175,45 +186,45 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 		},
 		process: {
 			kicker: 'Presença e processo',
-			title: 'Um estúdio que trabalha no detalhe.',
+			title: 'Menos pose, mais direção.',
 			intro:
-				'A Midnight Toronto não tenta parecer maior do que é. A força da marca vem de tratar cada elemento com intenção e coesão.',
+				'A nova apresentação coloca o jogo na frente e deixa o estúdio falar pelo que está criando. Shellbound vira o ponto de entrada, e o catálogo mostra de onde a Midnight Toronto veio.',
 			items: [
 				{
-					title: 'Direção antes do excesso',
+					title: 'Primeiro o jogo',
 					description:
-						'Escolhas visuais e mecânicas são guiadas por identidade, não por volume ou moda do momento.'
+						'A página abre com Shellbound porque é o projeto que melhor representa a próxima fase.'
 				},
 				{
-					title: 'Produção com acabamento',
+					title: 'Texto mais humano',
 					description:
-						'Escopo, interface e ritmo são pensados para chegar a um resultado mais sólido e menos improvisado.'
+						'A apresentação abandona frases genéricas e explica como o estúdio pensa jogos pequenos.'
 				},
 				{
-					title: 'Marca em construção constante',
+					title: 'Tema sem fantasia demais',
 					description:
-						'O estúdio evolui jogo por jogo, com espaço para experimentar sem perder consistência.'
+						'A paleta usa céu, areia, metal e verde oliva para lembrar Shellbound sem transformar o site em propaganda barulhenta.'
 				}
 			]
 		},
 		contact: {
-			kicker: 'Contato e presença',
-			title: 'Acompanhe a evolução da Midnight Toronto.',
+			kicker: 'Onde acompanhar',
+			title: 'Veja os jogos e acompanhe as novidades.',
 			description:
-				'Se você quer seguir os projetos, conversar sobre desenvolvimento ou observar o estúdio crescendo de perto, os canais abaixo são o melhor caminho.',
-			availability: 'Atualizações, bastidores e novas publicações aparecem primeiro por aqui.',
-			socialsLabel: 'Canais principais',
+				'Use os links abaixo para encontrar os jogos publicados e seguir as próximas atualizações da Midnight Toronto.',
+			availability: 'Shellbound ainda está em desenvolvimento; quando houver novidades públicas, elas aparecem primeiro por aqui.',
+			socialsLabel: 'Links úteis',
 			rights: 'Midnight Toronto'
 		}
 	},
 	en: {
 		locale: 'en',
 		seo: {
-			title: 'Midnight Toronto | Indie game studio',
+			title: 'Midnight Toronto | Shellbound and indie games',
 			description:
-				'Midnight Toronto is an indie game studio focused on authored experiences, strong visual direction, and carefully built games.',
+				'Midnight Toronto presents Shellbound, a new game in development, alongside the studio’s authored indie game catalog.',
 			keywords:
-				'midnight toronto, indie game studio, game development, brazilian game dev, midnight bubbles, a vinganca do heroi',
+				'midnight toronto, shellbound, indie game studio, game development, brazilian game dev, midnight bubbles, firezone zombies',
 			ogLocale: 'en_US'
 		},
 		nav: {
@@ -225,38 +236,49 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 			languageLabel: 'Language'
 		},
 		hero: {
-			eyebrow: 'Author-driven game development studio',
-			title: 'Games built with atmosphere, rhythm, and a clear identity.',
+			eyebrow: 'New game in development',
+			title: 'Shellbound is pocket war, turn by turn.',
 			subtitle:
-				'Midnight Toronto is shaped to create memorable experiences: compact worlds, deliberate visual direction, and a handcrafted feel in every layer.',
-			primaryCta: 'Explore projects',
+				'A 2D tactical tank game built around quick reads and short decisions. Each turn is easy to understand, but positioning, risk, and timing can flip the match.',
+			primaryCta: 'See Shellbound',
 			scrollHint: 'Scroll to continue'
 		},
 		vision: {
 			kicker: 'Studio vision',
-			title: 'Small in scale, precise in intention.',
+			title: 'Small games with a visible shape.',
 			intro:
-				'Midnight Toronto is meant to feel like a real creative studio: less noise, more intention, and a stronger sense of authorship.',
+				'We are not trying to look bigger than we are. We prefer smaller games focused on one good idea, with their own identity from the first contact.',
 			body: [
-				'Each project starts from a simple belief: independent games can stay compact and still carry atmosphere, tension, humor, and a distinct visual signature.',
-				'Rather than chasing excess, the studio focuses on refining what matters. Clear mechanics, art that supports the fantasy, and an experience that respects the player’s time.'
+				'Midnight Toronto makes compact, direct games with a strong focus on visuals. The idea is simple: you look at the screen, understand what is happening, and want to try it.',
+				'Shellbound represents what we want to make from here on: simple decisions that actually make a difference.',
+				'Smaller games, with a clear identity and an easy-to-recognize shape.'
 			],
 			notes: [
-				'Creation guided by visual identity and world feeling.',
-				'Controlled scope to preserve consistency and polish.'
+				'Simple ideas, executed well.',
+				'Projects sized so we can actually finish them and deliver them well.'
 			],
 			stats: [
-				{ value: '3', label: 'Projects in the catalog' },
+				{ value: '4', label: 'Projects in the catalog' },
 				{ value: 'PT + EN', label: 'Bilingual studio presentation' },
-				{ value: '100%', label: 'Focus on authored indie production' }
+				{ value: '2026', label: 'New phase with Shellbound' }
 			]
 		},
 		projects: {
 			kicker: 'Featured projects',
-			title: 'Three directions, one signature.',
+			title: 'Four games, a bolder signature.',
 			intro:
-				'Each game follows its own path, but all come from the same commitment to atmosphere, readability, and visual presence.',
+				'From puzzle to FPS, now with Shellbound on the horizon: each game follows its own path while keeping clear readability, visual impact, and identity.',
 			items: [
+				{
+					title: 'Shellbound',
+					category: 'Strategy / Turns / 2D',
+					status: 'In development',
+					description:
+						'Turn-based 2D tank battles built around positioning, aim, terrain, and short decisions that can flip the match.',
+					note: 'In production, designed to read clearly at first glance and become more interesting with every exchange.',
+					imageAlt: 'Artwork for Shellbound',
+					image: 'Game04img02.jpg'
+				},
 				{
 					title: 'Midnight Bubbles',
 					category: 'Puzzle / Casual',
@@ -295,34 +317,34 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 		},
 		process: {
 			kicker: 'Presence and process',
-			title: 'A studio built through detail.',
+			title: 'Less pose, more direction.',
 			intro:
-				'Midnight Toronto does not try to look bigger than it is. Its strength comes from treating each element with intention and cohesion.',
+				'The new presentation puts the game first and lets the studio speak through what it is building. Shellbound becomes the entry point, while the catalog shows where Midnight Toronto came from.',
 			items: [
 				{
-					title: 'Direction over excess',
+					title: 'Game first',
 					description:
-						'Visual and mechanical choices are guided by identity, not by volume or whatever happens to be trending.'
+						'The page opens with Shellbound because it best represents the studio’s next phase.'
 				},
 				{
-					title: 'Production with polish',
+					title: 'More human copy',
 					description:
-						'Scope, interface, and rhythm are shaped to reach a more solid result and avoid an improvised feel.'
+						'The studio text drops generic phrasing and explains how we think about small games.'
 				},
 				{
-					title: 'A brand that keeps evolving',
+					title: 'Theme without noise',
 					description:
-						'The studio grows one game at a time, with room to experiment without losing consistency.'
+						'Sky, sand, metal, and olive tones hint at Shellbound without turning the site into loud advertising.'
 				}
 			]
 		},
 		contact: {
-			kicker: 'Contact and presence',
-			title: 'Follow Midnight Toronto as it grows.',
+			kicker: 'Where to follow',
+			title: 'Find the games and follow what comes next.',
 			description:
-				'If you want to follow the projects, talk about development, or watch the studio take shape over time, these are the right places to stay close.',
-			availability: 'Updates, behind-the-scenes notes, and new posts tend to show up here first.',
-			socialsLabel: 'Main channels',
+				'Use the links below to find the released games and follow the next Midnight Toronto updates.',
+			availability: 'Shellbound is still in development; when public updates are ready, they will appear here first.',
+			socialsLabel: 'Useful links',
 			rights: 'Midnight Toronto'
 		}
 	}

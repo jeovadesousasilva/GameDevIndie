@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
     const sectionLinks = Array.from(navLinks).filter((link) => link.getAttribute('href')?.startsWith('#'));
     const sections = document.querySelectorAll('section[id]');
+    const backToTop = document.querySelector('[data-back-to-top]');
 
     if (header) {
         const updateHeaderState = () => {
@@ -56,6 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateActiveSection();
         window.addEventListener('scroll', updateActiveSection, { passive: true });
+    }
+
+    if (backToTop) {
+        const updateBackToTopState = () => {
+            backToTop.classList.toggle('visible', window.scrollY > 520);
+        };
+
+        updateBackToTopState();
+        window.addEventListener('scroll', updateBackToTopState, { passive: true });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     }
 
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {

@@ -26,16 +26,53 @@ const navSections = [
 	{ href: '#contact', label: content.nav.contact }
 ];
 
+const shellboundProject = content.projects.items.find((project) => project.title === 'Shellbound');
+const shellboundImage = `${studioAsset}/images/Game04img02.jpg`;
+const shellboundIcon = `${studioAsset}/images/Game04img01.png`;
+const shellboundSignals = isEnglish
+	? [
+			{ value: '2D', label: 'clear battlefield' },
+			{ value: 'Turns', label: 'one move at a time' },
+			{ value: 'Aim', label: 'shots with consequence' },
+			{ value: 'Terrain', label: 'position changes the fight' }
+		]
+	: [
+			{ value: '2D', label: 'campo fácil de ler' },
+			{ value: 'Turnos', label: 'uma decisão por vez' },
+			{ value: 'Mira', label: 'disparos com consequência' },
+			{ value: 'Terreno', label: 'posição muda a luta' }
+		];
+
 const socialLinks = [
 	{
+		platform: 'play',
 		href: 'https://play.google.com/store/apps/dev?id=8606518036992652230',
-		label: isEnglish ? 'Google Play Page' : 'Página no Google Play'
+		label: isEnglish ? 'Released games' : 'Jogos publicados',
+		description: isEnglish
+			? 'Open the studio page on Google Play.'
+			: 'Abra a página do estúdio no Google Play.'
 	},
 	{
+		platform: 'instagram',
 		href: 'https://www.instagram.com/midnight_toronto?igsh=Znh6c2g4d3YyNHJo',
-		label: 'Instagram'
+		label: isEnglish ? 'Instagram updates' : 'Novidades no Instagram',
+		description: isEnglish
+			? 'Follow public updates and work-in-progress posts.'
+			: 'Acompanhe novidades públicas e bastidores.'
 	}
 ];
+
+const contactSignal = isEnglish
+	? {
+			label: 'Next signal',
+			title: 'Shellbound is in the workshop.',
+			description: 'Turn-based 2D tank battles are still in development. Public news will land here first.'
+		}
+	: {
+			label: 'Próximo sinal',
+			title: 'Shellbound está na oficina.',
+			description: 'As batalhas 2D por turnos ainda estão em produção. Quando houver novidade pública, ela aparece por aqui primeiro.'
+		};
 ---
 
 <!DOCTYPE html>
@@ -74,7 +111,7 @@ const socialLinks = [
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@500;700;800&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Bungee&family=Manrope:wght@400;500;600;700;800&family=Syne:wght@500;700;800&display=swap"
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" href={withBase('midnight-toronto/assets/css/style.css')} />
@@ -138,24 +175,39 @@ const socialLinks = [
 							<h1 class="hero-title">{content.hero.title}</h1>
 							<p class="hero-subtitle">{content.hero.subtitle}</p>
 							<div class="hero-cta">
-								<a href="#projects" class="btn btn-primary">{content.hero.primaryCta}</a>
+								<a href="#shellbound" class="btn btn-primary">{content.hero.primaryCta}</a>
+								<a href="#projects" class="btn btn-secondary">
+									{isEnglish ? 'Full catalog' : 'Catálogo completo'}
+								</a>
 							</div>
 						</div>
 
-						<div class="hero-panel">
+						<div class="hero-panel shellbound-showcase">
 							<img
-								src={`${studioAsset}/images/MIDNIGHT-DEVELOPER-BANNER.png`}
-								alt="Midnight Toronto banner"
+								src={shellboundImage}
+								alt={shellboundProject?.imageAlt || 'Shellbound'}
 								class="hero-art"
 							/>
+							<img src={shellboundIcon} alt="" class="shellbound-icon" aria-hidden="true" />
 							<div class="hero-panel-copy">
-								<span>Midnight Toronto</span>
-								<p>{content.vision.intro}</p>
+								<span>{shellboundProject?.status}</span>
+								<p>{shellboundProject?.note}</p>
 							</div>
 						</div>
 					</div>
 					<div class="scroll-indicator">
 						<span>{content.hero.scrollHint}</span>
+					</div>
+				</section>
+
+				<section class="shellbound-brief" aria-label="Shellbound">
+					<div class="container shellbound-brief-grid">
+						{shellboundSignals.map((signal) => (
+							<div class="signal-card">
+								<strong>{signal.value}</strong>
+								<span>{signal.label}</span>
+							</div>
+						))}
 					</div>
 				</section>
 
@@ -203,11 +255,15 @@ const socialLinks = [
 
 						<div class="projects-grid">
 							{content.projects.items.map((project) => (
-								<article class="project-card">
+								<article
+									id={project.title === 'Shellbound' ? 'shellbound' : undefined}
+									class:list={['project-card', project.title === 'Shellbound' && 'project-card-featured']}
+								>
 									<div class="project-art">
 										<img
 											src={`${studioAsset}/images/${project.image}`}
 											alt={project.imageAlt}
+											class:list={[project.title === 'Shellbound' && 'project-art-cover']}
 										/>
 									</div>
 									<div class="project-body">
@@ -224,34 +280,26 @@ const socialLinks = [
 													href={project.downloadUrl}
 													target="_blank"
 													rel="noreferrer"
-													class="btn btn-primary project-download"
+													class="project-download play-store-badge"
+													aria-label={project.downloadLabel}
 												>
-													{project.downloadLabel}
+													<span class="play-badge-icon" aria-hidden="true">
+														<svg viewBox="0 0 24 24" focusable="false">
+															<path class="play-cyan" d="M4.7 3.2 14.2 12 4.7 20.8a2 2 0 0 1-.45-1.26V4.46c0-.48.16-.92.45-1.26Z" />
+															<path class="play-green" d="M5.6 2.62c.58-.18 1.24-.09 1.84.26l8.8 5.05-2.04 4.07L5.6 2.62Z" />
+															<path class="play-yellow" d="M16.24 7.93 19.46 9.78c1.38.79 1.38 2.65 0 3.44l-3.22 1.85L14.2 12l2.04-4.07Z" />
+															<path class="play-red" d="m5.6 21.38 8.6-9.38 2.04 4.07-8.8 5.05c-.6.35-1.26.44-1.84.26Z" />
+														</svg>
+													</span>
+													<span class="play-badge-copy">
+														<span class="play-badge-kicker">{isEnglish ? 'GET IT ON' : 'BAIXAR NA'}</span>
+														<strong>Google Play</strong>
+													</span>
 												</a>
 											</div>
 										)}
 									</div>
 								</article>
-							))}
-						</div>
-					</div>
-				</section>
-
-				<section class="section section-process">
-					<div class="container section-grid">
-						<div class="section-heading">
-							<p class="section-kicker">{content.process.kicker}</p>
-							<h2 class="section-title">{content.process.title}</h2>
-						</div>
-
-						<p class="section-intro">{content.process.intro}</p>
-
-						<div class="process-grid">
-							{content.process.items.map((item) => (
-								<div class="process-card">
-									<h3>{item.title}</h3>
-									<p>{item.description}</p>
-								</div>
 							))}
 						</div>
 					</div>
@@ -263,15 +311,47 @@ const socialLinks = [
 							<p class="section-kicker">{content.contact.kicker}</p>
 							<h2 class="section-title">{content.contact.title}</h2>
 							<p>{content.contact.description}</p>
-							<p class="contact-availability">{content.contact.availability}</p>
+
+							<div class="contact-signal">
+								<img src={shellboundIcon} alt="" class="contact-signal-icon" aria-hidden="true" />
+								<div>
+									<span>{contactSignal.label}</span>
+									<strong>{contactSignal.title}</strong>
+									<p>{contactSignal.description}</p>
+								</div>
+							</div>
 						</div>
 
 						<div class="contact-actions">
 							<span class="contact-label">{content.contact.socialsLabel}</span>
 							<div class="social-links">
 								{socialLinks.map((social) => (
-									<a href={social.href} target="_blank" rel="noreferrer" class="social-link">
-										{social.label}
+									<a
+										href={social.href}
+										target="_blank"
+										rel="noreferrer"
+										class:list={['social-link', `social-link-${social.platform}`]}
+									>
+										<span class="social-icon" aria-hidden="true">
+											{social.platform === 'play' ? (
+												<svg viewBox="0 0 24 24" focusable="false">
+													<path class="play-cyan" d="M4.7 3.2 14.2 12 4.7 20.8a2 2 0 0 1-.45-1.26V4.46c0-.48.16-.92.45-1.26Z" />
+													<path class="play-green" d="M5.6 2.62c.58-.18 1.24-.09 1.84.26l8.8 5.05-2.04 4.07L5.6 2.62Z" />
+													<path class="play-yellow" d="M16.24 7.93 19.46 9.78c1.38.79 1.38 2.65 0 3.44l-3.22 1.85L14.2 12l2.04-4.07Z" />
+													<path class="play-red" d="m5.6 21.38 8.6-9.38 2.04 4.07-8.8 5.05c-.6.35-1.26.44-1.84.26Z" />
+												</svg>
+											) : (
+												<svg viewBox="0 0 24 24" focusable="false">
+													<rect x="4.5" y="4.5" width="15" height="15" rx="4.2" />
+													<circle cx="12" cy="12" r="3.45" />
+													<circle cx="16.45" cy="7.55" r="1" />
+												</svg>
+											)}
+										</span>
+										<span class="social-copy">
+											<strong>{social.label}</strong>
+											<span>{social.description}</span>
+										</span>
 									</a>
 								))}
 							</div>
@@ -289,6 +369,17 @@ const socialLinks = [
 					</div>
 				</div>
 			</footer>
+
+			<button
+				class="back-to-top"
+				type="button"
+				aria-label={isEnglish ? 'Back to top' : 'Voltar ao topo'}
+				data-back-to-top
+			>
+				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+					<path d="M12 5.8 5.9 11.9l1.7 1.7 3.2-3.2v7.8h2.4v-7.8l3.2 3.2 1.7-1.7L12 5.8Z" />
+				</svg>
+			</button>
 		</div>
 
 		<script src={withBase('midnight-toronto/assets/js/main.js')}></script>
