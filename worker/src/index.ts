@@ -39,7 +39,7 @@ export default {
 			const rows = await env.DB.prepare(
 				`SELECT id, created_at, ip, ip_masked, ip_hash, path, referrer, user_agent,
 				 country, city, region, region_code, postal_code, continent, latitude, longitude,
-				 timezone, asn, as_organization, http_protocol, colo, device_type, browser_name,
+				 timezone, asn, as_organization, http_protocol, colo, device_type, device_model, browser_name,
 				 os_name, browser_language, browser_timezone, screen_width, screen_height,
 				 viewport_width, viewport_height, pixel_ratio, session_id, last_seen_at, closed_at,
 				 duration_seconds, is_open, location_permission, precise_latitude, precise_longitude,
@@ -94,13 +94,13 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 		`INSERT INTO visits (
 			created_at, ip, ip_masked, ip_hash, path, referrer, user_agent, country, colo,
 			city, region, region_code, postal_code, continent, latitude, longitude, timezone,
-			asn, as_organization, http_protocol, device_type, browser_name, os_name,
+			asn, as_organization, http_protocol, device_type, device_model, browser_name, os_name,
 			browser_language, browser_timezone, screen_width, screen_height, viewport_width,
 			viewport_height, pixel_ratio, session_id, last_seen_at, duration_seconds, is_open,
 			location_permission, precise_latitude, precise_longitude, precise_accuracy,
 			precise_altitude, precise_heading, precise_speed
 		)
-		 VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		 VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	).bind(
 		ip,
 		maskIp(ip),
@@ -122,6 +122,7 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 		cleanNullableText(cf.asOrganization, 256),
 		cleanNullableText(cf.httpProtocol, 32),
 		client.deviceType,
+		cleanNullableText(payload.deviceModel, 128) || client.deviceModel,
 		client.browserName,
 		client.osName,
 		cleanNullableText(payload.browserLanguage, 64),
@@ -235,6 +236,7 @@ function getCloudflareData(request: Request): Record<string, unknown> {
 
 function parseClient(userAgent: string): {
 	deviceType: string;
+	deviceModel: string | null;
 	browserName: string;
 	osName: string;
 } {
@@ -278,7 +280,46 @@ function parseClient(userAgent: string): {
 		browserName = 'Safari';
 	}
 
-	return { deviceType, browserName, osName };
+	const deviceModel = detectDeviceModel(ua, osName);
+
+	return { deviceType, deviceModel, browserName, osName };
+}
+
+function detectDeviceModel(userAgent: string, osName: string): string | null {
+	const patterns = [
+		/\b(SM-[A-Z0-9]+)\b/i,
+		/\b(GT-[A-Z0-9]+)\b/i,
+		/\b(Pixel [A-Z0-9 ]+)\b/i,
+		/\b(Moto [A-Z0-9 ]+)\b/i,
+		/\b(Redmi [A-Z0-9 ]+)\b/i,
+		/\b(POCO [A-Z0-9 ]+)\b/i,
+		/\b(Mi [A-Z0-9 ]+)\b/i,
+		/\b(Huawei [A-Z0-9 -]+)\b/i,
+		/\b(HONOR [A-Z0-9 -]+)\b/i,
+		/\b(OnePlus [A-Z0-9 ]+)\b/i,
+		/\b(XQ-[A-Z0-9]+)\b/i
+	];
+
+	for (const pattern of patterns) {
+		const match = userAgent.match(pattern);
+		if (match?.[1]) {
+			return cleanText(match[1].trim(), 128);
+		}
+	}
+
+	if (/iphone/i.test(userAgent)) {
+		return 'iPhone';
+	}
+
+	if (/ipad/i.test(userAgent)) {
+		return 'iPad';
+	}
+
+	if (/ipod/i.test(userAgent)) {
+		return 'iPod';
+	}
+
+	return osName === 'Android' ? 'Android não informado' : null;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -346,16 +387,20 @@ function adminPage(): string {
 		<title>Visitas do site</title>
 		<style>
 			:root {
-				color-scheme: light;
-				--bg: #f4f6fb;
-				--panel: #ffffff;
-				--panel-soft: #f8fafc;
-				--line: #dbe3ef;
-				--text: #111827;
-				--muted: #64748b;
-				--accent: #f97316;
-				--accent-soft: #fff1e8;
-				--good: #0f766e;
+				color-scheme: dark;
+				--bg: #05070c;
+				--panel: rgba(8, 14, 24, 0.92);
+				--panel-soft: rgba(12, 23, 38, 0.96);
+				--line: rgba(83, 250, 172, 0.17);
+				--line-strong: rgba(83, 250, 172, 0.36);
+				--text: #e9fff6;
+				--muted: #87a39a;
+				--accent: #53faac;
+				--accent-2: #38bdf8;
+				--accent-soft: rgba(83, 250, 172, 0.13);
+				--warn-soft: rgba(251, 191, 36, 0.15);
+				--danger-soft: rgba(148, 163, 184, 0.13);
+				--good: #53faac;
 			}
 
 			* {
@@ -367,10 +412,28 @@ function adminPage(): string {
 				padding: 28px;
 				font-family: Inter, Arial, sans-serif;
 				color: var(--text);
-				background: var(--bg);
+				background:
+					linear-gradient(rgba(83, 250, 172, 0.035) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(83, 250, 172, 0.035) 1px, transparent 1px),
+					radial-gradient(circle at 50% -20%, rgba(56, 189, 248, 0.18), transparent 34%),
+					linear-gradient(145deg, #05070c 0%, #07111d 52%, #02040a 100%);
+				background-size: 34px 34px, 34px 34px, auto, auto;
+				min-height: 100vh;
+			}
+
+			body::before {
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				content: '';
+				background: linear-gradient(180deg, transparent, rgba(83, 250, 172, 0.035), transparent);
+				animation: scan 9s linear infinite;
+				opacity: 0.7;
 			}
 
 			main {
+				position: relative;
+				z-index: 1;
 				max-width: 1240px;
 				margin: 0 auto;
 			}
@@ -382,7 +445,8 @@ function adminPage(): string {
 				border: 1px solid var(--line);
 				border-radius: 8px;
 				background: var(--panel);
-				box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+				box-shadow: 0 18px 42px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+				backdrop-filter: blur(16px);
 			}
 
 			.topbar {
@@ -391,6 +455,10 @@ function adminPage(): string {
 				justify-content: space-between;
 				gap: 18px;
 				padding: 22px;
+				border-color: var(--line-strong);
+				background:
+					linear-gradient(135deg, rgba(83, 250, 172, 0.12), transparent 42%),
+					linear-gradient(160deg, rgba(8, 14, 24, 0.98), rgba(4, 8, 16, 0.94));
 			}
 
 			h1,
@@ -401,6 +469,7 @@ function adminPage(): string {
 
 			h1 {
 				font-size: 1.45rem;
+				letter-spacing: 0;
 			}
 
 			p,
@@ -414,25 +483,26 @@ function adminPage(): string {
 				min-height: 28px;
 				padding: 0 10px;
 				border-radius: 999px;
-				color: #9a3412;
+				border: 1px solid rgba(83, 250, 172, 0.24);
+				color: var(--accent);
 				background: var(--accent-soft);
 				font-size: 0.78rem;
 				font-weight: 800;
 			}
 
 			.badge.open {
-				color: #065f46;
-				background: #d1fae5;
+				color: #b8ffe1;
+				background: rgba(16, 185, 129, 0.18);
 			}
 
 			.badge.closed {
-				color: #334155;
-				background: #e2e8f0;
+				color: #cbd5e1;
+				background: var(--danger-soft);
 			}
 
 			.badge.stale {
-				color: #92400e;
-				background: #fef3c7;
+				color: #fde68a;
+				background: var(--warn-soft);
 			}
 
 			.controls {
@@ -452,21 +522,30 @@ function adminPage(): string {
 
 			input {
 				border: 1px solid var(--line);
+				color: var(--text);
+				background: rgba(2, 6, 23, 0.72);
 				padding: 0 12px;
+				outline: 0;
+			}
+
+			input:focus {
+				border-color: var(--accent);
+				box-shadow: 0 0 0 3px rgba(83, 250, 172, 0.12);
 			}
 
 			button {
 				border: 0;
 				padding: 0 16px;
-				color: #ffffff;
-				background: var(--accent);
+				color: #03120b;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
 				font-weight: 800;
 				cursor: pointer;
 			}
 
 			button.secondary {
+				border: 1px solid var(--line);
 				color: var(--text);
-				background: #e8edf6;
+				background: rgba(255, 255, 255, 0.06);
 			}
 
 			.summary {
@@ -527,7 +606,7 @@ function adminPage(): string {
 				display: grid;
 				grid-template-columns: repeat(3, minmax(0, 1fr));
 				gap: 1px;
-				background: var(--line);
+				background: rgba(83, 250, 172, 0.12);
 			}
 
 			.info-block {
@@ -535,12 +614,12 @@ function adminPage(): string {
 				gap: 10px;
 				align-content: start;
 				padding: 14px;
-				background: var(--panel);
+				background: rgba(4, 10, 18, 0.82);
 			}
 
 			.info-block h3 {
 				margin: 0;
-				color: #334155;
+				color: var(--accent);
 				font-size: 0.78rem;
 				text-transform: uppercase;
 			}
@@ -562,10 +641,12 @@ function adminPage(): string {
 				min-width: 0;
 				overflow-wrap: anywhere;
 				font-size: 0.9rem;
+				color: #f7fffb;
 			}
 
 			code {
 				font-family: Consolas, monospace;
+				color: #93c5fd;
 			}
 
 			.empty {
@@ -575,6 +656,22 @@ function adminPage(): string {
 				color: var(--muted);
 				background: var(--panel);
 				text-align: center;
+			}
+
+			@keyframes scan {
+				from {
+					transform: translateY(-100%);
+				}
+
+				to {
+					transform: translateY(100%);
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				body::before {
+					animation: none;
+				}
 			}
 
 			@media (max-width: 1040px) {
@@ -794,6 +891,7 @@ function adminPage(): string {
 						+ '</section>'
 						+ '<section class="info-block"><h3>Dispositivo</h3>'
 							+ field('Tipo', visit.device_type)
+							+ field('Modelo provável', visit.device_model)
 							+ field('Sistema', visit.os_name)
 							+ field('Navegador', visit.browser_name)
 							+ field('Idioma', visit.browser_language)

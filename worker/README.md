@@ -67,7 +67,7 @@ Exemplo:
 https://midnight-visit-logger.seu-usuario.workers.dev/admin
 ```
 
-O painel mostra os horários em Brasília, separa localização aproximada por IP da localização precisa autorizada e indica se a sessão ainda está aberta, quando teve o último sinal, quanto tempo durou e quando foi fechada.
+O painel mostra os horários em Brasília, separa localização aproximada por IP da localização precisa autorizada e indica se a sessão ainda está aberta, quando teve o último sinal, quanto tempo durou e quando foi fechada. Ele também mostra o tipo de dispositivo e, quando o navegador permitir, o modelo provável do aparelho.
 
 Também dá para revisar via terminal. Troque `SEU_TOKEN` pelo valor que você salvou em `ADMIN_TOKEN`.
 
@@ -85,4 +85,4 @@ curl -X DELETE -H "Authorization: Bearer SEU_TOKEN" "https://midnight-visit-logg
 
 ## Observação de privacidade
 
-O IP e a localização aproximada vêm da conexão e dos dados da Cloudflare. A localização precisa só é enviada quando o visitante toca em permitir e aceita a permissão do navegador. IP e localização são dados pessoais em muitos contextos, então mantenha a coleta em uma política de privacidade ou nos termos do site, com finalidade clara como segurança, prevenção de abuso e análise técnica.
+O IP e a localização aproximada vêm da conexão e dos dados da Cloudflare. A localização precisa só é enviada quando o visitante toca em permitir e aceita a permissão do navegador; depois disso, novas visitas podem reutilizar a permissão já concedida. IP, localização e informações do dispositivo são dados pessoais em muitos contextos, então mantenha a coleta em uma política de privacidade ou nos termos do site, com finalidade clara como segurança, prevenção de abuso e análise técnica.

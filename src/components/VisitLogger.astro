@@ -13,6 +13,9 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 			const sessionId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 			const openedAt = Date.now();
 			const locationConsentKey = 'midnight-location-consent-v1';
+			let deviceModel = null;
+			let locationPermission = null;
+			let latestLocation = null;
 			const pageLanguage = (document.documentElement.lang || navigator.language || 'pt').toLowerCase();
 			const locationCopy = pageLanguage.startsWith('en')
 				? {
@@ -28,20 +31,26 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 					dismiss: 'Agora não'
 				};
 
-			const basePayload = (event) => ({
-				event,
-				sessionId,
-				durationSeconds: Math.max(0, Math.round((Date.now() - openedAt) / 1000)),
-				path: `${window.location.pathname}${window.location.search}`,
-				referrer: document.referrer || null,
-				browserLanguage: navigator.language || null,
-				browserTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
-				screenWidth: window.screen?.width || null,
-				screenHeight: window.screen?.height || null,
-				viewportWidth: window.innerWidth || null,
-				viewportHeight: window.innerHeight || null,
-				pixelRatio: window.devicePixelRatio || null
-			});
+			const basePayload = (event) => {
+				const payload = {
+					event,
+					sessionId,
+					durationSeconds: Math.max(0, Math.round((Date.now() - openedAt) / 1000)),
+					path: `${window.location.pathname}${window.location.search}`,
+					referrer: document.referrer || null,
+					deviceModel,
+					locationPermission,
+					browserLanguage: navigator.language || null,
+					browserTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+					screenWidth: window.screen?.width || null,
+					screenHeight: window.screen?.height || null,
+					viewportWidth: window.innerWidth || null,
+					viewportHeight: window.innerHeight || null,
+					pixelRatio: window.devicePixelRatio || null
+				};
+
+				return latestLocation ? { ...payload, ...latestLocation } : payload;
+			};
 
 			const send = (data) => {
 				try {
@@ -78,6 +87,22 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				}
 			};
 
+			const readDeviceModel = async () => {
+				const uaData = navigator.userAgentData;
+				if (!uaData?.getHighEntropyValues) {
+					return;
+				}
+
+				try {
+					const hints = await uaData.getHighEntropyValues(['model']);
+					if (hints.model) {
+						deviceModel = hints.model;
+					}
+				} catch {
+					/* Device hints are optional and may be blocked by the browser. */
+				}
+			};
+
 			const requestPreciseLocation = () => {
 				if (!('geolocation' in navigator)) {
 					return;
@@ -85,25 +110,24 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 
 				navigator.geolocation.getCurrentPosition(
 					(position) => {
-						saveConsent('granted');
-						send({
-							...basePayload('location'),
-							locationPermission: 'granted',
+						locationPermission = 'granted';
+						latestLocation = {
 							preciseLatitude: position.coords.latitude,
 							preciseLongitude: position.coords.longitude,
 							preciseAccuracy: position.coords.accuracy,
 							preciseAltitude: position.coords.altitude,
 							preciseHeading: position.coords.heading,
 							preciseSpeed: position.coords.speed
-						});
+						};
+						saveConsent('granted');
+						send(basePayload('location'));
 						document.querySelector('[data-location-consent]')?.remove();
 					},
 					() => {
+						locationPermission = 'denied';
+						latestLocation = null;
 						saveConsent('denied');
-						send({
-							...basePayload('location'),
-							locationPermission: 'denied'
-						});
+						send(basePayload('location'));
 						document.querySelector('[data-location-consent]')?.remove();
 					},
 					{
@@ -114,8 +138,29 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				);
 			};
 
-			const showLocationConsent = () => {
-				if (!('geolocation' in navigator) || readConsent()) {
+			const showLocationConsent = async () => {
+				if (!('geolocation' in navigator)) {
+					return;
+				}
+
+				locationPermission = readConsent();
+
+				try {
+					if (navigator.permissions?.query) {
+						const permission = await navigator.permissions.query({ name: 'geolocation' });
+						locationPermission = permission.state === 'prompt' ? locationPermission : permission.state;
+					}
+				} catch {
+					/* Permission state is not available in every browser. */
+				}
+
+				if (locationPermission === 'granted') {
+					requestPreciseLocation();
+					return;
+				}
+
+				if (locationPermission === 'denied' || locationPermission === 'dismissed') {
+					send(basePayload('location'));
 					return;
 				}
 
@@ -133,22 +178,25 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 
 				banner.querySelector('[data-location-allow]')?.addEventListener('click', requestPreciseLocation);
 				banner.querySelector('[data-location-dismiss]')?.addEventListener('click', () => {
+					locationPermission = 'dismissed';
 					saveConsent('dismissed');
-					send({
-						...basePayload('location'),
-						locationPermission: 'dismissed'
-					});
+					send(basePayload('location'));
 					banner.remove();
 				});
 
 				document.body.appendChild(banner);
 			};
 
-			send(basePayload('start'));
-			window.setInterval(() => send(basePayload('heartbeat')), 15000);
-			window.addEventListener('pagehide', closeSession, { capture: true });
-			window.addEventListener('beforeunload', closeSession, { capture: true });
-			window.setTimeout(showLocationConsent, 1800);
+			const startSession = () => {
+				locationPermission = readConsent();
+				send(basePayload('start'));
+				window.setInterval(() => send(basePayload('heartbeat')), 15000);
+				window.addEventListener('pagehide', closeSession, { capture: true });
+				window.addEventListener('beforeunload', closeSession, { capture: true });
+				window.setTimeout(showLocationConsent, 1800);
+			};
+
+			readDeviceModel().finally(startSession);
 		})();
 	</script>
 )}
