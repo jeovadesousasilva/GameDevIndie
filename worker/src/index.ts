@@ -28,7 +28,7 @@ export default {
 
 		if (url.pathname === '/admin/visits' && request.method === 'GET') {
 			if (!isAuthorized(request, env)) {
-				return json({ error: 'unauthorized' }, request, env, 401);
+				return json({ error: 'unauthorized' }, 401);
 			}
 
 			const limit = clamp(Number(url.searchParams.get('limit') || 100), 1, 500);
@@ -44,7 +44,7 @@ export default {
 
 		if (url.pathname === '/admin/visits' && request.method === 'DELETE') {
 			if (!isAuthorized(request, env)) {
-				return json({ error: 'unauthorized' }, request, env, 401);
+				return json({ error: 'unauthorized' }, 401);
 			}
 
 			const olderThanDays = clamp(Number(url.searchParams.get('olderThanDays') || 90), 1, 365);
