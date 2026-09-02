@@ -146,7 +146,7 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 						'Batalhas de tanques em 2D, turno por turno, com foco em posicionamento, mira, terreno e decisões curtas que podem virar a partida.',
 					note: 'Projeto em produção, pensado para ser fácil de ler no primeiro olhar e mais interessante a cada troca de tiro.',
 					imageAlt: 'Arte do jogo Shellbound',
-					image: 'Game04img02-1200.webp'
+					image: 'Game04img02-1600.webp'
 				},
 				{
 					title: 'Midnight Bubbles',
@@ -277,7 +277,7 @@ export const studioHomeContent: Record<StudioLocale, StudioHomeContent> = {
 						'Turn-based 2D tank battles built around positioning, aim, terrain, and short decisions that can flip the match.',
 					note: 'In production, designed to read clearly at first glance and become more interesting with every exchange.',
 					imageAlt: 'Artwork for Shellbound',
-					image: 'Game04img02-1200.webp'
+					image: 'Game04img02-1600.webp'
 				},
 				{
 					title: 'Midnight Bubbles',

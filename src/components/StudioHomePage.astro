@@ -27,8 +27,8 @@ const navSections = [
 ];
 
 const shellboundProject = content.projects.items.find((project) => project.title === 'Shellbound');
-const shellboundImage = `${studioAsset}/images/Game04img02-1200.webp`;
-const shellboundIcon = `${studioAsset}/images/Game04img01-320.webp`;
+const shellboundImage = `${studioAsset}/images/Game04img02-1600.webp`;
+const shellboundIcon = `${studioAsset}/images/Game04img01-480.webp`;
 const shellboundSignals = isEnglish
 	? [
 			{ value: '2D', label: 'clear battlefield' },
@@ -183,12 +183,14 @@ const contactSignal = isEnglish
 						</div>
 
 						<div class="hero-panel shellbound-showcase">
-							<img
-								src={shellboundImage}
-								alt={shellboundProject?.imageAlt || 'Shellbound'}
-								class="hero-art"
-							/>
-							<img src={shellboundIcon} alt="" class="shellbound-icon" aria-hidden="true" />
+							<div class="hero-art-frame">
+								<img
+									src={shellboundImage}
+									alt={shellboundProject?.imageAlt || 'Shellbound'}
+									class="hero-art"
+								/>
+								<img src={shellboundIcon} alt="" class="shellbound-icon" aria-hidden="true" />
+							</div>
 							<div class="hero-panel-copy">
 								<span>{shellboundProject?.status}</span>
 								<p>{shellboundProject?.note}</p>
