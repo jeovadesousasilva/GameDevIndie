@@ -219,6 +219,9 @@ textarea {
 
 .mobile-menu-toggle {
     display: none;
+    position: relative;
+    z-index: 1200;
+    flex: 0 0 auto;
     min-height: 42px;
     padding: 0 14px;
     border: 1px solid var(--line-light);
@@ -226,6 +229,7 @@ textarea {
     color: var(--text);
     background: rgba(255, 255, 255, 0.04);
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .hero {
@@ -1231,6 +1235,7 @@ textarea {
 
     .nav {
         position: fixed;
+        z-index: 1100;
         top: 0;
         right: -100%;
         width: min(360px, 88vw);
@@ -1248,6 +1253,18 @@ textarea {
 
     .nav.active {
         right: 0;
+    }
+
+    .mobile-menu-toggle[aria-expanded="true"] {
+        position: fixed;
+        top: max(14px, env(safe-area-inset-top));
+        right: max(14px, env(safe-area-inset-right));
+        z-index: 1300;
+        min-width: 86px;
+        border-color: rgba(243, 198, 111, 0.56);
+        color: #101522;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(243, 198, 111, 0.96));
+        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
     }
 
     .nav-list,
