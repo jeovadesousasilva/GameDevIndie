@@ -10,8 +10,28 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 			}
 
 			window.__midnightVisitLogged = true;
+			const sessionId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+			const openedAt = Date.now();
+			const locationConsentKey = 'midnight-location-consent-v1';
+			const pageLanguage = (document.documentElement.lang || navigator.language || 'pt').toLowerCase();
+			const locationCopy = pageLanguage.startsWith('en')
+				? {
+					title: 'Use precise location?',
+					body: 'With your permission, we save precise location to improve access review.',
+					allow: 'Allow',
+					dismiss: 'Not now'
+				}
+				: {
+					title: 'Usar localização precisa?',
+					body: 'Com sua permissão, salvamos a localização exata para melhorar a leitura dos acessos.',
+					allow: 'Permitir',
+					dismiss: 'Agora não'
+				};
 
-			const payload = JSON.stringify({
+			const basePayload = (event) => ({
+				event,
+				sessionId,
+				durationSeconds: Math.max(0, Math.round((Date.now() - openedAt) / 1000)),
 				path: `${window.location.pathname}${window.location.search}`,
 				referrer: document.referrer || null,
 				browserLanguage: navigator.language || null,
@@ -23,18 +43,112 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				pixelRatio: window.devicePixelRatio || null
 			});
 
-			try {
-				fetch(endpoint, {
-					method: 'POST',
-					headers: { 'content-type': 'text/plain;charset=UTF-8' },
-					body: payload,
-					keepalive: true,
-					credentials: 'omit',
-					mode: 'no-cors'
-				}).catch(() => {});
-			} catch {
-				/* The logger must never affect the visitor experience. */
-			}
+			const send = (data) => {
+				try {
+					fetch(endpoint, {
+						method: 'POST',
+						headers: { 'content-type': 'text/plain;charset=UTF-8' },
+						body: JSON.stringify(data),
+						keepalive: true,
+						credentials: 'omit',
+						mode: 'no-cors'
+					}).catch(() => {});
+				} catch {
+					/* The logger must never affect the visitor experience. */
+				}
+			};
+
+			const closeSession = () => {
+				send(basePayload('close'));
+			};
+
+			const readConsent = () => {
+				try {
+					return window.localStorage.getItem(locationConsentKey);
+				} catch {
+					return null;
+				}
+			};
+
+			const saveConsent = (value) => {
+				try {
+					window.localStorage.setItem(locationConsentKey, value);
+				} catch {
+					/* Storage can be unavailable in private or restricted browsing. */
+				}
+			};
+
+			const requestPreciseLocation = () => {
+				if (!('geolocation' in navigator)) {
+					return;
+				}
+
+				navigator.geolocation.getCurrentPosition(
+					(position) => {
+						saveConsent('granted');
+						send({
+							...basePayload('location'),
+							locationPermission: 'granted',
+							preciseLatitude: position.coords.latitude,
+							preciseLongitude: position.coords.longitude,
+							preciseAccuracy: position.coords.accuracy,
+							preciseAltitude: position.coords.altitude,
+							preciseHeading: position.coords.heading,
+							preciseSpeed: position.coords.speed
+						});
+						document.querySelector('[data-location-consent]')?.remove();
+					},
+					() => {
+						saveConsent('denied');
+						send({
+							...basePayload('location'),
+							locationPermission: 'denied'
+						});
+						document.querySelector('[data-location-consent]')?.remove();
+					},
+					{
+						enableHighAccuracy: true,
+						timeout: 10000,
+						maximumAge: 300000
+					}
+				);
+			};
+
+			const showLocationConsent = () => {
+				if (!('geolocation' in navigator) || readConsent()) {
+					return;
+				}
+
+				const banner = document.createElement('div');
+				banner.className = 'location-consent';
+				banner.dataset.locationConsent = 'true';
+				banner.innerHTML = `
+					<div>
+						<strong>${locationCopy.title}</strong>
+						<span>${locationCopy.body}</span>
+					</div>
+					<button type="button" data-location-allow>${locationCopy.allow}</button>
+					<button type="button" data-location-dismiss>${locationCopy.dismiss}</button>
+				`;
+
+				banner.querySelector('[data-location-allow]')?.addEventListener('click', requestPreciseLocation);
+				banner.querySelector('[data-location-dismiss]')?.addEventListener('click', () => {
+					saveConsent('dismissed');
+					send({
+						...basePayload('location'),
+						locationPermission: 'dismissed'
+					});
+					banner.remove();
+				});
+
+				document.body.appendChild(banner);
+			};
+
+			send(basePayload('start'));
+			window.setInterval(() => send(basePayload('heartbeat')), 15000);
+			window.addEventListener('pagehide', closeSession, { capture: true });
+			window.addEventListener('beforeunload', closeSession, { capture: true });
+			window.setTimeout(showLocationConsent, 1800);
 		})();
 	</script>
 )}

@@ -41,7 +41,9 @@ export default {
 				 country, city, region, region_code, postal_code, continent, latitude, longitude,
 				 timezone, asn, as_organization, http_protocol, colo, device_type, browser_name,
 				 os_name, browser_language, browser_timezone, screen_width, screen_height,
-				 viewport_width, viewport_height, pixel_ratio
+				 viewport_width, viewport_height, pixel_ratio, session_id, last_seen_at, closed_at,
+				 duration_seconds, is_open, location_permission, precise_latitude, precise_longitude,
+				 precise_accuracy, precise_altitude, precise_heading, precise_speed
 				 FROM visits
 				 ORDER BY id DESC
 				 LIMIT ?`
@@ -70,6 +72,13 @@ export default {
 
 async function logVisit(request: Request, env: Env): Promise<Response> {
 	const payload = await safeJson(request);
+	const event = cleanText(String(payload.event || 'start'), 32);
+	const sessionId = cleanNullableText(payload.sessionId, 96);
+
+	if (sessionId && ['heartbeat', 'close', 'location'].includes(event)) {
+		await updateVisitSession(env, sessionId, event, payload);
+		return json({ ok: true }, 200, visitCorsHeaders(request, env));
+	}
 
 	const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '';
 	const userAgent = request.headers.get('user-agent') || '';
@@ -87,9 +96,11 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 			city, region, region_code, postal_code, continent, latitude, longitude, timezone,
 			asn, as_organization, http_protocol, device_type, browser_name, os_name,
 			browser_language, browser_timezone, screen_width, screen_height, viewport_width,
-			viewport_height, pixel_ratio
+			viewport_height, pixel_ratio, session_id, last_seen_at, duration_seconds, is_open,
+			location_permission, precise_latitude, precise_longitude, precise_accuracy,
+			precise_altitude, precise_heading, precise_speed
 		)
-		 VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		 VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	).bind(
 		ip,
 		maskIp(ip),
@@ -104,8 +115,8 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 		cleanNullableText(cf.regionCode, 32),
 		cleanNullableText(cf.postalCode, 32),
 		cleanNullableText(cf.continent, 32),
-		cleanNullableText(cf.latitude, 32),
-		cleanNullableText(cf.longitude, 32),
+		cleanNullableScalarText(cf.latitude, 32),
+		cleanNullableScalarText(cf.longitude, 32),
 		cleanNullableText(cf.timezone, 64),
 		cleanNullableNumber(cf.asn),
 		cleanNullableText(cf.asOrganization, 256),
@@ -119,10 +130,59 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 		cleanNullableNumber(payload.screenHeight),
 		cleanNullableNumber(payload.viewportWidth),
 		cleanNullableNumber(payload.viewportHeight),
-		cleanNullableNumber(payload.pixelRatio)
+		cleanNullableNumber(payload.pixelRatio),
+		sessionId,
+		cleanNullableNumber(payload.durationSeconds) || 0,
+		1,
+		cleanNullableText(payload.locationPermission, 32),
+		cleanNullableScalarText(payload.preciseLatitude, 32),
+		cleanNullableScalarText(payload.preciseLongitude, 32),
+		cleanNullableNumber(payload.preciseAccuracy),
+		cleanNullableScalarText(payload.preciseAltitude, 32),
+		cleanNullableScalarText(payload.preciseHeading, 32),
+		cleanNullableScalarText(payload.preciseSpeed, 32)
 	).run();
 
 	return json({ ok: true }, 200, visitCorsHeaders(request, env));
+}
+
+async function updateVisitSession(env: Env, sessionId: string, event: string, payload: Record<string, unknown>): Promise<void> {
+	const durationSeconds = cleanNullableNumber(payload.durationSeconds);
+	const locationPermission = cleanNullableText(payload.locationPermission, 32);
+	const preciseLatitude = cleanNullableScalarText(payload.preciseLatitude, 32);
+	const preciseLongitude = cleanNullableScalarText(payload.preciseLongitude, 32);
+	const preciseAccuracy = cleanNullableNumber(payload.preciseAccuracy);
+	const preciseAltitude = cleanNullableScalarText(payload.preciseAltitude, 32);
+	const preciseHeading = cleanNullableScalarText(payload.preciseHeading, 32);
+	const preciseSpeed = cleanNullableScalarText(payload.preciseSpeed, 32);
+
+	await env.DB.prepare(
+		`UPDATE visits
+		 SET last_seen_at = datetime('now'),
+			 closed_at = CASE WHEN ? = 'close' THEN datetime('now') ELSE closed_at END,
+			 is_open = CASE WHEN ? = 'close' THEN 0 ELSE is_open END,
+			 duration_seconds = COALESCE(?, CAST(strftime('%s', 'now') - strftime('%s', created_at) AS INTEGER), duration_seconds),
+			 location_permission = COALESCE(?, location_permission),
+			 precise_latitude = COALESCE(?, precise_latitude),
+			 precise_longitude = COALESCE(?, precise_longitude),
+			 precise_accuracy = COALESCE(?, precise_accuracy),
+			 precise_altitude = COALESCE(?, precise_altitude),
+			 precise_heading = COALESCE(?, precise_heading),
+			 precise_speed = COALESCE(?, precise_speed)
+		 WHERE session_id = ?`
+	).bind(
+		event,
+		event,
+		durationSeconds,
+		locationPermission,
+		preciseLatitude,
+		preciseLongitude,
+		preciseAccuracy,
+		preciseAltitude,
+		preciseHeading,
+		preciseSpeed,
+		sessionId
+	).run();
 }
 
 async function safeJson(request: Request): Promise<Record<string, unknown>> {
@@ -142,6 +202,14 @@ function cleanNullableText(value: unknown, maxLength: number): string | null {
 	}
 
 	return cleanText(value, maxLength);
+}
+
+function cleanNullableScalarText(value: unknown, maxLength: number): string | null {
+	if (typeof value === 'number' && Number.isFinite(value)) {
+		return cleanText(String(value), maxLength);
+	}
+
+	return cleanNullableText(value, maxLength);
 }
 
 function cleanNullableNumber(value: unknown): number | null {
@@ -352,6 +420,21 @@ function adminPage(): string {
 				font-weight: 800;
 			}
 
+			.badge.open {
+				color: #065f46;
+				background: #d1fae5;
+			}
+
+			.badge.closed {
+				color: #334155;
+				background: #e2e8f0;
+			}
+
+			.badge.stale {
+				color: #92400e;
+				background: #fef3c7;
+			}
+
 			.controls {
 				display: grid;
 				grid-template-columns: 1fr auto auto;
@@ -388,7 +471,7 @@ function adminPage(): string {
 
 			.summary {
 				display: grid;
-				grid-template-columns: repeat(4, minmax(0, 1fr));
+				grid-template-columns: repeat(5, minmax(0, 1fr));
 				gap: 12px;
 				margin-bottom: 16px;
 			}
@@ -442,7 +525,7 @@ function adminPage(): string {
 
 			.visit-grid {
 				display: grid;
-				grid-template-columns: repeat(5, minmax(0, 1fr));
+				grid-template-columns: repeat(3, minmax(0, 1fr));
 				gap: 1px;
 				background: var(--line);
 			}
@@ -527,7 +610,7 @@ function adminPage(): string {
 			<section class="topbar">
 				<div>
 					<h1>Visitas do site</h1>
-					<p>Lista privada com IP, localização aproximada, dispositivo e origem do acesso.</p>
+					<p>Lista privada com sessão, IP, localização aproximada, localização autorizada e dispositivo.</p>
 				</div>
 				<span class="badge">Privado</span>
 			</section>
@@ -544,6 +627,7 @@ function adminPage(): string {
 				<div class="summary-card"><span>Visitas</span><strong id="totalVisits">0</strong></div>
 				<div class="summary-card"><span>IPs únicos</span><strong id="uniqueIps">0</strong></div>
 				<div class="summary-card"><span>Cidades</span><strong id="uniqueCities">0</strong></div>
+				<div class="summary-card"><span>Abertos agora</span><strong id="openVisits">0</strong></div>
 				<div class="summary-card"><span>Celulares</span><strong id="mobileVisits">0</strong></div>
 			</section>
 
@@ -576,6 +660,76 @@ function adminPage(): string {
 				return value === null || value === undefined || value === '' ? (fallback || '-') : value;
 			}
 
+			function parseUtcDate(value) {
+				if (!value) {
+					return null;
+				}
+
+				const text = String(value);
+				const normalized = /Z$|[+-][0-9]{2}:?[0-9]{2}$/.test(text) ? text : text.replace(' ', 'T') + 'Z';
+				const date = new Date(normalized);
+				return Number.isNaN(date.getTime()) ? null : date;
+			}
+
+			function brDate(value) {
+				const date = parseUtcDate(value);
+				if (!date) {
+					return '-';
+				}
+
+				return new Intl.DateTimeFormat('pt-BR', {
+					timeZone: 'America/Sao_Paulo',
+					dateStyle: 'short',
+					timeStyle: 'medium'
+				}).format(date);
+			}
+
+			function formatDuration(seconds) {
+				const total = Number(seconds || 0);
+				if (!Number.isFinite(total) || total <= 0) {
+					return 'menos de 1s';
+				}
+
+				const hours = Math.floor(total / 3600);
+				const minutes = Math.floor((total % 3600) / 60);
+				const secs = Math.floor(total % 60);
+				const parts = [];
+
+				if (hours) {
+					parts.push(hours + 'h');
+				}
+
+				if (minutes || hours) {
+					parts.push(minutes + 'min');
+				}
+
+				parts.push(secs + 's');
+				return parts.join(' ');
+			}
+
+			function sessionStatus(visit) {
+				const lastSeen = parseUtcDate(visit.last_seen_at);
+				const closed = visit.closed_at || visit.is_open === 0 || visit.is_open === '0';
+
+				if (closed) {
+					return { label: 'Fechado', className: 'closed' };
+				}
+
+				if (lastSeen && Date.now() - lastSeen.getTime() <= 45000) {
+					return { label: 'Aberto agora', className: 'open' };
+				}
+
+				return { label: 'Sem sinal recente', className: 'stale' };
+			}
+
+			function permissionLabel(value) {
+				return {
+					granted: 'Permitida',
+					denied: 'Negada',
+					dismissed: 'Dispensada'
+				}[value] || 'Não solicitada';
+			}
+
 			function field(label, content, code) {
 				const tag = code ? 'code' : 'strong';
 				return '<div class="field"><span>' + escapeHtml(label) + '</span><' + tag + '>' + escapeHtml(value(content)) + '</' + tag + '></div>';
@@ -594,10 +748,15 @@ function adminPage(): string {
 			}
 
 			function renderVisit(visit) {
+				const status = sessionStatus(visit);
+				const preciseCoords = visit.precise_latitude && visit.precise_longitude
+					? visit.precise_latitude + ', ' + visit.precise_longitude
+					: null;
+
 				return '<article class="visit-card">'
 					+ '<div class="visit-head">'
-						+ '<div><h2>#' + escapeHtml(visit.id) + ' - ' + escapeHtml(value(visit.path, '/')) + '</h2><p>' + escapeHtml(value(visit.created_at)) + '</p></div>'
-						+ '<span class="badge">' + escapeHtml(value(visit.device_type)) + '</span>'
+						+ '<div><h2>#' + escapeHtml(visit.id) + ' - ' + escapeHtml(value(visit.path, '/')) + '</h2><p>' + escapeHtml(brDate(visit.created_at)) + ' - horário de Brasília</p></div>'
+						+ '<span class="badge ' + status.className + '">' + escapeHtml(status.label) + '</span>'
 					+ '</div>'
 					+ '<div class="visit-grid">'
 						+ '<section class="info-block"><h3>Acesso</h3>'
@@ -605,12 +764,27 @@ function adminPage(): string {
 							+ field('Origem', visit.referrer)
 							+ field('Protocolo', visit.http_protocol)
 						+ '</section>'
-						+ '<section class="info-block"><h3>Localização aproximada</h3>'
+						+ '<section class="info-block"><h3>Sessão</h3>'
+							+ field('Status', status.label)
+							+ field('Tempo no site', formatDuration(visit.duration_seconds))
+							+ field('Aberto em', brDate(visit.created_at))
+							+ field('Último sinal', brDate(visit.last_seen_at))
+							+ field('Fechado em', brDate(visit.closed_at))
+							+ field('Sessão', visit.session_id, true)
+						+ '</section>'
+						+ '<section class="info-block"><h3>Localização por IP</h3>'
 							+ field('Cidade', visit.city)
 							+ field('Estado/região', visit.region)
 							+ field('País', visit.country)
 							+ field('Coordenadas', visit.latitude && visit.longitude ? visit.latitude + ', ' + visit.longitude : null, true)
 							+ field('Fuso por IP', visit.timezone)
+						+ '</section>'
+						+ '<section class="info-block"><h3>Localização autorizada</h3>'
+							+ field('Permissão', permissionLabel(visit.location_permission))
+							+ field('Coordenadas', preciseCoords, true)
+							+ field('Precisão', visit.precise_accuracy ? Math.round(Number(visit.precise_accuracy)) + ' m' : null)
+							+ field('Altitude', visit.precise_altitude ? visit.precise_altitude + ' m' : null)
+							+ field('Direção/velocidade', visit.precise_heading || visit.precise_speed ? value(visit.precise_heading) + ' / ' + value(visit.precise_speed) : null)
 						+ '</section>'
 						+ '<section class="info-block"><h3>IP e rede</h3>'
 							+ field('IP completo', visit.ip, true)
@@ -638,23 +812,27 @@ function adminPage(): string {
 			function updateSummary(visits) {
 				const ipSet = new Set(visits.map(function(visit) { return visit.ip_hash; }).filter(Boolean));
 				const citySet = new Set(visits.map(function(visit) { return locationTitle(visit); }).filter(function(item) { return item !== 'Localização não informada'; }));
+				const openCount = visits.filter(function(visit) { return sessionStatus(visit).className === 'open'; }).length;
 				const mobileCount = visits.filter(function(visit) { return visit.device_type === 'Celular'; }).length;
 
 				document.querySelector('#totalVisits').textContent = String(visits.length);
 				document.querySelector('#uniqueIps').textContent = String(ipSet.size);
 				document.querySelector('#uniqueCities').textContent = String(citySet.size);
+				document.querySelector('#openVisits').textContent = String(openCount);
 				document.querySelector('#mobileVisits').textContent = String(mobileCount);
 				summary.hidden = false;
 			}
 
-			async function loadVisits() {
+			async function loadVisits(silent) {
 				const password = token.value.trim();
 				if (!password) {
 					statusEl.textContent = 'Digite a senha primeiro.';
 					return;
 				}
 
-				statusEl.textContent = 'Carregando...';
+				if (!silent) {
+					statusEl.textContent = 'Carregando...';
+				}
 
 				const response = await fetch('/admin/visits?limit=100', {
 					headers: {
@@ -688,6 +866,14 @@ function adminPage(): string {
 					statusEl.textContent = 'Não foi possível atualizar a lista.';
 				});
 			});
+
+			window.setInterval(function() {
+				if (!token.value.trim() || document.hidden) {
+					return;
+				}
+
+				loadVisits(true).catch(function() {});
+			}, 30000);
 		</script>
 	</body>
 </html>`;

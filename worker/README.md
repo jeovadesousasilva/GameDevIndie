@@ -59,7 +59,17 @@ npm run build
 
 ## Revisar a lista
 
-Troque `SEU_TOKEN` pelo valor que você salvou em `ADMIN_TOKEN`.
+Abra a rota `/admin` do Worker no navegador e digite o valor que você salvou em `ADMIN_TOKEN`.
+
+Exemplo:
+
+```text
+https://midnight-visit-logger.seu-usuario.workers.dev/admin
+```
+
+O painel mostra os horários em Brasília, separa localização aproximada por IP da localização precisa autorizada e indica se a sessão ainda está aberta, quando teve o último sinal, quanto tempo durou e quando foi fechada.
+
+Também dá para revisar via terminal. Troque `SEU_TOKEN` pelo valor que você salvou em `ADMIN_TOKEN`.
 
 ```bash
 curl -H "Authorization: Bearer SEU_TOKEN" "https://midnight-visit-logger.seu-usuario.workers.dev/admin/visits?limit=100"
@@ -75,4 +85,4 @@ curl -X DELETE -H "Authorization: Bearer SEU_TOKEN" "https://midnight-visit-logg
 
 ## Observação de privacidade
 
-O visitante não vê nada na tela, mas IP é dado pessoal em muitos contextos. Mantenha a coleta em uma política de privacidade ou nos termos do site, com finalidade clara como segurança, prevenção de abuso e análise técnica.
+O IP e a localização aproximada vêm da conexão e dos dados da Cloudflare. A localização precisa só é enviada quando o visitante toca em permitir e aceita a permissão do navegador. IP e localização são dados pessoais em muitos contextos, então mantenha a coleta em uma política de privacidade ou nos termos do site, com finalidade clara como segurança, prevenção de abuso e análise técnica.

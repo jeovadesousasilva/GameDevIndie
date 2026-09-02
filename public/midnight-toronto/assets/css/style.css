@@ -1171,6 +1171,60 @@ textarea {
     fill: currentColor;
 }
 
+.location-consent {
+    position: fixed;
+    right: 18px;
+    bottom: 86px;
+    z-index: 1200;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    width: min(640px, calc(100% - 36px));
+    padding: 13px;
+    border: 1px solid rgba(243, 198, 111, 0.34);
+    border-radius: var(--radius-lg);
+    color: #fff8ec;
+    background:
+        linear-gradient(135deg, rgba(43, 156, 255, 0.14), transparent 36%),
+        linear-gradient(160deg, rgba(18, 24, 35, 0.98), rgba(8, 12, 20, 0.98));
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.36);
+}
+
+.location-consent div {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.location-consent strong {
+    font-size: 0.94rem;
+}
+
+.location-consent span {
+    color: rgba(255, 248, 236, 0.7);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.location-consent button {
+    min-height: 38px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+}
+
+.location-consent [data-location-allow] {
+    color: #1d1409;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--sand), var(--sun));
+    font-weight: 900;
+}
+
 .footer {
     padding: 0 0 40px;
 }
@@ -1536,6 +1590,14 @@ textarea {
         bottom: 14px;
         width: 44px;
         height: 44px;
+    }
+
+    .location-consent {
+        right: 12px;
+        bottom: 68px;
+        grid-template-columns: 1fr;
+        width: calc(100% - 24px);
+        padding: 12px;
     }
 
     .shellbound-brief {
