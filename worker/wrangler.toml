@@ -1,6 +1,7 @@
 name = "midnight-visit-logger"
 main = "src/index.ts"
 compatibility_date = "2026-09-02"
+workers_dev = true
 
 [vars]
 ALLOWED_ORIGINS = "https://midnighttoronto.com.br,https://www.midnighttoronto.com.br"

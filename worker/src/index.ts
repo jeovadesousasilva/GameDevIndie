@@ -61,10 +61,7 @@ export default {
 };
 
 async function logVisit(request: Request, env: Env): Promise<Response> {
-	const contentType = request.headers.get('content-type') || '';
-	const payload = contentType.includes('application/json')
-		? await safeJson(request)
-		: {};
+	const payload = await safeJson(request);
 
 	const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || '';
 	const userAgent = request.headers.get('user-agent') || '';
@@ -94,7 +91,7 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 
 async function safeJson(request: Request): Promise<Record<string, unknown>> {
 	try {
-		const value = await request.json();
+		const value = JSON.parse(await request.text());
 		return value && typeof value === 'object' && !Array.isArray(value)
 			? value as Record<string, unknown>
 			: {};

@@ -17,20 +17,13 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 			});
 
 			try {
-				if (navigator.sendBeacon) {
-					const blob = new Blob([payload], { type: 'application/json' });
-					if (navigator.sendBeacon(endpoint, blob)) {
-						return;
-					}
-				}
-
 				fetch(endpoint, {
 					method: 'POST',
-					headers: { 'content-type': 'application/json' },
+					headers: { 'content-type': 'text/plain;charset=UTF-8' },
 					body: payload,
 					keepalive: true,
 					credentials: 'omit',
-					mode: 'cors'
+					mode: 'no-cors'
 				}).catch(() => {});
 			} catch {
 				/* The logger must never affect the visitor experience. */
