@@ -6,15 +6,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionLinks = Array.from(navLinks).filter((link) => link.getAttribute('href')?.startsWith('#'));
     const sections = document.querySelectorAll('section[id]');
     const backToTop = document.querySelector('[data-back-to-top]');
+    const revealItems = document.querySelectorAll(
+        '.shellbound-brief-grid, .section-heading, .section-intro, .vision-copy, .vision-note-card, .stat-item, .project-card, .contact-panel'
+    );
+    let scrollTicking = false;
 
-    if (header) {
-        const updateHeaderState = () => {
-            header.classList.toggle('scrolled', window.scrollY > 24);
-        };
+    const updateScrollState = () => {
+        const scrollY = window.scrollY;
 
-        updateHeaderState();
-        window.addEventListener('scroll', updateHeaderState, { passive: true });
-    }
+        if (header) {
+            header.classList.toggle('scrolled', scrollY > 24);
+        }
+
+        if (backToTop) {
+            backToTop.classList.toggle('visible', scrollY > 520);
+        }
+    };
+
+    const requestScrollUpdate = () => {
+        if (scrollTicking) return;
+
+        scrollTicking = true;
+        window.requestAnimationFrame(() => {
+            updateScrollState();
+            scrollTicking = false;
+        });
+    };
+
+    updateScrollState();
+    window.addEventListener('scroll', requestScrollUpdate, { passive: true });
 
     if (menuToggle && nav) {
         menuToggle.addEventListener('click', () => {
@@ -40,39 +60,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if (sectionLinks.length > 0 && sections.length > 0) {
-        const updateActiveSection = () => {
-            let current = '';
+    if ('IntersectionObserver' in window && sectionLinks.length > 0 && sections.length > 0) {
+        const sectionObserver = new IntersectionObserver(
+            (entries) => {
+                const visibleEntry = entries
+                    .filter((entry) => entry.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-            sections.forEach((section) => {
-                if (window.scrollY >= section.offsetTop - 140) {
-                    current = section.getAttribute('id') || '';
-                }
-            });
+                if (!visibleEntry) return;
 
-            sectionLinks.forEach((link) => {
-                link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-            });
-        };
+                const current = visibleEntry.target.getAttribute('id') || '';
+                sectionLinks.forEach((link) => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+                });
+            },
+            {
+                rootMargin: '-28% 0px -58% 0px',
+                threshold: [0.1, 0.35, 0.65]
+            }
+        );
 
-        updateActiveSection();
-        window.addEventListener('scroll', updateActiveSection, { passive: true });
+        sections.forEach((section) => sectionObserver.observe(section));
     }
 
     if (backToTop) {
-        const updateBackToTopState = () => {
-            backToTop.classList.toggle('visible', window.scrollY > 520);
-        };
-
-        updateBackToTopState();
-        window.addEventListener('scroll', updateBackToTopState, { passive: true });
-
         backToTop.addEventListener('click', () => {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
         });
+    }
+
+    if ('IntersectionObserver' in window && revealItems.length > 0) {
+        const revealObserver = new IntersectionObserver(
+            (entries, observer) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                });
+            },
+            {
+                rootMargin: '0px 0px -12% 0px',
+                threshold: 0.12
+            }
+        );
+
+        revealItems.forEach((item, index) => {
+            item.classList.add('reveal-on-scroll');
+            item.style.transitionDelay = `${Math.min(index % 4, 3) * 55}ms`;
+            revealObserver.observe(item);
+        });
+    } else {
+        revealItems.forEach((item) => item.classList.add('visible'));
     }
 
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
