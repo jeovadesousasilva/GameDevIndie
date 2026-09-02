@@ -149,6 +149,7 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 
 async function updateVisitSession(env: Env, sessionId: string, event: string, payload: Record<string, unknown>): Promise<void> {
 	const durationSeconds = cleanNullableNumber(payload.durationSeconds);
+	const deviceModel = cleanNullableText(payload.deviceModel, 128);
 	const locationPermission = cleanNullableText(payload.locationPermission, 32);
 	const preciseLatitude = cleanNullableScalarText(payload.preciseLatitude, 32);
 	const preciseLongitude = cleanNullableScalarText(payload.preciseLongitude, 32);
@@ -163,6 +164,7 @@ async function updateVisitSession(env: Env, sessionId: string, event: string, pa
 			 closed_at = CASE WHEN ? = 'close' THEN datetime('now') ELSE closed_at END,
 			 is_open = CASE WHEN ? = 'close' THEN 0 ELSE is_open END,
 			 duration_seconds = COALESCE(?, CAST(strftime('%s', 'now') - strftime('%s', created_at) AS INTEGER), duration_seconds),
+			 device_model = COALESCE(?, device_model),
 			 location_permission = COALESCE(?, location_permission),
 			 precise_latitude = COALESCE(?, precise_latitude),
 			 precise_longitude = COALESCE(?, precise_longitude),
@@ -175,6 +177,7 @@ async function updateVisitSession(env: Env, sessionId: string, event: string, pa
 		event,
 		event,
 		durationSeconds,
+		deviceModel,
 		locationPermission,
 		preciseLatitude,
 		preciseLongitude,
@@ -823,7 +826,10 @@ function adminPage(): string {
 				return {
 					granted: 'Permitida',
 					denied: 'Negada',
-					dismissed: 'Dispensada'
+					dismissed: 'Dispensada',
+					prompt: 'Aguardando permissão',
+					unavailable: 'Indisponível no momento',
+					unsupported: 'Não suportada'
 				}[value] || 'Não solicitada';
 			}
 

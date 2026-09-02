@@ -12,7 +12,7 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 			window.__midnightVisitLogged = true;
 			const sessionId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 			const openedAt = Date.now();
-			const locationConsentKey = 'midnight-location-consent-v1';
+			const locationGrantKey = 'midnight-location-consent-v1';
 			let deviceModel = null;
 			let locationPermission = null;
 			let latestLocation = null;
@@ -71,20 +71,57 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				send(basePayload('close'));
 			};
 
-			const readConsent = () => {
+			let sessionEventsInstalled = false;
+			const installSessionEvents = () => {
+				if (sessionEventsInstalled) {
+					return;
+				}
+
+				sessionEventsInstalled = true;
+				window.setInterval(() => send(basePayload('heartbeat')), 15000);
+				window.addEventListener('pagehide', closeSession, { capture: true });
+				window.addEventListener('beforeunload', closeSession, { capture: true });
+			};
+
+			const readStoredGrant = () => {
 				try {
-					return window.localStorage.getItem(locationConsentKey);
+					return window.localStorage.getItem(locationGrantKey) === 'granted' ? 'granted' : null;
 				} catch {
 					return null;
 				}
 			};
 
-			const saveConsent = (value) => {
+			const saveStoredGrant = () => {
 				try {
-					window.localStorage.setItem(locationConsentKey, value);
+					window.localStorage.setItem(locationGrantKey, 'granted');
 				} catch {
 					/* Storage can be unavailable in private or restricted browsing. */
 				}
+			};
+
+			const clearStoredGrant = () => {
+				try {
+					window.localStorage.removeItem(locationGrantKey);
+				} catch {
+					/* Storage can be unavailable in private or restricted browsing. */
+				}
+			};
+
+			const readGeolocationPermission = async () => {
+				if (!('geolocation' in navigator)) {
+					return 'unsupported';
+				}
+
+				try {
+					if (navigator.permissions?.query) {
+						const permission = await navigator.permissions.query({ name: 'geolocation' });
+						return permission.state;
+					}
+				} catch {
+					/* Permission state is not available in every browser. */
+				}
+
+				return readStoredGrant() || 'prompt';
 			};
 
 			const readDeviceModel = async () => {
@@ -103,32 +140,35 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				}
 			};
 
-			const requestPreciseLocation = () => {
+			const collectPreciseLocation = () => new Promise((resolve) => {
 				if (!('geolocation' in navigator)) {
+					resolve({ permission: 'unsupported', location: null });
 					return;
 				}
 
 				navigator.geolocation.getCurrentPosition(
 					(position) => {
-						locationPermission = 'granted';
-						latestLocation = {
-							preciseLatitude: position.coords.latitude,
-							preciseLongitude: position.coords.longitude,
-							preciseAccuracy: position.coords.accuracy,
-							preciseAltitude: position.coords.altitude,
-							preciseHeading: position.coords.heading,
-							preciseSpeed: position.coords.speed
-						};
-						saveConsent('granted');
-						send(basePayload('location'));
-						document.querySelector('[data-location-consent]')?.remove();
+						saveStoredGrant();
+						resolve({
+							permission: 'granted',
+							location: {
+								preciseLatitude: position.coords.latitude,
+								preciseLongitude: position.coords.longitude,
+								preciseAccuracy: position.coords.accuracy,
+								preciseAltitude: position.coords.altitude,
+								preciseHeading: position.coords.heading,
+								preciseSpeed: position.coords.speed
+							}
+						});
 					},
-					() => {
-						locationPermission = 'denied';
-						latestLocation = null;
-						saveConsent('denied');
-						send(basePayload('location'));
-						document.querySelector('[data-location-consent]')?.remove();
+					(error) => {
+						if (error.code === error.PERMISSION_DENIED) {
+							clearStoredGrant();
+							resolve({ permission: 'denied', location: null });
+							return;
+						}
+
+						resolve({ permission: 'unavailable', location: null });
 					},
 					{
 						enableHighAccuracy: true,
@@ -136,6 +176,18 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 						maximumAge: 300000
 					}
 				);
+			});
+
+			const applyLocationResult = (result) => {
+				locationPermission = result.permission;
+				latestLocation = result.location;
+			};
+
+			const requestPreciseLocation = async () => {
+				const result = await collectPreciseLocation();
+				applyLocationResult(result);
+				send(basePayload('location'));
+				document.querySelector('[data-location-consent]')?.remove();
 			};
 
 			const showLocationConsent = async () => {
@@ -143,24 +195,17 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 					return;
 				}
 
-				locationPermission = readConsent();
-
-				try {
-					if (navigator.permissions?.query) {
-						const permission = await navigator.permissions.query({ name: 'geolocation' });
-						locationPermission = permission.state === 'prompt' ? locationPermission : permission.state;
-					}
-				} catch {
-					/* Permission state is not available in every browser. */
-				}
-
-				if (locationPermission === 'granted') {
-					requestPreciseLocation();
+				if (document.querySelector('[data-location-consent]')) {
 					return;
 				}
 
-				if (locationPermission === 'denied' || locationPermission === 'dismissed') {
-					send(basePayload('location'));
+				locationPermission = await readGeolocationPermission();
+				if (locationPermission === 'granted') {
+					await requestPreciseLocation();
+					return;
+				}
+
+				if (locationPermission === 'unsupported') {
 					return;
 				}
 
@@ -179,7 +224,6 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				banner.querySelector('[data-location-allow]')?.addEventListener('click', requestPreciseLocation);
 				banner.querySelector('[data-location-dismiss]')?.addEventListener('click', () => {
 					locationPermission = 'dismissed';
-					saveConsent('dismissed');
 					send(basePayload('location'));
 					banner.remove();
 				});
@@ -187,16 +231,25 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 				document.body.appendChild(banner);
 			};
 
-			const startSession = () => {
-				locationPermission = readConsent();
+			const startSession = async () => {
+				locationPermission = await readGeolocationPermission();
+				if (locationPermission === 'granted') {
+					applyLocationResult(await collectPreciseLocation());
+				}
+
 				send(basePayload('start'));
-				window.setInterval(() => send(basePayload('heartbeat')), 15000);
-				window.addEventListener('pagehide', closeSession, { capture: true });
-				window.addEventListener('beforeunload', closeSession, { capture: true });
+				installSessionEvents();
 				window.setTimeout(showLocationConsent, 1800);
 			};
 
-			readDeviceModel().finally(startSession);
+			readDeviceModel().finally(() => {
+				startSession().catch(() => {
+					locationPermission = 'prompt';
+					send(basePayload('start'));
+					installSessionEvents();
+					window.setTimeout(showLocationConsent, 1800);
+				});
+			});
 		})();
 	</script>
 )}
