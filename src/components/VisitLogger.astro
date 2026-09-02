@@ -12,7 +12,9 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 			window.__midnightVisitLogged = true;
 			const sessionId = window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 			const openedAt = Date.now();
+			const visitorIdKey = 'midnight-visitor-id-v1';
 			const locationGrantKey = 'midnight-location-consent-v1';
+			let visitorId = null;
 			let deviceModel = null;
 			let locationPermission = null;
 			let latestLocation = null;
@@ -31,10 +33,27 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 					dismiss: 'Agora não'
 				};
 
+			const randomId = () => window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+			const readVisitorId = () => {
+				try {
+					let storedVisitorId = window.localStorage.getItem(visitorIdKey);
+					if (!storedVisitorId) {
+						storedVisitorId = `mtv_${randomId()}`;
+						window.localStorage.setItem(visitorIdKey, storedVisitorId);
+					}
+
+					return storedVisitorId;
+				} catch {
+					return `mtv_session_${randomId()}`;
+				}
+			};
+
 			const basePayload = (event) => {
 				const payload = {
 					event,
 					sessionId,
+					visitorId,
 					durationSeconds: Math.max(0, Math.round((Date.now() - openedAt) / 1000)),
 					path: `${window.location.pathname}${window.location.search}`,
 					referrer: document.referrer || null,
@@ -232,6 +251,7 @@ const endpoint = import.meta.env.PUBLIC_VISIT_LOGGER_ENDPOINT || '';
 			};
 
 			const startSession = async () => {
+				visitorId = readVisitorId();
 				locationPermission = await readGeolocationPermission();
 				if (locationPermission === 'granted') {
 					applyLocationResult(await collectPreciseLocation());

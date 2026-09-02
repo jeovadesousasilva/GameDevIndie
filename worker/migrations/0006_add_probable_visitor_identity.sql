@@ -1,0 +1,62 @@
+DROP VIEW IF EXISTS visitas_resumo;
+
+ALTER TABLE visits ADD COLUMN visitor_id_hash TEXT;
+ALTER TABLE visits ADD COLUMN probable_person_id TEXT;
+
+CREATE INDEX IF NOT EXISTS idx_visits_visitor_id_hash
+ON visits(visitor_id_hash);
+
+CREATE INDEX IF NOT EXISTS idx_visits_probable_person_id
+ON visits(probable_person_id);
+
+PRAGMA optimize;
+
+CREATE VIEW visitas_resumo AS
+SELECT
+	id AS registro,
+	created_at AS data_hora_utc,
+	session_id AS sessao,
+	probable_person_id AS id_visitante_provavel,
+	is_open AS esta_aberto,
+	last_seen_at AS ultimo_sinal_utc,
+	closed_at AS fechado_em_utc,
+	duration_seconds AS duracao_segundos,
+	ip AS ip_completo,
+	ip_masked AS ip_mascarado,
+	path AS pagina,
+	country AS pais,
+	region AS estado_regiao,
+	region_code AS codigo_regiao,
+	city AS cidade_aproximada_por_ip,
+	postal_code AS cep_aproximado_por_ip,
+	latitude AS latitude_aproximada_por_ip,
+	longitude AS longitude_aproximada_por_ip,
+	timezone AS fuso_horario_por_ip,
+	location_permission AS permissao_localizacao_exata,
+	precise_latitude AS latitude_autorizada,
+	precise_longitude AS longitude_autorizada,
+	precise_accuracy AS precisao_metros,
+	precise_altitude AS altitude_autorizada,
+	precise_heading AS direcao_autorizada,
+	precise_speed AS velocidade_autorizada,
+	continent AS continente,
+	device_type AS tipo_dispositivo,
+	device_model AS modelo_dispositivo,
+	os_name AS sistema_operacional,
+	browser_name AS navegador,
+	browser_language AS idioma_navegador,
+	browser_timezone AS fuso_horario_navegador,
+	screen_width AS largura_tela,
+	screen_height AS altura_tela,
+	viewport_width AS largura_janela,
+	viewport_height AS altura_janela,
+	pixel_ratio AS densidade_tela,
+	asn AS rede_asn,
+	as_organization AS provedor_rede,
+	http_protocol AS protocolo_http,
+	referrer AS origem,
+	user_agent AS user_agent,
+	colo AS datacenter_cloudflare,
+	ip_hash AS identificador_privado,
+	visitor_id_hash AS identificador_navegador
+FROM visits;

@@ -43,7 +43,8 @@ export default {
 				 os_name, browser_language, browser_timezone, screen_width, screen_height,
 				 viewport_width, viewport_height, pixel_ratio, session_id, last_seen_at, closed_at,
 				 duration_seconds, is_open, location_permission, precise_latitude, precise_longitude,
-				 precise_accuracy, precise_altitude, precise_heading, precise_speed
+				 precise_accuracy, precise_altitude, precise_heading, precise_speed, visitor_id_hash,
+				 probable_person_id
 				 FROM visits
 				 ORDER BY id DESC
 				 LIMIT ?`
@@ -89,6 +90,8 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 	const country = cleanNullableText(cf.country, 16);
 	const colo = cleanNullableText(cf.colo, 16);
 	const ipHash = await sha256(`${ip}:${env.IP_HASH_SECRET}`);
+	const deviceModel = cleanNullableText(payload.deviceModel, 128) || client.deviceModel;
+	const identity = await createVisitorIdentity(payload, env, { ipHash, userAgent, deviceModel });
 
 	await env.DB.prepare(
 		`INSERT INTO visits (
@@ -98,9 +101,9 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 			browser_language, browser_timezone, screen_width, screen_height, viewport_width,
 			viewport_height, pixel_ratio, session_id, last_seen_at, duration_seconds, is_open,
 			location_permission, precise_latitude, precise_longitude, precise_accuracy,
-			precise_altitude, precise_heading, precise_speed
+			precise_altitude, precise_heading, precise_speed, visitor_id_hash, probable_person_id
 		)
-		 VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+		 VALUES (datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 	).bind(
 		ip,
 		maskIp(ip),
@@ -122,7 +125,7 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 		cleanNullableText(cf.asOrganization, 256),
 		cleanNullableText(cf.httpProtocol, 32),
 		client.deviceType,
-		cleanNullableText(payload.deviceModel, 128) || client.deviceModel,
+		deviceModel,
 		client.browserName,
 		client.osName,
 		cleanNullableText(payload.browserLanguage, 64),
@@ -141,7 +144,9 @@ async function logVisit(request: Request, env: Env): Promise<Response> {
 		cleanNullableNumber(payload.preciseAccuracy),
 		cleanNullableScalarText(payload.preciseAltitude, 32),
 		cleanNullableScalarText(payload.preciseHeading, 32),
-		cleanNullableScalarText(payload.preciseSpeed, 32)
+		cleanNullableScalarText(payload.preciseSpeed, 32),
+		identity.visitorIdHash,
+		identity.probablePersonId
 	).run();
 
 	return json({ ok: true }, 200, visitCorsHeaders(request, env));
@@ -157,6 +162,7 @@ async function updateVisitSession(env: Env, sessionId: string, event: string, pa
 	const preciseAltitude = cleanNullableScalarText(payload.preciseAltitude, 32);
 	const preciseHeading = cleanNullableScalarText(payload.preciseHeading, 32);
 	const preciseSpeed = cleanNullableScalarText(payload.preciseSpeed, 32);
+	const identity = await createVisitorIdentity(payload, env, { deviceModel });
 
 	await env.DB.prepare(
 		`UPDATE visits
@@ -171,7 +177,9 @@ async function updateVisitSession(env: Env, sessionId: string, event: string, pa
 			 precise_accuracy = COALESCE(?, precise_accuracy),
 			 precise_altitude = COALESCE(?, precise_altitude),
 			 precise_heading = COALESCE(?, precise_heading),
-			 precise_speed = COALESCE(?, precise_speed)
+			 precise_speed = COALESCE(?, precise_speed),
+			 visitor_id_hash = COALESCE(?, visitor_id_hash),
+			 probable_person_id = COALESCE(?, probable_person_id)
 		 WHERE session_id = ?`
 	).bind(
 		event,
@@ -185,8 +193,50 @@ async function updateVisitSession(env: Env, sessionId: string, event: string, pa
 		preciseAltitude,
 		preciseHeading,
 		preciseSpeed,
+		identity.visitorIdHash,
+		identity.probablePersonId,
 		sessionId
 	).run();
+}
+
+async function createVisitorIdentity(
+	payload: Record<string, unknown>,
+	env: Env,
+	context: { ipHash?: string | null; userAgent?: string | null; deviceModel?: string | null }
+): Promise<{ visitorIdHash: string | null; probablePersonId: string | null }> {
+	const visitorId = cleanNullableText(payload.visitorId, 160);
+	if (visitorId) {
+		const visitorIdHash = await sha256(`visitor:${visitorId}:${env.IP_HASH_SECRET}`);
+		return {
+			visitorIdHash,
+			probablePersonId: formatProbablePersonId(visitorIdHash)
+		};
+	}
+
+	if (!context.ipHash || !context.userAgent) {
+		return { visitorIdHash: null, probablePersonId: null };
+	}
+
+	const softSignals = [
+		context.ipHash,
+		cleanText(context.userAgent, 512),
+		cleanNullableText(payload.browserTimezone, 64) || '',
+		cleanNullableText(payload.browserLanguage, 64) || '',
+		context.deviceModel || '',
+		cleanNullableNumber(payload.screenWidth) || '',
+		cleanNullableNumber(payload.screenHeight) || '',
+		cleanNullableNumber(payload.pixelRatio) || ''
+	].join('|');
+	const probableHash = await sha256(`probable:${softSignals}:${env.IP_HASH_SECRET}`);
+
+	return {
+		visitorIdHash: null,
+		probablePersonId: formatProbablePersonId(probableHash)
+	};
+}
+
+function formatProbablePersonId(hash: string): string {
+	return `MP-${hash.slice(0, 10).toUpperCase()}`;
 }
 
 async function safeJson(request: Request): Promise<Record<string, unknown>> {
@@ -553,7 +603,7 @@ function adminPage(): string {
 
 			.summary {
 				display: grid;
-				grid-template-columns: repeat(5, minmax(0, 1fr));
+				grid-template-columns: repeat(6, minmax(0, 1fr));
 				gap: 12px;
 				margin-bottom: 16px;
 			}
@@ -601,6 +651,27 @@ function adminPage(): string {
 				background: var(--panel-soft);
 			}
 
+			.visit-meta {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-end;
+				gap: 8px;
+			}
+
+			.identity-chip {
+				display: inline-flex;
+				align-items: center;
+				min-height: 28px;
+				padding: 0 10px;
+				border: 1px solid rgba(56, 189, 248, 0.32);
+				border-radius: 999px;
+				color: #bae6fd;
+				background: rgba(56, 189, 248, 0.12);
+				font-family: Consolas, monospace;
+				font-size: 0.78rem;
+				font-weight: 800;
+			}
+
 			.visit-head h2 {
 				font-size: 1rem;
 			}
@@ -625,6 +696,84 @@ function adminPage(): string {
 				color: var(--accent);
 				font-size: 0.78rem;
 				text-transform: uppercase;
+			}
+
+			.map-block {
+				position: relative;
+				min-height: 230px;
+				overflow: hidden;
+				background:
+					linear-gradient(rgba(83, 250, 172, 0.08) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(83, 250, 172, 0.08) 1px, transparent 1px),
+					radial-gradient(circle at 50% 46%, rgba(83, 250, 172, 0.18), transparent 34%),
+					rgba(5, 18, 19, 0.95);
+				background-size: 28px 28px, 28px 28px, auto, auto;
+			}
+
+			.map-block::before,
+			.map-block::after {
+				position: absolute;
+				inset: 32px;
+				border: 1px solid rgba(83, 250, 172, 0.16);
+				border-radius: 50%;
+				content: '';
+			}
+
+			.map-block::after {
+				inset: 64px;
+				border-color: rgba(56, 189, 248, 0.18);
+			}
+
+			.map-content {
+				position: relative;
+				z-index: 1;
+				display: grid;
+				min-height: 100%;
+				align-content: center;
+				justify-items: center;
+				gap: 10px;
+				text-align: center;
+			}
+
+			.map-pin {
+				width: 16px;
+				height: 16px;
+				border-radius: 50%;
+				background: var(--accent);
+				box-shadow: 0 0 0 9px rgba(83, 250, 172, 0.11), 0 0 30px rgba(83, 250, 172, 0.82);
+			}
+
+			.map-source {
+				color: var(--muted);
+				font-size: 0.78rem;
+				font-weight: 800;
+				text-transform: uppercase;
+			}
+
+			.map-coords {
+				color: #e9fff6;
+				font-family: Consolas, monospace;
+				font-size: 0.92rem;
+				overflow-wrap: anywhere;
+			}
+
+			.map-link {
+				display: inline-flex;
+				align-items: center;
+				min-height: 38px;
+				padding: 0 12px;
+				border: 1px solid var(--line-strong);
+				border-radius: 8px;
+				color: #03120b;
+				background: linear-gradient(135deg, var(--accent), var(--accent-2));
+				font-size: 0.86rem;
+				font-weight: 900;
+				text-decoration: none;
+			}
+
+			.map-empty {
+				color: var(--muted);
+				font-weight: 800;
 			}
 
 			.field {
@@ -726,6 +875,7 @@ function adminPage(): string {
 			<section class="summary" id="summary" hidden>
 				<div class="summary-card"><span>Visitas</span><strong id="totalVisits">0</strong></div>
 				<div class="summary-card"><span>IPs únicos</span><strong id="uniqueIps">0</strong></div>
+				<div class="summary-card"><span>IDs prováveis</span><strong id="uniquePeople">0</strong></div>
 				<div class="summary-card"><span>Cidades</span><strong id="uniqueCities">0</strong></div>
 				<div class="summary-card"><span>Abertos agora</span><strong id="openVisits">0</strong></div>
 				<div class="summary-card"><span>Celulares</span><strong id="mobileVisits">0</strong></div>
@@ -850,18 +1000,61 @@ function adminPage(): string {
 				return visit.screen_width + ' x ' + visit.screen_height + ' / janela ' + value(visit.viewport_width) + ' x ' + value(visit.viewport_height);
 			}
 
+			function coordinatesForMap(visit) {
+				if (visit.precise_latitude && visit.precise_longitude) {
+					return {
+						source: 'Localização autorizada',
+						latitude: visit.precise_latitude,
+						longitude: visit.precise_longitude
+					};
+				}
+
+				if (visit.latitude && visit.longitude) {
+					return {
+						source: 'Localização por IP',
+						latitude: visit.latitude,
+						longitude: visit.longitude
+					};
+				}
+
+				return null;
+			}
+
+			function renderMap(visit) {
+				const coords = coordinatesForMap(visit);
+				if (!coords) {
+					return '<section class="info-block map-block"><div class="map-content"><span class="map-empty">Sem coordenadas disponíveis</span></div></section>';
+				}
+
+				const text = coords.latitude + ', ' + coords.longitude;
+				const href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(text);
+				return '<section class="info-block map-block">'
+					+ '<div class="map-content">'
+						+ '<span class="map-pin"></span>'
+						+ '<span class="map-source">' + escapeHtml(coords.source) + '</span>'
+						+ '<strong class="map-coords">' + escapeHtml(text) + '</strong>'
+						+ '<a class="map-link" href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer">Abrir no Google Maps</a>'
+					+ '</div>'
+				+ '</section>';
+			}
+
 			function renderVisit(visit) {
 				const status = sessionStatus(visit);
 				const preciseCoords = visit.precise_latitude && visit.precise_longitude
 					? visit.precise_latitude + ', ' + visit.precise_longitude
 					: null;
+				const probableId = value(visit.probable_person_id, 'MP-pendente');
 
 				return '<article class="visit-card">'
 					+ '<div class="visit-head">'
 						+ '<div><h2>#' + escapeHtml(visit.id) + ' - ' + escapeHtml(value(visit.path, '/')) + '</h2><p>' + escapeHtml(brDate(visit.created_at)) + ' - horário de Brasília</p></div>'
-						+ '<span class="badge ' + status.className + '">' + escapeHtml(status.label) + '</span>'
+						+ '<div class="visit-meta">'
+							+ '<span class="identity-chip">' + escapeHtml(probableId) + '</span>'
+							+ '<span class="badge ' + status.className + '">' + escapeHtml(status.label) + '</span>'
+						+ '</div>'
 					+ '</div>'
 					+ '<div class="visit-grid">'
+						+ renderMap(visit)
 						+ '<section class="info-block"><h3>Acesso</h3>'
 							+ field('Página', visit.path)
 							+ field('Origem', visit.referrer)
@@ -915,12 +1108,14 @@ function adminPage(): string {
 
 			function updateSummary(visits) {
 				const ipSet = new Set(visits.map(function(visit) { return visit.ip_hash; }).filter(Boolean));
+				const peopleSet = new Set(visits.map(function(visit) { return visit.probable_person_id; }).filter(Boolean));
 				const citySet = new Set(visits.map(function(visit) { return locationTitle(visit); }).filter(function(item) { return item !== 'Localização não informada'; }));
 				const openCount = visits.filter(function(visit) { return sessionStatus(visit).className === 'open'; }).length;
 				const mobileCount = visits.filter(function(visit) { return visit.device_type === 'Celular'; }).length;
 
 				document.querySelector('#totalVisits').textContent = String(visits.length);
 				document.querySelector('#uniqueIps').textContent = String(ipSet.size);
+				document.querySelector('#uniquePeople').textContent = String(peopleSet.size);
 				document.querySelector('#uniqueCities').textContent = String(citySet.size);
 				document.querySelector('#openVisits').textContent = String(openCount);
 				document.querySelector('#mobileVisits').textContent = String(mobileCount);
