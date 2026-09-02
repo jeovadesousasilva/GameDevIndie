@@ -1,0 +1,12 @@
+name = "midnight-visit-logger"
+main = "src/index.ts"
+compatibility_date = "2026-09-02"
+
+[vars]
+ALLOWED_ORIGINS = "https://midnighttoronto.com.br,https://www.midnighttoronto.com.br"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "midnight_visit_logs"
+database_id = "28461e13-dade-4557-a2ee-9bd805f8ca93"
+migrations_dir = "migrations"

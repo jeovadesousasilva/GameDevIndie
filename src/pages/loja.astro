@@ -1,5 +1,6 @@
 ---
 import { withBase } from '../utils/paths';
+import VisitLogger from '../components/VisitLogger.astro';
 
 const siteUrl = 'https://midnighttoronto.com.br';
 const pagePath = 'loja/';
@@ -1824,7 +1825,8 @@ const vipBenefits = [
 				loadDashboard({ silent: true });
 				revealProducts();
 			})();
-		</script>
+	</script>
+	<VisitLogger />
 	</body>
 </html>
 

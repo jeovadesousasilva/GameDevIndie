@@ -1,6 +1,7 @@
 ---
 import { withBase } from '../utils/paths';
 import { studioHomeContent, type StudioLocale } from '../content/studioHome';
+import VisitLogger from './VisitLogger.astro';
 
 interface Props {
 	locale: StudioLocale;
@@ -291,5 +292,6 @@ const socialLinks = [
 		</div>
 
 		<script src={withBase('midnight-toronto/assets/js/main.js')}></script>
+		<VisitLogger />
 	</body>
 </html>

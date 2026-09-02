@@ -1,5 +1,6 @@
 ---
 import { withBase } from '../utils/paths';
+import VisitLogger from '../components/VisitLogger.astro';
 
 const siteUrl = 'https://midnighttoronto.com.br';
 const canonicalUrl = `${siteUrl}${withBase('termos-loja/')}`;
@@ -89,6 +90,7 @@ const homeUrl = withBase();
 				</div>
 			</section>
 		</main>
+		<VisitLogger />
 	</body>
 </html>
 

@@ -7,6 +7,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  PUBLIC_VISIT_LOGGER_ENDPOINT: https://midnight-visit-logger.badas8863.workers.dev/visit
 
 permissions:
   contents: read
